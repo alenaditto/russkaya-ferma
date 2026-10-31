@@ -4,140 +4,256 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Русская ферма</title>
+<link rel="icon" href="data:,">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; font-family: system-ui, -apple-system, sans-serif; background:#f3e8d6; color:#5b4030; }
+  .app { max-width:440px; margin:0 auto; min-height:100vh; padding-bottom:24px; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:16px; }
+  h1 { font-size:22px; margin:0; }
+  .lvl { background:#c96a35; color:#fff; padding:7px 12px; border-radius:18px; font-weight:700; }
+  .res { display:flex; flex-wrap:wrap; gap:8px 14px; padding:0 16px 10px; font-weight:600; }
+  .card { background:#fffdf7; border-radius:16px; padding:16px; margin:12px 16px 0; box-shadow:0 2px 8px rgba(90,60,30,.08); }
+  .card h2 { font-size:17px; margin:0 0 12px; }
+  .plots { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .plot { background:#b9885a; border:3px solid #9c6f46; border-radius:14px; padding:14px 8px; text-align:center; min-height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; font-weight:600; }
+  .plot .emoji { font-size:42px; }
+  .plot.disabled { cursor:default; opacity:.85; }
+  button { background:#c96a35; color:#fff; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; width:100%; font-size:15px; }
+  button:disabled { background:#cbb59d; cursor:default; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .row button { width:auto; }
+  .big { font-size:44px; }
+  .hint { font-size:13px; opacity:.75; margin-top:8px; }
+  #status { text-align:center; font-size:12px; opacity:.6; padding:10px; }
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://ciwvncqfpjnjngsbcaie.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGpuam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+<div class="app">
+  <header>
+    <h1>🌾 Русская ферма</h1>
+    <div class="lvl" id="lvl">Ур. 1</div>
+  </header>
 
-let userKey = localStorage.getItem("ferma_user_key");
-if (!userKey) {
-  userKey = "u_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-  localStorage.setItem("ferma_user_key", userKey);
-}
-
-const game = { coins: 100, xp: 0, level: 1, wheat: 0, flour: 0, eggs: 0, bread: 0 };
-
-document.getElementById("root").innerHTML = `
-<div style="font-family:sans-serif;background:#f3e8d6;color:#5b4030;min-height:100vh;max-width:440px;margin:0 auto;">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;">
-    <div style="font-size:22px;font-weight:700;">🌾 Русская ферма</div>
-    <div id="lvl" style="background:#c96a35;color:#fff;padding:7px 12px;border-radius:18px;font-weight:700;">Ур. 1</div>
-  </div>
-  <div style="display:flex;gap:10px;padding:0 16px 8px;font-weight:600;">
+  <div class="res">
     <span>🪙 <span id="coins">0</span></span>
     <span>⭐ <span id="xp">0/100</span></span>
     <span>🌾 <span id="wheat-count">0</span></span>
     <span>🥚 <span id="egg-count">0</span></span>
+    <span>🫓 <span id="flour-count">0</span></span>
+    <span>🍞 <span id="bread-count">0</span></span>
   </div>
-  <div style="padding:12px 16px 90px;">
-    <div style="background:#fffdf7;border-radius:16px;padding:16px;margin-bottom:12px;">
-      <div style="font-size:17px;font-weight:700;margin-bottom:10px;">🌱 Грядки</div>
-      <div id="plots" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"></div>
-    </div>
-    <div style="background:#fffdf7;border-radius:16px;padding:16px;margin-bottom:12px;">
-      <div style="font-size:17px;font-weight:700;margin-bottom:10px;">🐔 Курятник</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span id="chicken-emoji">🐔</span>
-        <button id="btn-egg" style="background:#c96a35;color:#fff;border:none;border-radius:12px;padding:12px 16px;font-weight:700;">🥚 Собрать яйцо</button>
-      </div>
-    </div>
-    <div style="background:#fffdf7;border-radius:16px;padding:16px;margin-bottom:12px;">
-      <div style="font-size:17px;font-weight:700;margin-bottom:10px;">🏭 Мельница</div>
-      <button id="btn-flour" style="background:#c96a35;color:#fff;border:none;border-radius:12px;padding:12px 16px;width:100%;font-weight:700;">🌾➜ Мука (нужно 3 пшеницы)</button>
-    </div>
-    <div style="background:#fffdf7;border-radius:16px;padding:16px;">
-      <div style="font-size:17px;font-weight:700;margin-bottom:10px;">🍳 Кухня</div>
-      <button id="btn-bread" style="background:#c96a35;color:#fff;border:none;border-radius:12px;padding:12px 16px;width:100%;font-weight:700;">🍞 Испечь хлеб (мука + яйцо)</button>
-    </div>
+
+  <div class="card">
+    <h2>🌱 Грядки</h2>
+    <div class="plots" id="plots"></div>
+    <div class="hint">Пшеница растёт 3 секунды — для теста. Потом сделаем дольше.</div>
   </div>
+
+  <div class="card">
+    <h2>🐔 Курятник</h2>
+    <div class="row">
+      <span class="big" id="chicken-emoji">🐔</span>
+      <button id="btn-egg">🥚 Собрать яйцо</button>
+    </div>
+    <div class="hint" id="egg-hint">Яйцо готово!</div>
+  </div>
+
+  <div class="card">
+    <h2>🏭 Мельница</h2>
+    <button id="btn-flour">Смолоть муку — нужно 3 🌾</button>
+  </div>
+
+  <div class="card">
+    <h2>🍳 Кухня</h2>
+    <button id="btn-bread">🍞 Испечь хлеб — 1 мука + 1 яйцо</button>
+    <div class="hint">Хлеб автоматически продаётся за 20 🪙</div>
+  </div>
+
+  <div id="status">Загрузка…</div>
 </div>
-`;
 
-const $ = (id) => document.getElementById(id);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  "use strict";
 
-async function loadProfile() {
-  const { data, error } = await supabase.from("players").select("*").eq("user_key", userKey).maybeSingle();
-  if (error) { console.error(error); return; }
-  if (data) {
-    game.coins = data.coins ?? 100; game.xp = data.xp ?? 0; game.level = data.level ?? 1;
-    game.wheat = data.wheat ?? 0; game.flour = data.flour ?? 0; game.eggs = data.eggs ?? 0; game.bread = data.bread ?? 0;
-  } else { await saveProfile(); }
-  render();
-}
+  var SUPABASE_URL = "https://ciwvncqfpjnjngsbcaie.supabase.co";
+  var SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGluam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
 
-async function saveProfile() {
-  const { error } = await supabase.from("players").upsert({
-    user_key: userKey, coins: game.coins, xp: game.xp, level: game.level,
-    wheat: game.wheat, flour: game.flour, eggs: game.eggs, bread: game.bread
-  });
-  if (error) console.error(error);
-}
-
-function render() {
-  $("coins").textContent = game.coins;
-  $("xp").textContent = game.xp + "/100";
-  $("lvl").textContent = "Ур. " + game.level;
-  $("wheat-count").textContent = game.wheat;
-  $("egg-count").textContent = game.eggs;
-  renderPlots();
-  updateChicken();
-}
-
-function renderPlots() {
-  const plots = $("plots");
-  plots.innerHTML = "";
-  for (let i = 0; i < 4; i++) {
-    const p = document.createElement("div");
-    p.style = "background:#b9885a;border:3px solid #9c6f46;border-radius:14px;padding:14px;text-align:center;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;";
-    p.innerHTML = '<span style="font-size:42px;">➕</span><span style="font-weight:600;">Посадить пшеницу</span>';
-    p.onclick = () => plantWheat(p, i);
-    plots.appendChild(p);
+  // ГЛАВНОЕ ИСПРАВЛЕНИЕ: клиент называется db, а НЕ supabase
+  var db = null;
+  try {
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  } catch (e) {
+    console.error("Supabase не подключился, играем локально", e);
   }
-}
 
-function plantWheat(plot, i) {
-  plot.innerHTML = '<span style="font-size:42px;">🌱</span><span style="font-weight:600;">Растёт…</span>';
-  plot.onclick = null;
-  setTimeout(() => {
-    game.wheat += 1;
-    plot.innerHTML = '<span style="font-size:42px;">🌾</span><span style="font-weight:600;">Собрать пшеницу</span>';
-    plot.onclick = () => {
-      plot.innerHTML = '<span style="font-size:42px;">➕</span><span style="font-weight:600;">Посадить пшеницу</span>';
-      plot.onclick = () => plantWheat(plot, i);
-      game.xp += 10; saveProfile(); render();
-    };
-    saveProfile(); render();
-  }, 3000);
-}
+  var userKey = localStorage.getItem("ferma_user_key");
+  if (!userKey) {
+    userKey = "u_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem("ferma_user_key", userKey);
+  }
 
-function updateChicken() { $("chicken-emoji").textContent = game.eggs > 0 ? "🐔✨" : "🐔"; }
+  var game = { coins: 100, xp: 0, level: 1, wheat: 0, flour: 0, eggs: 0, bread: 0 };
 
-$("btn-egg").onclick = () => {
-  game.eggs += 1; game.xp += 5;
-  $("btn-egg").disabled = true;
-  setTimeout(() => { $("btn-egg").disabled = false; }, 5000);
-  saveProfile(); render();
-};
+  // Состояние грядок и курицы храним отдельно от ресурсов, таймеры не сбрасываются при render()
+  var plots = [
+    { state: "empty", readyAt: 0 },
+    { state: "empty", readyAt: 0 },
+    { state: "empty", readyAt: 0 },
+    { state: "empty", readyAt: 0 }
+  ];
+  var eggReadyAt = Date.now(); // первое яйцо готово сразу
 
-$("btn-flour").onclick = () => {
-  if (game.wheat >= 3) { game.wheat -= 3; game.flour += 1; game.xp += 15; }
-  else { alert("Не хватает пшеницы! Нужно 3 🌾"); }
-  saveProfile(); render();
-};
+  function $(id) { return document.getElementById(id); }
 
-$("btn-bread").onclick = () => {
-  if (game.flour >= 1 && game.eggs >= 1) {
-    game.flour -= 1; game.eggs -= 1; game.bread += 1; game.coins += 20; game.xp += 25;
-  } else { alert("Нужны: 1 мука + 1 яйцо 🍞"); }
-  if (game.xp >= 100) { game.xp -= 100; game.level += 1; alert("🎉 Новый уровень! Теперь вы " + game.level + "-го уровня!"); }
-  saveProfile(); render();
-};
+  function addXp(amount) {
+    game.xp += amount;
+    while (game.xp >= 100) {
+      game.xp -= 100;
+      game.level += 1;
+      alert("🎉 Новый уровень! Теперь вы " + game.level + "-го уровня!");
+    }
+  }
 
-loadProfile();
+  function saveLocal() {
+    localStorage.setItem("ferma_save", JSON.stringify(game));
+  }
+
+  var saveTimer = null;
+  function saveProfile() {
+    saveLocal();
+    if (!db) { $("status").textContent = "Локальный режим (без базы)"; return; }
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async function () {
+      var res = await db.from("players").upsert({
+        user_key: userKey, coins: game.coins, xp: game.xp, level: game.level,
+        wheat: game.wheat, flour: game.flour, eggs: game.eggs, bread: game.bread,
+        updated_at: new Date().toISOString()
+      });
+      $("status").textContent = res.error ? "Ошибка сохранения в базу" : "✓ Сохранено";
+      if (res.error) console.error(res.error);
+    }, 300);
+  }
+
+  async function loadProfile() {
+    // Сначала локальный сейв — чтобы игра никогда не показывала пустой экран
+    try {
+      var local = JSON.parse(localStorage.getItem("ferma_save") || "null");
+      if (local) game = Object.assign(game, local);
+    } catch (e) {}
+
+    render();
+
+    if (!db) { $("status").textContent = "Локальный режим (без базы)"; return; }
+
+    var res = await db.from("players").select("*").eq("user_key", userKey).maybeSingle();
+    if (res.error) {
+      console.error(res.error);
+      $("status").textContent = "База недоступна, играем локально";
+      return;
+    }
+    if (res.data) {
+      game.coins = res.data.coins ?? 100;
+      game.xp = res.data.xp ?? 0;
+      game.level = res.data.level ?? 1;
+      game.wheat = res.data.wheat ?? 0;
+      game.flour = res.data.flour ?? 0;
+      game.eggs = res.data.eggs ?? 0;
+      game.bread = res.data.bread ?? 0;
+      saveLocal();
+    } else {
+      await saveProfile();
+    }
+    $("status").textContent = "✓ Подключено к базе";
+    render();
+  }
+
+  function render() {
+    $("coins").textContent = game.coins;
+    $("xp").textContent = game.xp + "/100";
+    $("lvl").textContent = "Ур. " + game.level;
+    $("wheat-count").textContent = game.wheat;
+    $("egg-count").textContent = game.eggs;
+    $("flour-count").textContent = game.flour;
+    $("bread-count").textContent = game.bread;
+
+    var now = Date.now();
+    var box = $("plots");
+    box.innerHTML = "";
+    plots.forEach(function (p, i) {
+      if (p.state === "growing" && now >= p.readyAt) p.state = "ready";
+      var d = document.createElement("div");
+      if (p.state === "empty") {
+        d.className = "plot";
+        d.innerHTML = '<span class="emoji">➕</span><span>Посадить пшеницу</span>';
+        d.onclick = function () {
+          p.state = "growing";
+          p.readyAt = Date.now() + 3000;
+          render();
+        };
+      } else if (p.state === "growing") {
+        d.className = "plot disabled";
+        var sec = Math.max(1, Math.ceil((p.readyAt - now) / 1000));
+        d.innerHTML = '<span class="emoji">🌱</span><span>Растёт… ' + sec + 'с</span>';
+      } else {
+        d.className = "plot";
+        d.innerHTML = '<span class="emoji">🌾</span><span>Собрать!</span>';
+        d.onclick = function () {
+          p.state = "empty";
+          game.wheat += 1;
+          addXp(10);
+          saveProfile();
+          render();
+        };
+      }
+      box.appendChild(d);
+    });
+
+    var eggReady = now >= eggReadyAt;
+    $("btn-egg").disabled = !eggReady;
+    $("chicken-emoji").textContent = eggReady ? "🐔✨" : "🐔";
+    $("egg-hint").textContent = eggReady
+      ? "Яйцо готово!"
+      : "Следующее яйцо через " + Math.max(1, Math.ceil((eggReadyAt - now) / 1000)) + "с";
+
+    $("btn-flour").disabled = game.wheat < 3;
+    $("btn-bread").disabled = !(game.flour >= 1 && game.eggs >= 1);
+  }
+
+  $("btn-egg").onclick = function () {
+    if (Date.now() < eggReadyAt) return;
+    game.eggs += 1;
+    addXp(5);
+    eggReadyAt = Date.now() + 5000;
+    saveProfile();
+    render();
+  };
+
+  $("btn-flour").onclick = function () {
+    if (game.wheat < 3) { alert("Не хватает пшеницы! Нужно 3 🌾"); return; }
+    game.wheat -= 3;
+    game.flour += 1;
+    addXp(15);
+    saveProfile();
+    render();
+  };
+
+  $("btn-bread").onclick = function () {
+    if (!(game.flour >= 1 && game.eggs >= 1)) { alert("Нужны: 1 мука + 1 яйцо 🍞"); return; }
+    game.flour -= 1;
+    game.eggs -= 1;
+    game.bread += 1;
+    game.coins += 20;
+    addXp(25);
+    saveProfile();
+    render();
+  };
+
+  setInterval(render, 500); // таймер роста/яиц, грядки при этом НЕ пересоздаются из базы
+  loadProfile();
+})();
 </script>
 </body>
 </html>
