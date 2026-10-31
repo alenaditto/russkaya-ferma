@@ -6,306 +6,272 @@
 <title>Русская ферма</title>
 <link rel="icon" href="data:,">
 <style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin:0; font-family: system-ui, -apple-system, sans-serif; background:#f3e8d6; color:#5b4030; }
-  .app { max-width:440px; margin:0 auto; min-height:100vh; padding-bottom:24px; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:16px; }
-  h1 { font-size:22px; margin:0; }
-  .lvl { background:#c96a35; color:#fff; padding:7px 12px; border-radius:18px; font-weight:700; }
-  .res { display:flex; flex-wrap:wrap; gap:8px 14px; padding:0 16px 10px; font-weight:600; }
-  .card { background:#fffdf7; border-radius:16px; padding:16px; margin:12px 16px 0; box-shadow:0 2px 8px rgba(90,60,30,.08); }
-  .card h2 { font-size:17px; margin:0 0 12px; }
-  .hint { font-size:13px; opacity:.75; margin-top:8px; line-height:1.4; }
-  #status { text-align:center; font-size:12px; opacity:.6; padding:10px; }
-  .board { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
-  .cell {
-    aspect-ratio:1; border:none; border-radius:12px; cursor:pointer;
-    font-size:30px; display:flex; align-items:center; justify-content:center;
-    background:#e9dcc3; transition:transform .15s, background .15s;
-  }
-  .cell:active { transform:scale(.92); }
-  .cell.selected { background:#ffd98a; outline:3px solid #c96a35; }
-  .cell.matched { background:#b7e4a8; transform:scale(.85); opacity:.4; }
-  .energy-bar { background:#e9dcc3; border-radius:10px; height:14px; overflow:hidden; margin-top:6px; }
-  .energy-fill { background:#f0a13c; height:100%; transition:width .3s; }
-  button.action {
-    background:#c96a35; color:#fff; border:none; border-radius:12px;
-    padding:12px 16px; font-weight:700; cursor:pointer; width:100%; font-size:15px; margin-top:10px;
-  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f3e8d6;color:#5b4030}
+  .app{max-width:440px;margin:0 auto;min-height:100vh;padding-bottom:84px}
+  header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 6px}
+  h1{font-size:22px;margin:0}
+  .lvl{background:#c96a35;color:#fff;padding:7px 12px;border-radius:18px;font-weight:700}
+  .res{display:flex;flex-wrap:wrap;gap:8px 14px;padding:6px 16px;font-weight:600}
+  .card{background:#fffdf7;border-radius:16px;padding:16px;margin:12px 16px 0;box-shadow:0 2px 8px rgba(90,60,30,.08)}
+  .card h2{font-size:17px;margin:0 0 12px}
+  .hint{font-size:13px;opacity:.75;margin-top:8px;line-height:1.4}
+  #status{text-align:center;font-size:12px;opacity:.6;padding:12px}
+  .board{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .cell{aspect-ratio:1;border:none;border-radius:12px;cursor:pointer;font-size:30px;display:flex;align-items:center;justify-content:center;background:#e9dcc3;transition:transform .15s,background .15s}
+  .cell:active{transform:scale(.92)}
+  .cell.selected{background:#ffd98a;outline:3px solid #c96a35}
+  .cell.matched{background:#b7e4a8;transform:scale(.85);opacity:.4}
+  .energy-bar{background:#e9dcc3;border-radius:10px;height:14px;overflow:hidden;margin-top:6px}
+  .energy-fill{background:#f0a13c;height:100%;transition:width .3s}
+  button.action{background:#c96a35;color:#fff;border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer;width:100%;font-size:15px;margin-top:10px}
+  button.action:disabled{background:#cbb59d}
+  .page{display:none}.page.active{display:block}
+  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:#fffdf7;display:flex;border-top:1px solid #e5d6bd;z-index:10}
+  .nav button{flex:1;background:none;border:none;padding:9px 2px;font-size:11px;font-weight:700;color:#8a6a4f;cursor:pointer}
+  .nav button.active{color:#c96a35;background:#fbeed3}
+  .nav .ico{display:block;font-size:21px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .big{font-size:44px}
+  .order{border:2px solid #ecd9b8;border-radius:12px;padding:12px;margin-bottom:10px}
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <h1>🌾 Русская ферма</h1>
-    <div class="lvl" id="lvl">Ур. 1</div>
-  </header>
-
+  <header><h1>🌾 Русская ферма</h1><div class="lvl" id="lvl">Ур. 1</div></header>
   <div class="res">
     <span>🪙 <span id="coins">0</span></span>
     <span>⭐ <span id="xp">0/100</span></span>
+    <span>⚡ <span id="energy-text">20/20</span></span>
+  </div>
+  <div class="res">
+    <span>🌾 <span id="wheat-count">0</span></span>
+    <span>🥕 <span id="carrot-count">0</span></span>
+    <span>🌽 <span id="corn-count">0</span></span>
+    <span>🥚 <span id="egg-count">0</span></span>
+    <span>🫓 <span id="flour-count">0</span></span>
+    <span>🍞 <span id="bread-count">0</span></span>
   </div>
 
-  <div class="card">
-    <h2>⚡ Энергия: <span id="energy-text">20/20</span></h2>
-    <div class="energy-bar"><div class="energy-fill" id="energy-fill" style="width:100%"></div></div>
-    <div class="hint">Удачный ход = −1 энергия. Восстановление: 1 ⚡ за 20 сек (тест).</div>
-  </div>
-
-  <div class="card">
-    <h2>🌱 Поле — собери 4 в ряд!</h2>
-    <div class="board" id="board"></div>
-    <div class="hint">Нажми на клетку, потом на соседнюю (сверху, снизу, слева или справа).</div>
-  </div>
-
-  <div class="card">
-    <h2>🧺 Склад</h2>
-    <div class="res" style="padding:0;">
-      <span>🌾 <span id="wheat-count">0</span></span>
-      <span>🥕 <span id="carrot-count">0</span></span>
-      <span>🌽 <span id="corn-count">0</span></span>
+  <!-- ПОЛЕ -->
+  <section class="page active" id="page-field">
+    <div class="card">
+      <h2>⚡ Энергия</h2>
+      <div class="energy-bar"><div class="energy-fill" id="energy-fill"></div></div>
+      <div class="hint">Удачный ход = −1⚡. За 1 ряд = 1 урожай на склад.</div>
     </div>
-    <button class="action" id="btn-sell">💰 Продать весь урожай</button>
-    <div class="hint">Цены: пшеница 2 🪙, морковь 3 🪙, кукуруза 5 🪙 — редкое дороже!</div>
-  </div>
+    <div class="card">
+      <h2>🌱 Поле — собери 4 в ряд!</h2>
+      <div class="board" id="board"></div>
+      <div class="hint">Нажми клетку, потом соседнюю.</div>
+    </div>
+    <div class="card">
+      <h2>🧺 Продать урожай</h2>
+      <button class="action" id="btn-sell">💰 Продать пшеницу, морковь и кукурузу</button>
+      <div class="hint">🌾 2🪙 · 🥕 3🪙 · 🌽 5🪙</div>
+    </div>
+  </section>
+
+  <!-- СКОТНЫЙ ДВОР -->
+  <section class="page" id="page-animals">
+    <div class="card">
+      <h2>🐔 Курятник</h2>
+      <div class="row"><span class="big" id="chicken-emoji">🐔</span><span id="chicken-info"></span></div>
+      <button class="action" id="btn-egg">🥚 Собрать яйца</button>
+      <div class="hint" id="egg-hint"></div>
+    </div>
+    <div class="card">
+      <h2>🚧 Скоро</h2>
+      <div class="hint">На следующих уровнях: 🐄 коровы → молоко, 🐑 овцы → шерсть.</div>
+    </div>
+  </section>
+
+  <!-- ЦЕХИ -->
+  <section class="page" id="page-factory">
+    <div class="card">
+      <h2>🏭 Мельница</h2>
+      <button class="action" id="btn-flour">Смолоть муку — нужно 3 🌾</button>
+    </div>
+    <div class="card">
+      <h2>🥖 Пекарня</h2>
+      <button class="action" id="btn-bread">Испечь хлеб — 1 🫓 мука + 1 🥚 яйцо</button>
+      <button class="action" id="btn-sell-bread">💰 Продать хлеб по 20🪙</button>
+    </div>
+  </section>
+
+  <!-- ЗАДАНИЯ -->
+  <section class="page" id="page-orders">
+    <div class="card">
+      <h2>📋 Задания</h2>
+      <div id="orders"></div>
+      <div class="hint">Выполняй задания — это выгоднее обычной продажи!</div>
+    </div>
+  </section>
+
+  <!-- УЛУЧШЕНИЯ -->
+  <section class="page" id="page-upgrades">
+    <div class="card"><h2>⬆️ Улучшения</h2><div id="upgrades"></div></div>
+  </section>
 
   <div id="status">Загрузка…</div>
 </div>
 
+<nav class="nav">
+  <button data-page="field" class="active"><span class="ico">🌾</span>Поле</button>
+  <button data-page="animals"><span class="ico">🐄</span>Двор</button>
+  <button data-page="factory"><span class="ico">🏭</span>Цехи</button>
+  <button data-page="orders"><span class="ico">📋</span>Задания</button>
+  <button data-page="upgrades"><span class="ico">⬆️</span>Прокачка</button>
+</nav>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(function () {
-  "use strict";
+(function(){
+"use strict";
+var SUPABASE_URL="https://ciwvncqfpjnjngsbcaie.supabase.co";
+var SUPABASE_ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGluam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
+var db=null; try{db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);}catch(e){}
+var userKey=localStorage.getItem("ferma_user_key");
+if(!userKey){userKey="u_"+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("ferma_user_key",userKey);}
 
-  var SUPABASE_URL = "https://ciwvncqfpjnjngsbcaie.supabase.co";
-  var SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGpuam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
+var SIZE=6, NEED=4;
+var CROPS=[
+ {id:"wheat",emoji:"🌾",chance:50,price:2,name:"пшеницы"},
+ {id:"carrot",emoji:"🥕",chance:30,price:3,name:"моркови"},
+ {id:"corn",emoji:"🌽",chance:20,price:5,name:"кукурузы"}
+];
+var game={coins:100,xp:0,level:1,energy:20,maxEnergy:20,chickens:1,regenLevel:0,wheat:0,carrot:0,corn:0,flour:0,eggs:0,bread:0};
+var board=[],selected=-1,busy=false,lastEnergyAt=Date.now(),eggReadyAt=Date.now(),orders=[];
 
-  var db = null;
-  try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON); }
-  catch (e) { console.error("Играем локально", e); }
+function $(id){return document.getElementById(id);}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function regenMs(){return Math.max(5000,20000-game.regenLevel*3000);}
+function randomCrop(){var roll=Math.random()*100,sum=0,i;for(i=0;i<CROPS.length;i++){sum+=CROPS[i].chance;if(roll<sum)return CROPS[i].id;}return "wheat";}
+function emojiOf(id){for(var i=0;i<CROPS.length;i++)if(CROPS[i].id===id)return CROPS[i].emoji;return "❓";}
 
-  var userKey = localStorage.getItem("ferma_user_key");
-  if (!userKey) {
-    userKey = "u_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    localStorage.setItem("ferma_user_key", userKey);
-  }
+/* Линии: каждая линия >=4 даёт ОДНУ единицу урожая */
+function findLines(){
+ var lines=[],r,c,len,k,cells;
+ for(r=0;r<SIZE;r++){len=1;for(c=1;c<=SIZE;c++){
+   if(c<SIZE&&board[r*SIZE+c]&&board[r*SIZE+c]===board[r*SIZE+c-1])len++;
+   else{if(len>=NEED){cells=[];for(k=1;k<=len;k++)cells.push(r*SIZE+c-k);lines.push({crop:board[r*SIZE+c-1],cells:cells});}len=1;}
+ }}
+ for(c=0;c<SIZE;c++){len=1;for(r=1;r<=SIZE;r++){
+   if(r<SIZE&&board[r*SIZE+c]&&board[r*SIZE+c]===board[(r-1)*SIZE+c])len++;
+   else{if(len>=NEED){cells=[];for(k=1;k<=len;k++)cells.push((r-k)*SIZE+c);lines.push({crop:board[(r-1)*SIZE+c],cells:cells});}len=1;}
+ }}
+ return lines;
+}
+function matchedCells(lines){var s={};lines.forEach(function(l){l.cells.forEach(function(i){s[i]=true;});});return Object.keys(s).map(Number);}
+function newBoard(){board=[];for(var i=0;i<SIZE*SIZE;i++)board.push(randomCrop());var m=findLines(),g=0;while(m.length&&g<100){matchedCells(m).forEach(function(i){board[i]=randomCrop();});m=findLines();g++;}}
+function applyGravity(){for(var c=0;c<SIZE;c++){var stack=[],r,r2,k;for(r=SIZE-1;r>=0;r--)if(board[r*SIZE+c])stack.push(board[r*SIZE+c]);for(r2=SIZE-1,k=0;r2>=0;r2--,k++)board[r2*SIZE+c]=k<stack.length?stack[k]:randomCrop();}}
 
-  // ===== НАСТРОЙКИ ИГРЫ (меняются одной цифрой) =====
-  var SIZE = 6;               // поле 6x6
-  var NEED = 4;               // нужно в ряд
-  var MAX_ENERGY = 20;
-  var ENERGY_MS = 20000;      // 1 энергия за 20 сек — ТЕСТ, потом увеличим
-  var CROPS = [
-    { id: "wheat",  emoji: "🌾", chance: 50, price: 2 },
-    { id: "carrot", emoji: "🥕", chance: 30, price: 3 },
-    { id: "corn",   emoji: "🌽", chance: 20, price: 5 }
-  ];
-  // ===================================================
+async function resolveBoard(){
+ var lines=findLines();
+ while(lines.length){
+   var cells=matchedCells(lines); render(cells); await sleep(350);
+   lines.forEach(function(l){ game[l.crop]+=1; addXp(10); }); /* 👈 1 ряд = 1 ед. */
+   cells.forEach(function(i){board[i]=null;});
+   applyGravity(); render([]); await sleep(200); lines=findLines();
+ }
+ saveProfile(); render([]);
+}
+function isNeighbour(a,b){var ar=Math.floor(a/SIZE),ac=a%SIZE,br=Math.floor(b/SIZE),bc=b%SIZE;return Math.abs(ar-br)+Math.abs(ac-bc)===1;}
+async function onCell(i){
+ if(busy)return;
+ if(selected===-1){selected=i;render([]);return;}
+ if(selected===i){selected=-1;render([]);return;}
+ if(!isNeighbour(selected,i)){selected=i;render([]);return;}
+ if(game.energy<=0){alert("⚡ Энергия закончилась! Загляни в Задания или подожди.");selected=-1;render([]);return;}
+ busy=true;var a=selected;selected=-1;var tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);await sleep(200);
+ if(findLines().length){game.energy-=1;await resolveBoard();}
+ else{tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);}
+ busy=false;render([]);
+}
+function addXp(n){game.xp+=n;while(game.xp>=100){game.xp-=100;game.level+=1;game.energy=game.maxEnergy;alert("🎉 Новый уровень: "+game.level+"! Энергия восстановлена.");}}
 
-  var game = { coins: 100, xp: 0, level: 1, energy: MAX_ENERGY, wheat: 0, carrot: 0, corn: 0 };
-  var board = [];
-  var selected = -1;
-  var busy = false;
-  var lastEnergyAt = Date.now();
+/* Задания */
+var ORDER_TEMPLATES=[
+ {text:"Приготовить 1 🍞 хлеб",need:{bread:1},coins:45,xp:20},
+ {text:"Приготовить 2 🍞 хлеба",need:{bread:2},coins:100,xp:45},
+ {text:"Привезти 3 🌾 пшеницы",need:{wheat:3},coins:25,xp:15},
+ {text:"Привезти 2 🥕 моркови",need:{carrot:2},coins:30,xp:15},
+ {text:"Привезти 2 🌽 кукурузы",need:{corn:2},coins:45,xp:20},
+ {text:"Собрать 3 🥚 яйца",need:{eggs:3},coins:35,xp:15},
+ {text:"Смолоть 2 🫓 муки",need:{flour:2},coins:50,xp:25}
+];
+function newOrder(){return ORDER_TEMPLATES[Math.floor(Math.random()*ORDER_TEMPLATES.length)];}
+function ensureOrders(){while(orders.length<3)orders.push(newOrder());}
+function canDo(o){return Object.keys(o.need).every(function(k){return game[k]>=o.need[k];});}
 
-  function $(id) { return document.getElementById(id); }
-  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+/* Сохранение */
+function saveLocal(){localStorage.setItem("ferma_save3",JSON.stringify({game:game,board:board,orders:orders}));}
+var saveTimer=null;
+function saveProfile(){saveLocal();if(!db){$("status").textContent="Локальный режим";return;}clearTimeout(saveTimer);saveTimer=setTimeout(async function(){
+ var res=await db.from("players").upsert({user_key:userKey,coins:game.coins,xp:game.xp,level:game.level,wheat:game.wheat,carrot:game.carrot,corn:game.corn,energy:game.energy,max_energy:game.maxEnergy,chickens:game.chickens,regen_level:game.regenLevel,flour:game.flour,eggs:game.eggs,bread:game.bread,updated_at:new Date().toISOString()});
+ $("status").textContent=res.error?"Ошибка базы (игра работает локально)":"✓ Сохранено";if(res.error)console.error(res.error);
+},300);}
+async function loadProfile(){
+ try{var local=JSON.parse(localStorage.getItem("ferma_save3")||"null");if(local){if(local.game)game=Object.assign(game,local.game);if(local.board&&local.board.length===36)board=local.board;if(local.orders)orders=local.orders;}}catch(e){}
+ if(!board.length)newBoard(); ensureOrders(); render([]);
+ if(!db)return;
+ var res=await db.from("players").select("*").eq("user_key",userKey).maybeSingle();
+ if(!res.error&&res.data){["coins","xp","level","wheat","carrot","corn","flour","eggs","bread","energy","chickens"].forEach(function(k){if(res.data[k]!=null)game[k]=res.data[k];});if(res.data.max_energy)game.maxEnergy=res.data.max_energy;if(res.data.regen_level!=null)game.regenLevel=res.data.regen_level;$("status").textContent="✓ Подключено к базе";}
+ else if(!res.error)await saveProfile();
+ render([]);
+}
 
-  function randomCrop() {
-    var roll = Math.random() * 100, sum = 0;
-    for (var i = 0; i < CROPS.length; i++) {
-      sum += CROPS[i].chance;
-      if (roll < sum) return CROPS[i].id;
-    }
-    return CROPS[0].id;
-  }
-  function emojiOf(id) {
-    for (var i = 0; i < CROPS.length; i++) if (CROPS[i].id === id) return CROPS[i].emoji;
-    return "❓";
-  }
+function render(matched){
+ matched=matched||[];
+ $("coins").textContent=game.coins;$("xp").textContent=game.xp+"/100";$("lvl").textContent="Ур. "+game.level;
+ $("wheat-count").textContent=game.wheat;$("carrot-count").textContent=game.carrot;$("corn-count").textContent=game.corn;
+ $("egg-count").textContent=game.eggs;$("flour-count").textContent=game.flour;$("bread-count").textContent=game.bread;
+ $("energy-text").textContent=game.energy+"/"+game.maxEnergy;$("energy-fill").style.width=(game.energy/game.maxEnergy*100)+"%";
+ var box=$("board");box.innerHTML="";
+ board.forEach(function(id,i){var b=document.createElement("button");b.className="cell"+(i===selected?" selected":"")+(matched.indexOf(i)>=0?" matched":"");b.textContent=id?emojiOf(id):"";b.onclick=function(){onCell(i);};box.appendChild(b);});
+ /* двор */
+ var ready=Date.now()>=eggReadyAt;
+ $("btn-egg").disabled=!ready;$("chicken-emoji").textContent=ready?"🐔✨":"🐔";
+ $("chicken-info").textContent="Куриц: "+game.chickens+" · 1 сбор = "+game.chickens+" 🥚";
+ $("egg-hint").textContent=ready?"Яйца готовы!":"Следующие яйца через "+Math.max(1,Math.ceil((eggReadyAt-Date.now())/1000))+" сек (тест)";
+ $("btn-flour").disabled=game.wheat<3;$("btn-bread").disabled=!(game.flour>=1&&game.eggs>=1);
+ /* задания */
+ ensureOrders();var ob=$("orders");ob.innerHTML="";
+ orders.forEach(function(o,idx){var d=document.createElement("div");d.className="order";var ok=canDo(o);
+  d.innerHTML="<b>"+o.text+"</b><br>Награда: "+o.coins+"🪙 + "+o.xp+"⭐";
+  var btn=document.createElement("button");btn.className="action";btn.textContent=ok?"✅ Выполнить":"Не хватает ресурсов";btn.disabled=!ok;
+  btn.onclick=function(){Object.keys(o.need).forEach(function(k){game[k]-=o.need[k];});game.coins+=o.coins;addXp(o.xp);orders.splice(idx,1);ensureOrders();saveProfile();render([]);};
+  d.appendChild(btn);ob.appendChild(d);});
+ /* улучшения */
+ var up=[
+  {name:"⚡ Макс. энергия +5",desc:"Сейчас: "+game.maxEnergy,cost:100+ (game.maxEnergy-20)*40,buy:function(){game.maxEnergy+=5;game.energy+=5;}},
+  {name:"🐔 Курица +1",desc:"Сейчас: "+game.chickens+" — больше яиц за сбор",cost:100*game.chickens,buy:function(){game.chickens+=1;}},
+  {name:"⏩ Быстрое восстановление",desc:"Уровень: "+game.regenLevel+" — энергия возвращается быстрее",cost:120*(game.regenLevel+1),buy:function(){game.regenLevel+=1;}}
+ ];
+ var ub=$("upgrades");ub.innerHTML="";
+ up.forEach(function(u){var d=document.createElement("div");d.className="order";d.innerHTML="<b>"+u.name+"</b><br>"+u.desc;
+  var btn=document.createElement("button");btn.className="action";btn.textContent="Купить за "+u.cost+"🪙";btn.disabled=game.coins<u.cost;
+  btn.onclick=function(){if(game.coins<u.cost)return;game.coins-=u.cost;u.buy();saveProfile();render([]);};
+  d.appendChild(btn);ub.appendChild(d);});
+}
 
-  // Ищем все линии из NEED и больше одинаковых
-  function findMatches() {
-    var matched = {}, r, c, len, k;
-    for (r = 0; r < SIZE; r++) {           // по строкам
-      len = 1;
-      for (c = 1; c <= SIZE; c++) {
-        if (c < SIZE && board[r * SIZE + c] && board[r * SIZE + c] === board[r * SIZE + c - 1]) len++;
-        else {
-          if (len >= NEED) for (k = 1; k <= len; k++) matched[r * SIZE + c - k] = true;
-          len = 1;
-        }
-      }
-    }
-    for (c = 0; c < SIZE; c++) {           // по колонкам
-      len = 1;
-      for (r = 1; r <= SIZE; r++) {
-        if (r < SIZE && board[r * SIZE + c] && board[r * SIZE + c] === board[(r - 1) * SIZE + c]) len++;
-        else {
-          if (len >= NEED) for (k = 1; k <= len; k++) matched[(r - k) * SIZE + c] = true;
-          len = 1;
-        }
-      }
-    }
-    return Object.keys(matched).map(Number);
-  }
+$("btn-egg").onclick=function(){if(Date.now()<eggReadyAt)return;game.eggs+=game.chickens;addXp(5);eggReadyAt=Date.now()+15000;saveProfile();render([]);};
+$("btn-flour").onclick=function(){if(game.wheat<3)return;game.wheat-=3;game.flour+=1;addXp(10);saveProfile();render([]);};
+$("btn-bread").onclick=function(){if(!(game.flour>=1&&game.eggs>=1))return;game.flour-=1;game.eggs-=1;game.bread+=1;addXp(15);saveProfile();render([]);};
+$("btn-sell-bread").onclick=function(){if(!game.bread)return;game.coins+=game.bread*20;game.bread=0;saveProfile();render([]);};
+$("btn-sell").onclick=function(){var sum=0;CROPS.forEach(function(c){sum+=game[c.id]*c.price;game[c.id]=0;});if(!sum){alert("Склад пустой!");return;}game.coins+=sum;alert("💰 Продано на "+sum+"🪙");saveProfile();render([]);};
 
-  function newBoard() {
-    board = [];
-    for (var i = 0; i < SIZE * SIZE; i++) board.push(randomCrop());
-    // чтобы на старте не было готовых линий — просто пересобираем клетки линий
-    var m = findMatches(), guard = 0;
-    while (m.length && guard < 100) {
-      m.forEach(function (i) { board[i] = randomCrop(); });
-      m = findMatches(); guard++;
-    }
-  }
+document.querySelectorAll(".nav button").forEach(function(btn){btn.onclick=function(){
+ document.querySelectorAll(".nav button").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");
+ document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});$("page-"+btn.dataset.page).classList.add("active");
+};});
 
-  // Падение: пустые клетки уходят вверх, сверху падают новые
-  function applyGravity() {
-    for (var c = 0; c < SIZE; c++) {
-      var stack = [];
-      for (var r = SIZE - 1; r >= 0; r--) if (board[r * SIZE + c]) stack.push(board[r * SIZE + c]);
-      for (var r2 = SIZE - 1, k = 0; r2 >= 0; r2--, k++) {
-        board[r2 * SIZE + c] = k < stack.length ? stack[k] : randomCrop();
-      }
-    }
-  }
-
-  async function resolveBoard() {
-    var matches = findMatches();
-    while (matches.length) {
-      render(matches);
-      await sleep(350);
-      matches.forEach(function (i) {
-        game[board[i]] += 1;        // урожай на склад
-        addXp(2);
-        board[i] = null;
-      });
-      applyGravity();
-      render([]);
-      await sleep(200);
-      matches = findMatches();      // вдруг упала новая линия — собираем и её
-    }
-    saveProfile();
-    render([]);
-  }
-
-  function isNeighbour(a, b) {
-    var ar = Math.floor(a / SIZE), ac = a % SIZE, br = Math.floor(b / SIZE), bc = b % SIZE;
-    return Math.abs(ar - br) + Math.abs(ac - bc) === 1;
-  }
-
-  async function onCell(i) {
-    if (busy) return;
-    if (selected === -1) { selected = i; render([]); return; }
-    if (selected === i) { selected = -1; render([]); return; }
-    if (!isNeighbour(selected, i)) { selected = i; render([]); return; }
-
-    if (game.energy <= 0) { alert("⚡ Энергия закончилась! Подожди восстановления."); selected = -1; render([]); return; }
-
-    busy = true;
-    var a = selected; selected = -1;
-    var tmp = board[a]; board[a] = board[i]; board[i] = tmp;
-    render([]);
-    await sleep(200);
-
-    if (findMatches().length) {
-      game.energy -= 1;             // энергия — только за удачный ход
-      await resolveBoard();
-    } else {
-      tmp = board[a]; board[a] = board[i]; board[i] = tmp;   // ход не удался — вернуть обратно
-      render([]);
-    }
-    busy = false;
-    render([]);
-  }
-
-  function addXp(amount) {
-    game.xp += amount;
-    while (game.xp >= 100) {
-      game.xp -= 100; game.level += 1; game.energy = MAX_ENERGY;
-      alert("🎉 Новый уровень! Теперь вы " + game.level + "-го уровня! Энергия восстановлена.");
-    }
-  }
-
-  function tickEnergy() {
-    if (game.energy < MAX_ENERGY && Date.now() - lastEnergyAt >= ENERGY_MS) {
-      game.energy += 1; lastEnergyAt = Date.now(); saveLocal(); render([]);
-    }
-    if (game.energy >= MAX_ENERGY) lastEnergyAt = Date.now();
-  }
-
-  function saveLocal() { localStorage.setItem("ferma_save2", JSON.stringify({ game: game, board: board })); }
-
-  var saveTimer = null;
-  function saveProfile() {
-    saveLocal();
-    if (!db) { $("status").textContent = "Локальный режим"; return; }
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(async function () {
-      var res = await db.from("players").upsert({
-        user_key: userKey, coins: game.coins, xp: game.xp, level: game.level,
-        wheat: game.wheat, carrot: game.carrot, corn: game.corn, energy: game.energy,
-        updated_at: new Date().toISOString()
-      });
-      $("status").textContent = res.error ? "Ошибка сохранения (игра работает локально)" : "✓ Сохранено";
-      if (res.error) console.error(res.error);
-    }, 300);
-  }
-
-  async function loadProfile() {
-    try {
-      var local = JSON.parse(localStorage.getItem("ferma_save2") || "null");
-      if (local && local.game) { game = Object.assign(game, local.game); }
-      if (local && local.board && local.board.length === SIZE * SIZE) board = local.board;
-    } catch (e) {}
-    if (!board.length) newBoard();
-    render([]);
-
-    if (!db) { $("status").textContent = "Локальный режим"; return; }
-    var res = await db.from("players").select("*").eq("user_key", userKey).maybeSingle();
-    if (!res.error && res.data) {
-      game.coins = res.data.coins ?? game.coins;
-      game.xp = res.data.xp ?? 0; game.level = res.data.level ?? 1;
-      game.wheat = res.data.wheat ?? 0; game.carrot = res.data.carrot ?? 0;
-      game.corn = res.data.corn ?? 0; game.energy = res.data.energy ?? MAX_ENERGY;
-      $("status").textContent = "✓ Подключено к базе";
-    } else if (!res.error) { await saveProfile(); }
-    render([]);
-  }
-
-  function render(matched) {
-    $("coins").textContent = game.coins;
-    $("xp").textContent = game.xp + "/100";
-    $("lvl").textContent = "Ур. " + game.level;
-    $("wheat-count").textContent = game.wheat;
-    $("carrot-count").textContent = game.carrot;
-    $("corn-count").textContent = game.corn;
-    $("energy-text").textContent = game.energy + "/" + MAX_ENERGY;
-    $("energy-fill").style.width = (game.energy / MAX_ENERGY * 100) + "%";
-
-    var box = $("board"); box.innerHTML = "";
-    board.forEach(function (id, i) {
-      var b = document.createElement("button");
-      b.className = "cell" + (i === selected ? " selected" : "") + (matched.indexOf(i) >= 0 ? " matched" : "");
-      b.textContent = id ? emojiOf(id) : "";
-      b.onclick = function () { onCell(i); };
-      box.appendChild(b);
-    });
-  }
-
-  $("btn-sell").onclick = function () {
-    var sum = 0;
-    CROPS.forEach(function (crop) { sum += game[crop.id] * crop.price; game[crop.id] = 0; });
-    if (sum === 0) { alert("Склад пустой — сначала собери урожай на поле!"); return; }
-    game.coins += sum; addXp(5);
-    alert("💰 Продано на " + sum + " монет!");
-    saveProfile(); render([]);
-  };
-
-  setInterval(tickEnergy, 1000);
-  loadProfile();
+setInterval(function(){
+ if(game.energy<game.maxEnergy&&Date.now()-lastEnergyAt>=regenMs()){game.energy+=1;lastEnergyAt=Date.now();saveLocal();}
+ if(game.energy>=game.maxEnergy)lastEnergyAt=Date.now();
+ render([]);
+},1000);
+loadProfile();
 })();
 </script>
 </body>
