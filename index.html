@@ -28,8 +28,8 @@
   button.mini{width:38px;margin-top:0;padding:8px 0;font-size:18px}
   .page{display:none}.page.active{display:block}
   .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:#fffdf7;display:flex;border-top:1px solid #e5d6bd;z-index:10}
-  .nav button{flex:1;background:none;border:none;padding:9px 1px;font-size:10px;font-weight:700;color:#8a6a4f;cursor:pointer}
-  .nav button.active{color:#c96a35;background:#fbeed3}.nav .ico{display:block;font-size:20px}
+  .nav button{flex:1;background:none;border:none;padding:9px 0;font-size:9px;font-weight:700;color:#8a6a4f;cursor:pointer}
+  .nav button.active{color:#c96a35;background:#fbeed3}.nav .ico{display:block;font-size:19px}
   .row{display:flex;justify-content:space-between;align-items:center;gap:10px}.big{font-size:44px}
   .order{border:2px solid #ecd9b8;border-radius:12px;padding:12px;margin-bottom:10px}
   .lock{text-align:center;padding:24px 16px}.lock .big{display:block;margin-bottom:8px}
@@ -56,8 +56,9 @@
 <div class="modal-wrap" id="storage-modal"><div class="modal-box">
   <div style="font-size:48px">📦</div><h2>Склад заполнен!</h2>
   <p id="storage-modal-text">Мест больше нет.</p>
-  <p class="hint">Выбери количество кнопками − / + и продай лишнее по 1🪙 за штуку, чтобы освободить место.</p>
+  <p class="hint">Кнопками − / + выбери количество у каждого товара, потом нажми одну общую кнопку внизу — всё продастся вместе по 1🪙 за штуку.</p>
   <div id="storage-actions"></div>
+  <button class="action" id="storage-sell-all">Продать выбранное за 0🪙</button>
   <button class="action" id="storage-to-orders">📋 Перейти к заданиям</button>
   <button class="action" id="storage-to-upgrades">⬆️ Расширить склад</button>
   <label class="check"><input type="checkbox" id="storage-hide"> Больше не напоминать</label>
@@ -86,7 +87,7 @@
     <div class="card" id="content-animals" style="display:none">
       <h2>🐔 Курятник</h2>
       <div class="row"><span class="big" id="chicken-emoji">🐔</span><span id="chicken-info"></span></div>
-      <button class="action" id="btn-feed">🌾 Покормить — 1 пшеница + 1⚡</button>
+      <button class="action" id="btn-feed">🌾 Покормить — пшеница + 1⚡</button>
       <button class="action" id="btn-egg">🥚 Собрать яйца</button>
       <div class="hint" id="egg-hint"></div>
     </div>
@@ -96,7 +97,7 @@
     <div class="card" id="content-barn" style="display:none">
       <h2>🐄 Коровник</h2>
       <div class="row"><span class="big" id="cow-emoji">🐄</span><span id="cow-info"></span></div>
-      <button class="action" id="btn-feed-cow">🌽 Покормить — 1 кукуруза + 1⚡</button>
+      <button class="action" id="btn-feed-cow">🌽 Покормить — кукуруза + 1⚡</button>
       <button class="action" id="btn-milk">🥛 Собрать молоко</button>
       <div class="hint" id="milk-hint"></div>
     </div>
@@ -118,13 +119,16 @@
       <h2>🥖 Пекарня</h2>
       <button class="action" id="btn-bread">Испечь хлеб — 1 🫓 + 1 🥚 + 1⚡</button>
     </div>
+  </section>
 
+  <!-- ТАВЕРНА: ОТДЕЛЬНАЯ ВКЛАДКА -->
+  <section class="page" id="page-tavern">
     <div class="card lock" id="lock-tavern"><span class="big">🔒</span><b>Таверна откроется на 8 уровне</b></div>
     <div class="card" id="content-tavern" style="display:none">
       <h2>🍳 Таверна</h2>
       <button class="action" id="btn-omelet">Приготовить яичницу — 1 🥚 + 1⚡</button>
       <div class="hint" id="tavern-hint"></div>
-      <div class="hint">Готовится 2 минуты → попадает в очередь блюд → гость выкупает через 1 минуту за 40🪙. Готовые блюда на склад НЕ падают и в заданиях НЕ участвуют.</div>
+      <div class="hint">Готовится 2 минуты → попадает в очередь блюд → гость выкупает через 1 минуту за 40🪙. Готовые блюда на склад НЕ падают и в заданиях НЕ участвуют. Позже добавим сюда доставку и грузовик.</div>
     </div>
   </section>
 
@@ -150,6 +154,7 @@
   <button data-page="field" class="active"><span class="ico">🌾</span>Поле</button>
   <button data-page="animals"><span class="ico">🐄</span>Двор</button>
   <button data-page="factory"><span class="ico">🏭</span>Цехи</button>
+  <button data-page="tavern"><span class="ico">🍳</span>Таверна</button>
   <button data-page="orders"><span class="ico">📋</span>Задания</button>
   <button data-page="market"><span class="ico">🏪</span>Рынок</button>
   <button data-page="upgrades"><span class="ico">⬆️</span>Прокачка</button>
@@ -197,38 +202,52 @@ function goPage(name){
   if(name==="market"&&game.level>=10)loadMarket();
 }
 
-/* --- Склад: продажа с выбором количества --- */
+/* --- Склад: выбор количества и продажа ВСЕГО выбранного одной кнопкой --- */
 function renderStorageActions(){
-  var box=$("storage-actions");box.innerHTML="";var has=false;
+  var box=$("storage-actions");box.innerHTML="";var has=false,total=0;
   ITEM_KEYS.forEach(function(k){
     if(game[k]>0){
-      has=true; if(!sellQty[k]||sellQty[k]<1)sellQty[k]=1; if(sellQty[k]>game[k])sellQty[k]=game[k];
+      has=true;
+      if(sellQty[k]==null)sellQty[k]=1;
+      if(sellQty[k]>game[k])sellQty[k]=game[k];
+      if(sellQty[k]<0)sellQty[k]=0;
+      total+=sellQty[k];
       var d=document.createElement("div");d.className="store-row";
       d.innerHTML="<b>"+ITEMS[k]+": "+game[k]+" шт.</b>";
       var c=document.createElement("div");c.className="store-controls";
       var minus=document.createElement("button");minus.className="action mini";minus.textContent="−";
-      minus.onclick=function(){sellQty[k]=Math.max(1,sellQty[k]-1);renderStorageActions();};
+      minus.onclick=function(){sellQty[k]=Math.max(0,sellQty[k]-1);renderStorageActions();};
       var q=document.createElement("span");q.className="qty";q.textContent=sellQty[k];
       var plus=document.createElement("button");plus.className="action mini";plus.textContent="+";
       plus.onclick=function(){sellQty[k]=Math.min(game[k],sellQty[k]+1);renderStorageActions();};
       var all=document.createElement("button");all.className="action small";all.textContent="Всё";
       all.onclick=function(){sellQty[k]=game[k];renderStorageActions();};
-      var sell=document.createElement("button");sell.className="action small";sell.textContent="Продать за "+sellQty[k]+"🪙";
-      sell.onclick=function(){
-        var n=Math.min(sellQty[k],game[k]); if(n<1)return;
-        game[k]-=n;game.coins+=n;sellQty[k]=1;
-        showToast("Продано "+n+" шт. за "+n+"🪙. Склад: "+storageCount()+"/"+storageCap());
-        saveProfile();render([]);
-        $("storage-modal-text").textContent="Сейчас занято "+storageCount()+" из "+storageCap()+" мест.";
-        renderStorageActions();
-        if(freeSpace()>0)$("storage-modal").style.display="none";
-      };
-      c.appendChild(minus);c.appendChild(q);c.appendChild(plus);c.appendChild(all);c.appendChild(sell);
+      var none=document.createElement("button");none.className="action small";none.textContent="0";
+      none.onclick=function(){sellQty[k]=0;renderStorageActions();};
+      c.appendChild(minus);c.appendChild(q);c.appendChild(plus);c.appendChild(all);c.appendChild(none);
       d.appendChild(c);box.appendChild(d);
     }
   });
   if(!has)box.innerHTML="<div class='hint'>Склад пустой.</div>";
+  var btn=$("storage-sell-all");
+  if(btn){btn.textContent="Продать выбранное за "+total+"🪙";btn.disabled=total<=0;}
 }
+$("storage-sell-all").onclick=function(){
+  var total=0;
+  ITEM_KEYS.forEach(function(k){
+    var n=Math.min(sellQty[k]||0,game[k]||0);
+    if(n>0){game[k]-=n;total+=n;sellQty[k]=0;}
+  });
+  if(total<=0)return;
+  game.coins+=total;
+  showToast("Продано товаров: "+total+" шт. за "+total+"🪙. Склад: "+storageCount()+"/"+storageCap());
+  saveProfile();render([]);
+  if(freeSpace()>0){$("storage-modal").style.display="none";}
+  else{
+    $("storage-modal-text").textContent="Сейчас занято "+storageCount()+" из "+storageCap()+" мест.";
+    renderStorageActions();
+  }
+};
 function showStorageFull(){
   $("storage-modal-text").textContent="Сейчас занято "+storageCount()+" из "+storageCap()+" мест.";
   renderStorageActions();$("storage-modal").style.display="flex";
@@ -242,7 +261,7 @@ function unlocksFor(l){
   if(l===4)return ["🏭 Мельницу можно построить за 300🪙","🫓 Мука готовится 5 минут"];
   if(l===5)return ["🥖 Пекарню можно построить за 500🪙","📋 Сразу 3 задания"];
   if(l===7)return ["🐄 Коровник можно построить за 800🪙","🥛 Молоко через 10 минут"];
-  if(l===8)return ["🍳 Открыта Таверна — вкладка «Цехи»","🍳 Яичница: 1🥚 + 1⚡, готовится 2 минуты","🧑‍🍳 Гость выкупит блюдо через 1 минуту за 40🪙"];
+  if(l===8)return ["🍳 Открыта Таверна — отдельная вкладка внизу","🍳 Яичница: 1🥚 + 1⚡, готовится 2 минуты","🧑 Гость выкупит блюдо через 1 минуту за 40🪙"];
   if(l===10)return ["🏪 Открыт Рынок!","➡️ Продавай товары другим игрокам"];
   return ["⚡ Энергия восстановлена","⬆️ Загляни в «Прокачку»"];
 }
@@ -261,7 +280,6 @@ async function resolveBoard(){var lines=findLines();while(lines.length){var cell
 function isNeighbour(a,b){var ar=Math.floor(a/SIZE),ac=a%SIZE,br=Math.floor(b/SIZE),bc=b%SIZE;return Math.abs(ar-br)+Math.abs(ac-bc)===1;}
 async function onCell(i){if(busy)return;if(freeSpace()<=0){showStorageFull();selected=-1;render([]);return;}if(selected===-1){selected=i;render([]);return;}if(selected===i){selected=-1;render([]);return;}if(!isNeighbour(selected,i)){selected=i;render([]);return;}if(game.energy<=0){alert("⚡ Энергия закончилась!");selected=-1;render([]);return;}busy=true;var a=selected;selected=-1;var tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);await sleep(200);if(findLines().length){game.energy-=1;await resolveBoard();}else{tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);}busy=false;render([]);}
 
-/* Экономика заданий: пшеница < морковь < кукуруза < яйцо < молоко < мука < хлеб */
 function makeOrder(){
   var pool=[
     {text:"Привезти 3 🌾 пшеницы",need:{wheat:3},coins:24,xp:15},
@@ -361,19 +379,20 @@ function render(matched){
   if(sel){if(!sel.options.length)ITEM_KEYS.forEach(function(k){var o=document.createElement("option");o.value=k;sel.appendChild(o);});for(var oi=0;oi<sel.options.length;oi++){var key=sel.options[oi].value;sel.options[oi].textContent=ITEMS[key]+" (на складе: "+game[key]+")";}}
 
   if(game.boughtCoop){
-    /* ИСПРАВЛЕН БАГ: пока яйцо готовится (chickenFed>0) — кормить нельзя, даже если купила 2-ю курицу */
-    $("btn-feed").disabled=!(game.wheat>=1&&game.energy>=1&&chickenFed===0&&chickenReady===0);
+    $("btn-feed").disabled=!(game.wheat>=game.chickens&&game.energy>=1&&chickenFed===0&&chickenReady===0);
+    $("btn-feed").textContent="🌾 Покормить — "+game.chickens+" пшеницы + 1⚡";
     $("btn-egg").disabled=chickenReady===0||freeSpace()<=0;
     $("chicken-emoji").textContent=chickenReady>0?"🐔✨":"🐔";
     $("chicken-info").textContent="Куриц: "+game.chickens;
-    $("egg-hint").textContent=chickenReady>0?("Готово яиц: "+chickenReady+" — сначала забери их!"):chickenFed>0?("Готовится яйцо: "+chickenFed+" шт. Осталось "+Math.max(1,Math.ceil((eggReadyAt-Date.now())/1000))+" сек. Новое кормление будет доступно после сбора."):"Покорми: 1🌾 + 1⚡ на курицу → яйца через 3 минуты.";
+    $("egg-hint").textContent=chickenReady>0?("Готово яиц: "+chickenReady+" — сначала забери их!"):chickenFed>0?("Готовятся яйца: "+chickenFed+" шт. Осталось "+Math.max(1,Math.ceil((eggReadyAt-Date.now())/1000))+" сек. Новое кормление — после сбора."):"Покорми всех куриц сразу: пшеница по числу куриц + 1⚡ → яйца через 3 минуты.";
   }
   if(game.boughtBarn){
-    $("btn-feed-cow").disabled=!(game.corn>=1&&game.energy>=1&&cowFed===0&&cowReady===0);
+    $("btn-feed-cow").disabled=!(game.corn>=game.cows&&game.energy>=1&&cowFed===0&&cowReady===0);
+    $("btn-feed-cow").textContent="🌽 Покормить — "+game.cows+" кукурузы + 1⚡";
     $("btn-milk").disabled=cowReady===0||freeSpace()<=0;
     $("cow-emoji").textContent=cowReady>0?"🐄✨":"🐄";
     $("cow-info").textContent="Коров: "+game.cows;
-    $("milk-hint").textContent=cowReady>0?("Готово молока: "+cowReady+" — сначала забери!"):cowFed>0?("Молоко готовится. Осталось около "+Math.ceil((milkReadyAt-Date.now())/60000)+" мин. Новое кормление после сбора."):"Покорми: 1🌽 + 1⚡ на корову → молоко через 10 минут.";
+    $("milk-hint").textContent=cowReady>0?("Готово молока: "+cowReady+" — сначала забери!"):cowFed>0?("Молоко готовится. Осталось около "+Math.ceil((milkReadyAt-Date.now())/60000)+" мин. Новое кормление — после сбора."):"Покорми всех коров сразу: кукуруза по числу коров + 1⚡ → молоко через 10 минут.";
   }
   if(game.boughtMill){
     $("btn-flour").disabled=!(game.wheat>=3&&game.energy>=1&&!millBusy&&millReady===0);
@@ -396,7 +415,7 @@ function render(matched){
   var up=[
     {name:"📦 Склад +10 мест",desc:"Сейчас: "+storageCount()+"/"+storageCap(),cost:storageCost,locked:false,buy:function(){game.storageLevel+=1;}},
     {name:"⚡ Макс. энергия +5",desc:"Сейчас: "+game.maxEnergy,cost:100+(game.maxEnergy-20)*40,locked:false,buy:function(){game.maxEnergy+=5;game.energy+=5;}},
-    {name:"🐔 Курица +1",desc:"Сейчас: "+game.chickens+" — за одно кормление будет больше яиц, но кормить можно только когда предыдущие готовы и собраны",cost:100*game.chickens,locked:!game.boughtCoop,lockText:"🔒 Сначала построй курятник",buy:function(){game.chickens+=1;}},
+    {name:"🐔 Курица +1",desc:"Сейчас: "+game.chickens+" — за одно кормление будет больше яиц, но новое кормление только после сбора предыдущих",cost:100*game.chickens,locked:!game.boughtCoop,lockText:"🔒 Сначала построй курятник",buy:function(){game.chickens+=1;}},
     {name:"🐄 Корова +1",desc:"Сейчас: "+game.cows,cost:250*game.cows,locked:!game.boughtBarn,lockText:"🔒 Сначала построй коровник",buy:function(){game.cows+=1;}},
     {name:"⏩ Быстрое восстановление",desc:"Уровень: "+game.regenLevel,cost:120*(game.regenLevel+1),locked:false,buy:function(){game.regenLevel+=1;}}
   ];
@@ -413,15 +432,13 @@ $("btn-feed").onclick=function(){
   if(!game.boughtCoop||chickenFed>0||chickenReady>0)return;
   if(game.wheat<game.chickens){alert("Нужно пшеницы: "+game.chickens+" 🌾 — по 1 на курицу");return;}
   if(game.energy<1){alert("⚡ Нет энергии");return;}
-  game.energy-=1; /* энергия 1 раз за запуск партии, как ты просила: покормить животное = 1 энергия */
-  game.wheat-=game.chickens;
-  chickenFed=game.chickens;eggReadyAt=Date.now()+EGG_MS;
+  game.energy-=1;game.wheat-=game.chickens;chickenFed=game.chickens;eggReadyAt=Date.now()+EGG_MS;
   saveProfile();render([]);
 };
 $("btn-egg").onclick=function(){if(chickenReady<1)return;var take=Math.min(chickenReady,freeSpace());if(take<=0){showStorageFull();return;}game.eggs+=take;chickenReady-=take;addXp(5);saveProfile();render([]);};
 $("btn-feed-cow").onclick=function(){
   if(!game.boughtBarn||cowFed>0||cowReady>0)return;
-  if(game.corn<game.cows){alert("Нужно кукурузы: "+game.cows+" 🌽");return;}
+  if(game.corn<game.cows){alert("Нужно кукурузы: "+game.cows+" 🌽 — по 1 на корову");return;}
   if(game.energy<1){alert("⚡ Нет энергии");return;}
   game.energy-=1;game.corn-=game.cows;cowFed=game.cows;milkReadyAt=Date.now()+MILK_MS;
   saveProfile();render([]);
