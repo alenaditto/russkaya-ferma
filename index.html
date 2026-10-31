@@ -33,7 +33,6 @@
       box-shadow: 0 0 30px rgba(0,0,0,.1);
     }
 
-    /* Шапка */
     .header {
       display: flex;
       align-items: center;
@@ -41,48 +40,39 @@
       padding: 14px 16px;
     }
     .title { font-size: 22px; font-weight: 700; }
-    .resources { display: flex; gap: 14px; font-weight: 600; }
-    .res { display: flex; align-items: center; gap: 5px; background: var(--card);
-      padding: 6px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
     .lvl { background: var(--accent); color: #fff; padding: 7px 12px;
       border-radius: 18px; font-weight: 700; font-size: 14px; }
 
-    /* Контент */
-    .content { flex: 1; padding: 12px 16px 90px; }
+    .resources { display: flex; gap: 14px; font-weight: 600; padding: 0 16px 8px; }
+    .res { display: flex; align-items: center; gap: 5px; background: var(--card);
+      padding: 6px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
 
+    .content { flex: 1; padding: 12px 16px 90px; }
     .screen { display: none; flex-direction: column; gap: 12px; }
     .screen.active { display: flex; }
-
     .card { background: var(--card); border-radius: 16px; padding: 16px;
       box-shadow: 0 3px 10px rgba(0,0,0,.06); }
-
     .section-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
 
-    /* Грядки */
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .plot { background: #b9885a; border-radius: 14px; padding: 14px; text-align: center;
       min-height: 110px; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; cursor: pointer; transition: transform .12s, box-shadow .12s;
+      justify-content: center; cursor: pointer; transition: transform .12s;
       border: 3px solid #9c6f46; }
-    .plot:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,.15); }
+    .plot:hover { transform: translateY(-2px); }
     .plot .emoji { font-size: 42px; }
     .plot .label { margin-top: 6px; font-weight: 600; font-size: 13px; }
     .plot.empty { background: #c49a6c; border-style: dashed; }
 
-    /* Кнопки */
     button {
       font-family: inherit; font-weight: 700; border: none; border-radius: 12px;
       padding: 12px 16px; cursor: pointer; font-size: 15px; background: var(--accent);
       color: #fff; transition: filter .12s;
     }
     button:hover { filter: brightness(1.08); }
-    button.ghost { background: var(--card); color: var(--accent);
-      border: 2px solid var(--accent); }
     button:disabled { opacity: .45; cursor: not-allowed; }
-
     .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
 
-    /* Навигация */
     .nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 100%; max-width: 440px; background: var(--card); display: flex;
       border-top: 1px solid #e7dcc8; }
@@ -96,14 +86,15 @@
   <div class="app">
     <div class="header">
       <div class="title">🌾 Русская ферма</div>
-      <div class="lvl">Ур. 1</div>
+      <div class="lvl" id="lvl">Ур. 1</div>
     </div>
-    <div class="resources" style="padding: 0 16px 8px;">
-      <div class="res">🪙 <span id="coins">100</span></div>
+    <div class="resources">
+      <div class="res">🪙 <span id="coins">0</span></div>
       <div class="res">⭐ <span id="xp">0/100</span></div>
+      <div class="res">🌾 <span id="wheat-count">0</span></div>
+      <div class="res">🥚 <span id="egg-count">0</span></div>
     </div>
 
-    <!-- Экран: Ферма -->
     <main class="content">
       <section class="screen active" id="screen-farm">
         <div class="card">
@@ -157,37 +148,87 @@
     </nav>
   </div>
 
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const SUPABASE_URL = "https://ciwvncqfpjnjngsbcaie.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGpuam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    // Уникальный ключ игрока (сохраняем в браузере)
+    let userKey = localStorage.getItem("ferma_user_key");
+    if (!userKey) {
+      userKey = "u_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem("ferma_user_key", userKey);
+    }
+
     // ===== Состояние игры =====
     const game = {
-      coins: 100,
-      xp: 0,
-      level: 1,
-      wheat: 0,
-      flour: 0,
-      eggs: 0,
-      bread: 0,
+      coins: 100, xp: 0, level: 1,
+      wheat: 0, flour: 0, eggs: 0, bread: 0,
     };
 
-    // ===== Элементы =====
     const $ = (id) => document.getElementById(id);
+
+    // ===== Загрузка / создание профиля =====
+    async function loadProfile() {
+      const { data, error } = await supabase
+        .from("players")
+        .select("*")
+        .eq("user_key", userKey)
+        .maybeSingle();
+
+      if (error) { console.error(error); return; }
+
+      if (data) {
+        game.coins = data.coins ?? 100;
+        game.xp = data.xp ?? 0;
+        game.level = data.level ?? 1;
+        game.wheat = data.wheat ?? 0;
+        game.flour = data.flour ?? 0;
+        game.eggs = data.eggs ?? 0;
+        game.bread = data.bread ?? 0;
+      } else {
+        await saveProfile();
+      }
+      render();
+    }
+
+    async function saveProfile() {
+      const { error } = await supabase
+        .from("players")
+        .upsert({
+          user_key: userKey,
+          coins: game.coins,
+          xp: game.xp,
+          level: game.level,
+          wheat: game.wheat,
+          flour: game.flour,
+          eggs: game.eggs,
+          bread: game.bread,
+        });
+      if (error) console.error(error);
+    }
 
     // ===== Рендер =====
     function render() {
-      $('coins').textContent = game.coins;
-      $('xp').textContent = game.xp + '/100';
-      document.querySelector('.lvl').textContent = 'Ур. ' + game.level;
+      $("coins").textContent = game.coins;
+      $("xp").textContent = game.xp + "/100";
+      $("lvl").textContent = "Ур. " + game.level;
+      $("wheat-count").textContent = game.wheat;
+      $("egg-count").textContent = game.eggs;
       renderPlots();
       updateChicken();
     }
 
     // ===== Грядки =====
     function renderPlots() {
-      const plots = $('plots');
-      plots.innerHTML = '';
+      const plots = $("plots");
+      plots.innerHTML = "";
       for (let i = 0; i < 4; i++) {
-        const p = document.createElement('div');
-        p.className = 'plot empty';
+        const p = document.createElement("div");
+        p.className = "plot empty";
         p.innerHTML = '<span class="emoji">➕</span><span class="label">Посадить пшеницу</span>';
         p.onclick = () => plantWheat(p, i);
         plots.appendChild(p);
@@ -195,50 +236,54 @@
     }
 
     function plantWheat(plot, i) {
-      plot.className = 'plot';
+      plot.className = "plot";
       plot.innerHTML = '<span class="emoji">🌱</span><span class="label">Растёт…</span>';
       plot.onclick = null;
       setTimeout(() => {
         game.wheat += 1;
-        plot.className = 'plot';
+        plot.className = "plot";
         plot.innerHTML = '<span class="emoji">🌾</span><span class="label">Собрать пшеницу</span>';
         plot.onclick = () => {
-          plot.className = 'plot empty';
+          plot.className = "plot empty";
           plot.innerHTML = '<span class="emoji">➕</span><span class="label">Посадить пшеницу</span>';
           plot.onclick = () => plantWheat(plot, i);
           game.xp += 10;
+          saveProfile();
           render();
         };
+        saveProfile();
         render();
-      }, 3000); // 3 секунды для теста (потом сделаем реальные минуты)
+      }, 3000);
     }
 
     // ===== Курицы =====
     function updateChicken() {
-      $('chicken-emoji').textContent = game.eggs > 0 ? '🐔✨' : '🐔';
+      $("chicken-emoji").textContent = game.eggs > 0 ? "🐔✨" : "🐔";
     }
-    $('btn-egg').onclick = () => {
+    $("btn-egg").onclick = () => {
       game.eggs += 1;
       game.xp += 5;
-      $('btn-egg').disabled = true;
-      setTimeout(() => { $('btn-egg').disabled = false; }, 5000);
+      $("btn-egg").disabled = true;
+      setTimeout(() => { $("btn-egg").disabled = false; }, 5000);
+      saveProfile();
       render();
     };
 
     // ===== Мельница =====
-    $('btn-flour').onclick = () => {
+    $("btn-flour").onclick = () => {
       if (game.wheat >= 3) {
         game.wheat -= 3;
         game.flour += 1;
         game.xp += 15;
       } else {
-        alert('Не хватает пшеницы! Нужно 3 🌾');
+        alert("Не хватает пшеницы! Нужно 3 🌾");
       }
+      saveProfile();
       render();
     };
 
     // ===== Кухня =====
-    $('btn-bread').onclick = () => {
+    $("btn-bread").onclick = () => {
       if (game.flour >= 1 && game.eggs >= 1) {
         game.flour -= 1;
         game.eggs -= 1;
@@ -246,30 +291,30 @@
         game.coins += 20;
         game.xp += 25;
       } else {
-        alert('Нужны: 1 мука + 1 яйцо 🍞');
+        alert("Нужны: 1 мука + 1 яйцо 🍞");
       }
       checkLevelUp();
+      saveProfile();
       render();
     };
 
-    // ===== Уровни =====
     function checkLevelUp() {
       if (game.xp >= 100) {
         game.xp -= 100;
         game.level += 1;
-        alert('🎉 Новый уровень! Теперь вы ' + game.level + '-го уровня!');
+        alert("🎉 Новый уровень! Теперь вы " + game.level + "-го уровня!");
       }
     }
 
     // ===== Навигация =====
-    document.querySelectorAll('.nav button').forEach(btn => {
+    document.querySelectorAll(".nav button").forEach(btn => {
       btn.onclick = () => {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        $('screen-' + btn.dataset.screen).classList.add('active');
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        $("screen-" + btn.dataset.screen).classList.add("active");
       };
     });
 
-    render();
+    loadProfile();
   </script>
 </body>
 </html>
