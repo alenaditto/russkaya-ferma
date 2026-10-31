@@ -13,7 +13,6 @@
       --card: #fffdf7;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: "Segoe UI", system-ui, sans-serif;
       background: var(--bg);
@@ -22,7 +21,6 @@
       justify-content: center;
       min-height: 100vh;
     }
-
     .app {
       width: 100%;
       max-width: 440px;
@@ -32,53 +30,28 @@
       background: linear-gradient(#dcecc8 0%, #f3e8d6 35%);
       box-shadow: 0 0 30px rgba(0,0,0,.1);
     }
-
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-    }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
     .title { font-size: 22px; font-weight: 700; }
-    .lvl { background: var(--accent); color: #fff; padding: 7px 12px;
-      border-radius: 18px; font-weight: 700; font-size: 14px; }
-
+    .lvl { background: var(--accent); color: #fff; padding: 7px 12px; border-radius: 18px; font-weight: 700; font-size: 14px; }
     .resources { display: flex; gap: 14px; font-weight: 600; padding: 0 16px 8px; }
-    .res { display: flex; align-items: center; gap: 5px; background: var(--card);
-      padding: 6px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
-
+    .res { display: flex; align-items: center; gap: 5px; background: var(--card); padding: 6px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
     .content { flex: 1; padding: 12px 16px 90px; }
     .screen { display: none; flex-direction: column; gap: 12px; }
     .screen.active { display: flex; }
-    .card { background: var(--card); border-radius: 16px; padding: 16px;
-      box-shadow: 0 3px 10px rgba(0,0,0,.06); }
+    .card { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 3px 10px rgba(0,0,0,.06); }
     .section-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
-
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .plot { background: #b9885a; border-radius: 14px; padding: 14px; text-align: center;
-      min-height: 110px; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; cursor: pointer; transition: transform .12s;
-      border: 3px solid #9c6f46; }
+    .plot { background: #b9885a; border-radius: 14px; padding: 14px; text-align: center; min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform .12s; border: 3px solid #9c6f46; }
     .plot:hover { transform: translateY(-2px); }
     .plot .emoji { font-size: 42px; }
     .plot .label { margin-top: 6px; font-weight: 600; font-size: 13px; }
     .plot.empty { background: #c49a6c; border-style: dashed; }
-
-    button {
-      font-family: inherit; font-weight: 700; border: none; border-radius: 12px;
-      padding: 12px 16px; cursor: pointer; font-size: 15px; background: var(--accent);
-      color: #fff; transition: filter .12s;
-    }
+    button { font-family: inherit; font-weight: 700; border: none; border-radius: 12px; padding: 12px 16px; cursor: pointer; font-size: 15px; background: var(--accent); color: #fff; transition: filter .12s; }
     button:hover { filter: brightness(1.08); }
     button:disabled { opacity: .45; cursor: not-allowed; }
     .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
-
-    .nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 100%; max-width: 440px; background: var(--card); display: flex;
-      border-top: 1px solid #e7dcc8; }
-    .nav button { flex: 1; background: none; color: var(--dark); border-radius: 0;
-      padding: 14px 4px; display: flex; flex-direction: column; align-items: center;
-      gap: 3px; font-size: 12px; }
+    .nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; background: var(--card); display: flex; border-top: 1px solid #e7dcc8; }
+    .nav button { flex: 1; background: none; color: var(--dark); border-radius: 0; padding: 14px 4px; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; }
     .nav button .ico { font-size: 22px; }
   </style>
 </head>
@@ -148,47 +121,27 @@
     </nav>
   </div>
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://ciwvncqfpjnjngsbcaie.supabase.co";
     const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGpuam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
-
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    // Уникальный ключ игрока (сохраняем в браузере)
     let userKey = localStorage.getItem("ferma_user_key");
     if (!userKey) {
       userKey = "u_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
       localStorage.setItem("ferma_user_key", userKey);
     }
 
-    // ===== Состояние игры =====
-    const game = {
-      coins: 100, xp: 0, level: 1,
-      wheat: 0, flour: 0, eggs: 0, bread: 0,
-    };
-
+    const game = { coins: 100, xp: 0, level: 1, wheat: 0, flour: 0, eggs: 0, bread: 0 };
     const $ = (id) => document.getElementById(id);
 
-    // ===== Загрузка / создание профиля =====
     async function loadProfile() {
-      const { data, error } = await supabase
-        .from("players")
-        .select("*")
-        .eq("user_key", userKey)
-        .maybeSingle();
-
+      const { data, error } = await supabase.from("players").select("*").eq("user_key", userKey).maybeSingle();
       if (error) { console.error(error); return; }
-
       if (data) {
-        game.coins = data.coins ?? 100;
-        game.xp = data.xp ?? 0;
-        game.level = data.level ?? 1;
-        game.wheat = data.wheat ?? 0;
-        game.flour = data.flour ?? 0;
-        game.eggs = data.eggs ?? 0;
-        game.bread = data.bread ?? 0;
+        game.coins = data.coins ?? 100; game.xp = data.xp ?? 0; game.level = data.level ?? 1;
+        game.wheat = data.wheat ?? 0; game.flour = data.flour ?? 0; game.eggs = data.eggs ?? 0; game.bread = data.bread ?? 0;
       } else {
         await saveProfile();
       }
@@ -196,22 +149,13 @@
     }
 
     async function saveProfile() {
-      const { error } = await supabase
-        .from("players")
-        .upsert({
-          user_key: userKey,
-          coins: game.coins,
-          xp: game.xp,
-          level: game.level,
-          wheat: game.wheat,
-          flour: game.flour,
-          eggs: game.eggs,
-          bread: game.bread,
-        });
+      const { error } = await supabase.from("players").upsert({
+        user_key: userKey, coins: game.coins, xp: game.xp, level: game.level,
+        wheat: game.wheat, flour: game.flour, eggs: game.eggs, bread: game.bread,
+      });
       if (error) console.error(error);
     }
 
-    // ===== Рендер =====
     function render() {
       $("coins").textContent = game.coins;
       $("xp").textContent = game.xp + "/100";
@@ -222,7 +166,6 @@
       updateChicken();
     }
 
-    // ===== Грядки =====
     function renderPlots() {
       const plots = $("plots");
       plots.innerHTML = "";
@@ -247,66 +190,37 @@
           plot.className = "plot empty";
           plot.innerHTML = '<span class="emoji">➕</span><span class="label">Посадить пшеницу</span>';
           plot.onclick = () => plantWheat(plot, i);
-          game.xp += 10;
-          saveProfile();
-          render();
+          game.xp += 10; saveProfile(); render();
         };
-        saveProfile();
-        render();
+        saveProfile(); render();
       }, 3000);
     }
 
-    // ===== Курицы =====
-    function updateChicken() {
-      $("chicken-emoji").textContent = game.eggs > 0 ? "🐔✨" : "🐔";
-    }
+    function updateChicken() { $("chicken-emoji").textContent = game.eggs > 0 ? "🐔✨" : "🐔"; }
     $("btn-egg").onclick = () => {
-      game.eggs += 1;
-      game.xp += 5;
+      game.eggs += 1; game.xp += 5;
       $("btn-egg").disabled = true;
       setTimeout(() => { $("btn-egg").disabled = false; }, 5000);
-      saveProfile();
-      render();
+      saveProfile(); render();
     };
 
-    // ===== Мельница =====
     $("btn-flour").onclick = () => {
-      if (game.wheat >= 3) {
-        game.wheat -= 3;
-        game.flour += 1;
-        game.xp += 15;
-      } else {
-        alert("Не хватает пшеницы! Нужно 3 🌾");
-      }
-      saveProfile();
-      render();
+      if (game.wheat >= 3) { game.wheat -= 3; game.flour += 1; game.xp += 15; }
+      else { alert("Не хватает пшеницы! Нужно 3 🌾"); }
+      saveProfile(); render();
     };
 
-    // ===== Кухня =====
     $("btn-bread").onclick = () => {
       if (game.flour >= 1 && game.eggs >= 1) {
-        game.flour -= 1;
-        game.eggs -= 1;
-        game.bread += 1;
-        game.coins += 20;
-        game.xp += 25;
-      } else {
-        alert("Нужны: 1 мука + 1 яйцо 🍞");
-      }
-      checkLevelUp();
-      saveProfile();
-      render();
+        game.flour -= 1; game.eggs -= 1; game.bread += 1; game.coins += 20; game.xp += 25;
+      } else { alert("Нужны: 1 мука + 1 яйцо 🍞"); }
+      checkLevelUp(); saveProfile(); render();
     };
 
     function checkLevelUp() {
-      if (game.xp >= 100) {
-        game.xp -= 100;
-        game.level += 1;
-        alert("🎉 Новый уровень! Теперь вы " + game.level + "-го уровня!");
-      }
+      if (game.xp >= 100) { game.xp -= 100; game.level += 1; alert("🎉 Новый уровень! Теперь вы " + game.level + "-го уровня!"); }
     }
 
-    // ===== Навигация =====
     document.querySelectorAll(".nav button").forEach(btn => {
       btn.onclick = () => {
         document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
