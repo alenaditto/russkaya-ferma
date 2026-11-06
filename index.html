@@ -10,8 +10,7 @@
   body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f3e8d6;color:#5b4030}
   .app{max-width:440px;margin:0 auto;min-height:100vh;padding-bottom:84px}
   header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 6px}
-  h1{font-size:22px;margin:0}
-  .lvl{background:#c96a35;color:#fff;padding:7px 12px;border-radius:18px;font-weight:700}
+  h1{font-size:22px;margin:0}.lvl{background:#c96a35;color:#fff;padding:7px 12px;border-radius:18px;font-weight:700}
   .res{display:flex;flex-wrap:wrap;gap:8px 14px;padding:6px 16px;font-weight:600}
   .card{background:#fffdf7;border-radius:16px;padding:16px;margin:12px 16px 0;box-shadow:0 2px 8px rgba(90,60,30,.08)}
   .card h2{font-size:17px;margin:0 0 12px}
@@ -21,12 +20,9 @@
   .board{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
   .cell{aspect-ratio:1;border:none;border-radius:12px;cursor:pointer;font-size:30px;display:flex;align-items:center;justify-content:center;background:#e9dcc3;transition:transform .15s,background .15s}
   .cell:active{transform:scale(.92)}.cell.selected{background:#ffd98a;outline:3px solid #c96a35}.cell.matched{background:#b7e4a8;transform:scale(.85);opacity:.4}
-  .energy-bar{background:#e9dcc3;border-radius:10px;height:14px;overflow:hidden;margin-top:6px}
-  .energy-fill{background:#f0a13c;height:100%;transition:width .3s}
+  .energy-bar{background:#e9dcc3;border-radius:10px;height:14px;overflow:hidden;margin-top:6px}.energy-fill{background:#f0a13c;height:100%;transition:width .3s}
   button.action{background:#c96a35;color:#fff;border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer;width:100%;font-size:15px;margin-top:10px}
-  button.action:disabled{background:#cbb59d}
-  button.small{width:auto;margin-top:0;padding:8px 10px;font-size:13px}
-  button.mini{width:38px;margin-top:0;padding:8px 0;font-size:18px}
+  button.action:disabled{background:#cbb59d}button.small{width:auto;margin-top:0;padding:8px 10px;font-size:13px}button.mini{width:38px;margin-top:0;padding:8px 0;font-size:18px}
   .page{display:none}.page.active{display:block}
   .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:#fffdf7;display:flex;border-top:1px solid #e5d6bd;z-index:10}
   .nav button{flex:1;background:none;border:none;padding:9px 0;font-size:9px;font-weight:700;color:#8a6a4f;cursor:pointer}
@@ -34,16 +30,20 @@
   .row{display:flex;justify-content:space-between;align-items:center;gap:10px}.big{font-size:44px}
   .order{border:2px solid #ecd9b8;border-radius:12px;padding:12px;margin-bottom:10px}
   .lock{text-align:center;padding:24px 16px}.lock .big{display:block;margin-bottom:8px}
-  #toast{display:none;position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#5b4030;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:60;max-width:90%;text-align:center}
+  #toast{display:none;position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#5b4030;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:70;max-width:90%;text-align:center}
   .modal-wrap{display:none;position:fixed;inset:0;background:rgba(60,35,15,.55);z-index:50;align-items:flex-start;justify-content:center;padding:18px;overflow:auto}
   .modal-box{background:#fffdf7;border-radius:20px;padding:22px;max-width:390px;width:100%;text-align:center;margin:auto}
   .modal-box ul{text-align:left;line-height:1.9;padding-left:20px}
   select,input[type=number]{width:100%;padding:11px;border:2px solid #ecd9b8;border-radius:10px;font-size:15px;margin-top:8px;background:#fff}
   label{font-weight:700;font-size:13px}
   .store-row{border:2px solid #ecd9b8;border-radius:10px;padding:10px;margin-top:8px;text-align:left}
-  .store-controls{display:flex;align-items:center;gap:8px;margin-top:8px}
-  .qty{min-width:30px;text-align:center;font-weight:800}
-  .shelf{font-size:26px;letter-spacing:4px}
+  .store-controls{display:flex;align-items:center;gap:8px;margin-top:8px}.qty{min-width:30px;text-align:center;font-weight:800}.shelf{font-size:26px;letter-spacing:4px}
+  #bug-modal{z-index:80;background:rgba(35,55,25,.92)}
+  .bug-box{background:#f7ead0;border-radius:20px;padding:16px;max-width:420px;width:100%;margin:auto;text-align:center}
+  .bug-board{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;background:#6b4a2b;padding:8px;border-radius:14px;margin-top:10px}
+  .bug-cell{aspect-ratio:1;border:none;border-radius:50%;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);padding:0}
+  .bug-cell.empty{background:rgba(255,255,255,.08)}
+  .shooter{font-size:38px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -55,9 +55,8 @@
 </div></div>
 
 <div class="modal-wrap" id="storage-modal"><div class="modal-box">
-  <div style="font-size:48px">📦</div><h2>Склад заполнен!</h2>
-  <p id="storage-modal-text">Мест больше нет.</p>
-  <p class="hint">Кнопками − / + выбери количество у каждого товара, потом нажми одну общую кнопку внизу — всё продастся вместе по 1🪙 за штуку.</p>
+  <div style="font-size:48px">📦</div><h2>Склад заполнен!</h2><p id="storage-modal-text">Мест больше нет.</p>
+  <p class="hint">Кнопками − / + выбери количество у каждого товара, потом нажми общую кнопку — всё продастся вместе по 1🪙.</p>
   <div id="storage-actions"></div>
   <button class="action" id="storage-sell-all">Продать выбранное за 0🪙</button>
   <button class="action" id="storage-to-orders">📋 Перейти к заданиям</button>
@@ -65,111 +64,104 @@
   <button class="action" id="storage-close">Закрыть</button>
 </div></div>
 
+<!-- МИНИ-ИГРА: АТАКА ЖУКОВ -->
+<div class="modal-wrap" id="bug-modal"><div class="bug-box">
+  <div style="font-size:42px">🪲</div>
+  <h2 style="margin:4px 0">Атака жуков!</h2>
+  <div id="bug-info">Продержись 3 минуты!</div>
+  <div class="bug-board" id="bug-board"></div>
+  <div class="shooter">🧴 <span id="bug-current">🟢</span> ➡️ следующий: <span id="bug-next">🔴</span></div>
+  <div class="hint">Нажимай на колонку, куда стрелять из дезинсектора. Группа из 4+ жуков одного цвета отваливается.</div>
+  <button class="action" id="bug-surrender">Сдаться</button>
+</div></div>
+
 <div class="app">
   <header><h1>🌾 Русская ферма</h1><div class="lvl" id="lvl">Ур. 1</div></header>
-  <div class="res">
-    <span>🪙 <span id="coins">0</span></span>
-    <span>⭐ <span id="xp">0/0</span></span>
-    <span>⚡ <span id="energy-text">20/20</span></span>
-    <span>📦 <span id="storage-text">0/15</span></span>
-  </div>
+  <div class="res"><span>🪙 <span id="coins">0</span></span><span>⭐ <span id="xp">0/0</span></span><span>⚡ <span id="energy-text">20/20</span></span><span>📦 <span id="storage-text">0/15</span></span></div>
 
   <section class="page active" id="page-field">
     <div class="card"><h2>⚡ Энергия</h2><div class="energy-bar"><div class="energy-fill" id="energy-fill"></div></div>
-    <div class="hint" id="energy-hint">Ход, кормление, запуск производства и таверна = −1⚡. Энергия восстанавливается и пока ферма закрыта.</div></div>
+    <div class="hint" id="energy-hint">Энергия восстанавливается и пока ферма закрыта.</div></div>
     <div class="card"><h2>🌱 Поле — собери 4 в ряд!</h2><div class="board" id="board"></div>
-    <div class="hint">Нажми клетку, потом соседнюю. Если ходов нет — поле перемешается само.</div></div>
+    <div class="hint">🪲 Жук встречается с шансом 10%. Если собрать 4 жуков — начнётся атака на амбар!</div></div>
   </section>
 
   <section class="page" id="page-animals">
     <div class="card lock" id="lock-animals"><span class="big">🔒</span><b>Скотный двор откроется на 2 уровне</b></div>
     <div class="card lock" id="buy-coop" style="display:none"><span class="big">🐔</span><br><b>Курятник ещё не построен</b><button class="action" id="btn-buy-coop">Построить курятник — 150🪙</button></div>
-    <div class="card" id="content-animals" style="display:none">
-      <h2>🐔 Курятник</h2>
+    <div class="card" id="content-animals" style="display:none"><h2>🐔 Курятник</h2>
       <div class="row"><span class="big" id="chicken-emoji">🐔</span><span id="chicken-info"></span></div>
-      <button class="action" id="btn-feed">🌾 Покормить</button>
-      <button class="action" id="btn-egg">🥚 Собрать готовые яйца</button>
-      <div class="hint" id="egg-hint"></div>
-      <div class="missing" id="egg-missing"></div>
-    </div>
-
+      <button class="action" id="btn-feed">🌾 Покормить</button><button class="action" id="btn-egg">🥚 Собрать готовые яйца</button>
+      <div class="hint" id="egg-hint"></div><div class="missing" id="egg-missing"></div></div>
     <div class="card lock" id="lock-barn"><span class="big">🔒</span><b>Коровник: строительство откроется на 7 уровне</b></div>
     <div class="card lock" id="buy-barn" style="display:none"><span class="big">🐄</span><br><b>Коровник ещё не построен</b><button class="action" id="btn-buy-barn">Построить коровник — 600🪙</button></div>
-    <div class="card" id="content-barn" style="display:none">
-      <h2>🐄 Коровник</h2>
+    <div class="card" id="content-barn" style="display:none"><h2>🐄 Коровник</h2>
       <div class="row"><span class="big" id="cow-emoji">🐄</span><span id="cow-info"></span></div>
-      <button class="action" id="btn-feed-cow">🌽 Покормить</button>
-      <button class="action" id="btn-milk">🥛 Собрать готовое молоко</button>
-      <div class="hint" id="milk-hint"></div>
-      <div class="missing" id="milk-missing"></div>
-    </div>
+      <button class="action" id="btn-feed-cow">🌽 Покормить</button><button class="action" id="btn-milk">🥛 Собрать готовое молоко</button>
+      <div class="hint" id="milk-hint"></div><div class="missing" id="milk-missing"></div></div>
   </section>
 
   <section class="page" id="page-factory">
+    <div class="card lock" id="lock-juicer"><span class="big">🔒</span><b>Соковыжималка: строительство откроется на 3 уровне</b></div>
+    <div class="card lock" id="buy-juicer" style="display:none"><span class="big">🧃</span><br><b>Соковыжималка ещё не построена</b><button class="action" id="btn-buy-juicer">Построить соковыжималку — 200🪙</button></div>
+    <div class="card" id="content-juicer" style="display:none"><h2>🧃 Соковыжималка</h2>
+      <button class="action" id="btn-juice">Сделать морковный сок — 2 🥕 + 1⚡</button>
+      <button class="action" id="btn-juice-collect">🧃 Забрать готовый сок</button>
+      <div class="hint" id="juice-hint"></div><div class="missing" id="juice-missing"></div></div>
+
     <div class="card lock" id="lock-mill"><span class="big">🔒</span><b>Мельница: строительство откроется на 4 уровне</b></div>
     <div class="card lock" id="buy-mill" style="display:none"><span class="big">🏭</span><br><b>Мельница ещё не построена</b><button class="action" id="btn-buy-mill">Построить мельницу — 200🪙</button></div>
-    <div class="card" id="content-mill" style="display:none">
-      <h2>🏭 Мельница</h2>
-      <button class="action" id="btn-flour">Запустить муку — 3 🌾 + 1⚡</button>
-      <button class="action" id="btn-flour-collect">🫓 Забрать готовую муку</button>
-      <div class="hint" id="mill-hint"></div>
-      <div class="missing" id="mill-missing"></div>
-    </div>
+    <div class="card" id="content-mill" style="display:none"><h2>🏭 Мельница</h2>
+      <button class="action" id="btn-flour">Запустить пшеничную муку — 3 🌾 + 1⚡</button>
+      <button class="action" id="btn-flour-collect">🫓 Забрать пшеничную муку</button>
+      <button class="action" id="btn-cornflour">Запустить кукурузную муку — 3 🌽 + 1⚡ (с 7 ур.)</button>
+      <button class="action" id="btn-cornflour-collect">🌽 Забрать кукурузную муку</button>
+      <div class="hint" id="mill-hint"></div><div class="missing" id="mill-missing"></div></div>
 
     <div class="card lock" id="lock-bakery"><span class="big">🔒</span><b>Пекарня: строительство откроется на 5 уровне</b></div>
     <div class="card lock" id="buy-bakery" style="display:none"><span class="big">🥖</span><br><b>Пекарня ещё не построена</b><button class="action" id="btn-buy-bakery">Построить пекарню — 350🪙</button></div>
-    <div class="card" id="content-bakery" style="display:none">
-      <h2>🥖 Пекарня</h2>
+    <div class="card" id="content-bakery" style="display:none"><h2>🥖 Пекарня</h2>
       <button class="action" id="btn-bread">Поставить хлеб — 1 🫓 + 1 🥚 + 1⚡</button>
       <button class="action" id="btn-bread-collect">🍞 Забрать готовый хлеб</button>
-      <div class="hint" id="bread-hint"></div>
-      <div class="missing" id="bread-missing"></div>
-    </div>
+      <button class="action" id="btn-cornbread">Поставить кукурузный хлеб — 1 🌽мука + 1 🥛 + 1⚡ (с 7 ур.)</button>
+      <button class="action" id="btn-cornbread-collect">🫓 Забрать кукурузный хлеб</button>
+      <button class="action" id="btn-cake">Поставить морковный торт — 3 🥕 + 1 🥚 + 1 🥛 + 1⚡ (с 9 ур., только в таверну)</button>
+      <div class="hint" id="bread-hint"></div><div class="missing" id="bread-missing"></div></div>
   </section>
 
   <section class="page" id="page-tavern">
     <div class="card lock" id="lock-tavern"><span class="big">🔒</span><b>Таверна: строительство откроется на 8 уровне</b></div>
     <div class="card lock" id="buy-tavern" style="display:none"><span class="big">🍳</span><br><b>Таверна ещё не построена</b><button class="action" id="btn-buy-tavern">Построить таверну — 250🪙</button></div>
-    <div class="card" id="content-tavern" style="display:none">
-      <h2>🍳 Таверна</h2>
+    <div class="card" id="content-tavern" style="display:none"><h2>🍳 Таверна</h2>
       <button class="action" id="btn-omelet">Приготовить яичницу — 1 🥚 + 1⚡</button>
-      <div class="hint" id="tavern-hint"></div>
-      <div class="missing" id="tavern-missing"></div>
-      <div class="hint">Готовится 2 минуты → очередь блюд → гость выкупает через 1 минуту за 40🪙. Блюда на склад не падают и в заданиях не участвуют. Позже добавим сюда доставку и грузовик.</div>
-    </div>
+      <button class="action" id="btn-serve-juice">🧃 Подать морковный сок гостю — 1 сок</button>
+      <button class="action" id="btn-serve-cake">🍰 Подать морковный торт гостю</button>
+      <div class="hint" id="tavern-hint"></div><div class="missing" id="tavern-missing"></div>
+      <div class="hint">Гость выкупает блюдо через 1 минуту: яичница 40🪙, сок 60🪙, торт 180🪙. Блюда на склад не падают и в заданиях не участвуют.</div></div>
   </section>
 
   <section class="page" id="page-orders"><div class="card"><h2>📋 Задания</h2><div id="orders"></div>
     <button class="action" id="btn-replace-orders">🔄 Заменить все задания (бесплатно)</button>
     <button class="action" id="btn-replace-ad" disabled>📺 Вторая замена — смотреть рекламу (скоро)</button>
-    <div class="hint">Задания сами обновляются в 00:00 по Москве. Одна бесплатная замена в день, вторая — за рекламу или подписку (добавим позже).</div>
-  </div></section>
+    <div class="hint">Задания обновляются в 00:00 по Москве. Одна бесплатная замена в день.</div></div></section>
 
   <section class="page" id="page-market">
     <div class="card lock" id="lock-market"><span class="big">🔒</span><b>Рынок откроется на 10 уровне</b></div>
     <div id="content-market" style="display:none">
-      <div class="card">
-        <h2>🏪 Мои полки</h2>
-        <div class="shelf" id="market-shelves">🗄️</div>
-        <div class="hint" id="market-shelves-hint"></div>
+      <div class="card"><h2>🏪 Мои полки</h2><div class="shelf" id="market-shelves">▫️</div><div class="hint" id="market-shelves-hint"></div>
         <button class="action" id="btn-buy-shelf">Купить ещё полку</button>
         <label>Товар</label><select id="market-item"></select>
         <label>Количество</label><input type="number" id="market-qty" value="1" min="1">
         <label>Цена за всё, 🪙</label><input type="number" id="market-price" value="10" min="1">
-        <button class="action" id="btn-list">Выставить на свободную полку</button>
-        <div class="missing" id="market-missing"></div>
-      </div>
-      <div class="card">
-        <h2>🛒 Мои объявления</h2>
-        <div id="market-list"></div>
+        <button class="action" id="btn-list">Выставить на свободную полку</button><div class="missing" id="market-missing"></div></div>
+      <div class="card"><h2>🛒 Мои объявления</h2><div id="market-list"></div>
         <button class="action" id="btn-market-refresh">Обновить список</button>
-        <button class="action" id="btn-other-market" disabled>👀 Посмотреть рынок других игроков (скоро)</button>
-      </div>
+        <button class="action" id="btn-other-market" disabled>👀 Посмотреть рынок других игроков (скоро)</button></div>
     </div>
   </section>
 
   <section class="page" id="page-upgrades"><div class="card"><h2>⬆️ Улучшения</h2><div id="upgrades"></div>
-  <div class="hint">«Быстрое восстановление энергии»: цена удваивается после каждой покупки за день (60 → 120 → 240), в 00:00 по Москве снова 60.</div></div></section>
+  <div class="hint">«Быстрое восстановление»: 60 → 120 → 240🪙 за день, в 00:00 МСК снова 60.</div></div></section>
   <div id="status">Загрузка…</div>
 </div>
 
@@ -189,24 +181,23 @@
 "use strict";
 var SUPABASE_URL="https://ciwvncqfpjnjngsbcaie.supabase.co";
 var SUPABASE_ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpd3ZuY3FmcGluam5nc2JjYWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NDQ3NTEsImV4cCI6MjEwOTAyMDc1MX0.-48U3ZCM0hCwhs0HyFJsZ6jSk9tXcp-djFhNYAwImpU";
-var db=null; try{db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);}catch(e){console.error(e);}
+var db=null;try{db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);}catch(e){console.error(e);}
 var userKey=localStorage.getItem("ferma_user_key");
 if(!userKey){userKey="u_"+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("ferma_user_key",userKey);}
 
-var SIZE=6,NEED=4,OMELET_MS=120000,GUEST_MS=60000;
-var COST_COOP=150,COST_MILL=200,COST_BAKERY=350,COST_BARN=600,COST_TAVERN=250;
-var CROPS=[{id:"wheat",emoji:"🌾",chance:50},{id:"carrot",emoji:"🥕",chance:30},{id:"corn",emoji:"🌽",chance:20}];
-var ITEMS={wheat:"🌾 Пшеница",carrot:"🥕 Морковь",corn:"🌽 Кукуруза",eggs:"🥚 Яйца",milk:"🥛 Молоко",flour:"🫓 Мука",bread:"🍞 Хлеб"};
+var SIZE=6,NEED=4,OMELET_MS=120000,GUEST_MS=60000,JUICE_MS=180000,CAKE_MS=600000;
+var COST_COOP=150,COST_JUICER=200,COST_MILL=200,COST_BAKERY=350,COST_BARN=600,COST_TAVERN=250;
+var CROPS=[{id:"wheat",emoji:"🌾",chance:45},{id:"carrot",emoji:"🥕",chance:27},{id:"corn",emoji:"🌽",chance:18},{id:"beetle",emoji:"🪲",chance:10}];
+var ITEMS={wheat:"🌾 Пшеница",carrot:"🥕 Морковь",corn:"🌽 Кукуруза",eggs:"🥚 Яйца",milk:"🥛 Молоко",flour:"🫓 Пшеничная мука",juice:"🧃 Морковный сок",cornflour:"🌽 Кукурузная мука",bread:"🍞 Хлеб",cornbread:"🫓 Кукурузный хлеб"};
 var ITEM_KEYS=Object.keys(ITEMS);
 
-var game={coins:100,xp:0,level:1,energy:20,maxEnergy:20,chickens:1,cows:1,regenLevel:0,storageLevel:0,millLevel:1,bakeryLevel:1,marketSlots:1,wheat:0,carrot:0,corn:0,flour:0,eggs:0,milk:0,bread:0,boughtCoop:false,boughtMill:false,boughtBakery:false,boughtBarn:false,boughtTavern:false};
+var game={coins:100,xp:0,level:1,energy:20,maxEnergy:20,chickens:1,cows:1,regenLevel:0,storageLevel:0,millLevel:1,bakeryLevel:1,marketSlots:1,wheat:0,carrot:0,corn:0,flour:0,eggs:0,milk:0,bread:0,juice:0,cornflour:0,cornbread:0,boughtCoop:false,boughtJuicer:false,boughtMill:false,boughtBakery:false,boughtBarn:false,boughtTavern:false};
 var board=[],selected=-1,busy=false,lastEnergyAt=Date.now(),orders=[],sellQty={};
-var chickenPending=0,chickenReady=0,chickenDone=0,eggNextAt=0;
-var cowPending=0,cowReady=0,cowDone=0,milkNextAt=0;
-var millPending=0,millReady=0,millNextAt=0;
-var breadPending=0,breadReady=0,breadNextAt=0;
-var tavernCooking=false,tavernCookAt=0,tavernReady=0,tavernSellAt=0;
-var dayKey="",replaceUsed=0,regenBuysToday=0,ownListings=0,hadLocal=false;
+var chickenPending=0,chickenReady=0,chickenDone=0,eggNextAt=0,cowPending=0,cowReady=0,cowDone=0,milkNextAt=0;
+var juicePending=0,juiceReady=0,juiceNextAt=0,millPending=0,millReady=0,millNextAt=0,cornMillPending=0,cornMillReady=0,cornMillNextAt=0;
+var breadPending=0,breadReady=0,breadNextAt=0,cornBreadPending=0,cornBreadReady=0,cornBreadNextAt=0,cakePending=0,cakeReady=0,cakeNextAt=0;
+var tavernCooking=false,tavernCookAt=0,tavernQueue=[];
+var dayKey="",replaceUsed=0,regenBuysToday=0,ownListings=0,hadLocal=false,attackPending=false;
 
 function $(id){return document.getElementById(id);}
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
@@ -220,95 +211,35 @@ function emojiOf(id){for(var i=0;i<CROPS.length;i++)if(CROPS[i].id===id)return C
 function spendEnergy(){if(game.energy<1)return false;game.energy-=1;lastEnergyAt=Date.now();return true;}
 function showToast(t){var el=$("toast");el.textContent=t;el.style.display="block";setTimeout(function(){el.style.display="none";},3200);}
 function fmt(ms){var s=Math.max(1,Math.ceil(ms/1000));return s>=60?Math.ceil(s/60)+" мин":s+" сек";}
-function eggInterval(done){return Math.max(120000,180000-done*30000);}
-function milkInterval(done){return Math.max(480000,600000-done*60000);}
+function eggInterval(d){return Math.max(120000,180000-d*30000);}
+function milkInterval(d){return Math.max(480000,600000-d*60000);}
 function millMs(){return Math.max(120000,300000-(game.millLevel-1)*30000);}
 function breadMs(){return Math.max(240000,480000-(game.bakeryLevel-1)*30000);}
 function eggOrderQty(){return game.level<=8?1:game.level<=11?2:3;}
 function milkOrderQty(){return game.level<=9?1:game.level<=12?2:3;}
-function moscowDay(){
-  try{return new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Moscow",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}
-  catch(e){var d=new Date(Date.now()+3*3600000);return d.toISOString().slice(0,10);}
-}
-function goPage(name){
-  document.querySelectorAll(".nav button").forEach(function(b){b.classList.toggle("active",b.dataset.page===name);});
-  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
-  $("page-"+name).classList.add("active");
-  if(name==="market"&&game.level>=10)loadMarket();
-}
+function moscowDay(){try{return new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Moscow",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}catch(e){return new Date(Date.now()+3*3600000).toISOString().slice(0,10);}}
+function goPage(name){document.querySelectorAll(".nav button").forEach(function(b){b.classList.toggle("active",b.dataset.page===name);});document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});$("page-"+name).classList.add("active");if(name==="market"&&game.level>=10)loadMarket();}
+function missingText(need){var parts=[];Object.keys(need).forEach(function(k){var have=k==="energy"?game.energy:(game[k]||0);var lack=need[k]-have;if(lack>0)parts.push(lack+" "+(k==="energy"?"⚡ энергии":ITEMS[k]));});return parts.length?("Не хватает: "+parts.join(", ")):"";}
+function applyOfflineEnergy(){if(game.energy>=game.maxEnergy){lastEnergyAt=Date.now();return;}var elapsed=Date.now()-lastEnergyAt;if(elapsed<regenMs())return;var gain=Math.floor(elapsed/regenMs());game.energy=Math.min(game.maxEnergy,game.energy+gain);lastEnergyAt=game.energy>=game.maxEnergy?Date.now():lastEnergyAt+gain*regenMs();}
+function checkDaily(){var today=moscowDay();if(dayKey&&dayKey!==today){orders=[];ensureOrders();replaceUsed=0;regenBuysToday=0;showToast("🌅 Новый день! Задания обновлены.");}dayKey=today;}
 
-/* Чего не хватает: {wheat:3, eggs:1, energy:1} -> "Не хватает: 2 🌾, 1 ⚡" */
-function missingText(need){
-  var parts=[];
-  Object.keys(need).forEach(function(k){
-    var have=k==="energy"?game.energy:(game[k]||0);
-    var lack=need[k]-have;
-    if(lack>0)parts.push(lack+" "+(k==="energy"?"⚡ энергии":ITEMS[k]));
-  });
-  return parts.length?("Не хватает: "+parts.join(", ")):"";
-}
-
-/* --- Энергия офлайн --- */
-function applyOfflineEnergy(){
-  if(game.energy>=game.maxEnergy){lastEnergyAt=Date.now();return;}
-  var elapsed=Date.now()-lastEnergyAt;
-  if(elapsed<regenMs())return;
-  var gain=Math.floor(elapsed/regenMs());
-  game.energy=Math.min(game.maxEnergy,game.energy+gain);
-  lastEnergyAt=game.energy>=game.maxEnergy?Date.now():lastEnergyAt+gain*regenMs();
-}
-
-/* --- Смена суток 00:00 МСК --- */
-function checkDaily(){
-  var today=moscowDay();
-  if(dayKey&&dayKey!==today){
-    orders=[];ensureOrders();replaceUsed=0;regenBuysToday=0;
-    showToast("🌅 Новый день! Задания обновлены, замена заданий и цена энергии снова со старта.");
-  }
-  dayKey=today;
-}
-
-/* --- Склад --- */
-function renderStorageActions(){
-  var box=$("storage-actions");box.innerHTML="";var has=false,total=0;
-  ITEM_KEYS.forEach(function(k){
-    if(game[k]>0){
-      has=true;if(sellQty[k]==null)sellQty[k]=1;if(sellQty[k]>game[k])sellQty[k]=game[k];if(sellQty[k]<0)sellQty[k]=0;total+=sellQty[k];
-      var d=document.createElement("div");d.className="store-row";d.innerHTML="<b>"+ITEMS[k]+": "+game[k]+" шт.</b>";
-      var c=document.createElement("div");c.className="store-controls";
-      var minus=document.createElement("button");minus.className="action mini";minus.textContent="−";minus.onclick=function(){sellQty[k]=Math.max(0,sellQty[k]-1);renderStorageActions();};
-      var q=document.createElement("span");q.className="qty";q.textContent=sellQty[k];
-      var plus=document.createElement("button");plus.className="action mini";plus.textContent="+";plus.onclick=function(){sellQty[k]=Math.min(game[k],sellQty[k]+1);renderStorageActions();};
-      var all=document.createElement("button");all.className="action small";all.textContent="Всё";all.onclick=function(){sellQty[k]=game[k];renderStorageActions();};
-      var none=document.createElement("button");none.className="action small";none.textContent="0";none.onclick=function(){sellQty[k]=0;renderStorageActions();};
-      c.appendChild(minus);c.appendChild(q);c.appendChild(plus);c.appendChild(all);c.appendChild(none);d.appendChild(c);box.appendChild(d);
-    }
-  });
-  if(!has)box.innerHTML="<div class='hint'>Склад пустой.</div>";
-  var btn=$("storage-sell-all");btn.textContent="Продать выбранное за "+total+"🪙";btn.disabled=total<=0;
-}
-$("storage-sell-all").onclick=function(){
-  var total=0;
-  ITEM_KEYS.forEach(function(k){var n=Math.min(sellQty[k]||0,game[k]||0);if(n>0){game[k]-=n;total+=n;sellQty[k]=0;}});
-  if(total<=0)return;
-  game.coins+=total;showToast("Продано: "+total+" шт. за "+total+"🪙. Склад: "+storageCount()+"/"+storageCap());
-  saveProfile();render([]);
-  if(freeSpace()>0)$("storage-modal").style.display="none";
-  else{$("storage-modal-text").textContent="Сейчас занято "+storageCount()+" из "+storageCap()+" мест.";renderStorageActions();}
-};
+function renderStorageActions(){var box=$("storage-actions");box.innerHTML="";var has=false,total=0;ITEM_KEYS.forEach(function(k){if(game[k]>0){has=true;if(sellQty[k]==null)sellQty[k]=1;if(sellQty[k]>game[k])sellQty[k]=game[k];if(sellQty[k]<0)sellQty[k]=0;total+=sellQty[k];var d=document.createElement("div");d.className="store-row";d.innerHTML="<b>"+ITEMS[k]+": "+game[k]+" шт.</b>";var c=document.createElement("div");c.className="store-controls";var minus=document.createElement("button");minus.className="action mini";minus.textContent="−";minus.onclick=function(){sellQty[k]=Math.max(0,sellQty[k]-1);renderStorageActions();};var q=document.createElement("span");q.className="qty";q.textContent=sellQty[k];var plus=document.createElement("button");plus.className="action mini";plus.textContent="+";plus.onclick=function(){sellQty[k]=Math.min(game[k],sellQty[k]+1);renderStorageActions();};var all=document.createElement("button");all.className="action small";all.textContent="Всё";all.onclick=function(){sellQty[k]=game[k];renderStorageActions();};var none=document.createElement("button");none.className="action small";none.textContent="0";none.onclick=function(){sellQty[k]=0;renderStorageActions();};c.appendChild(minus);c.appendChild(q);c.appendChild(plus);c.appendChild(all);c.appendChild(none);d.appendChild(c);box.appendChild(d);}});if(!has)box.innerHTML="<div class='hint'>Склад пустой.</div>";var btn=$("storage-sell-all");btn.textContent="Продать выбранное за "+total+"🪙";btn.disabled=total<=0;}
+$("storage-sell-all").onclick=function(){var total=0;ITEM_KEYS.forEach(function(k){var n=Math.min(sellQty[k]||0,game[k]||0);if(n>0){game[k]-=n;total+=n;sellQty[k]=0;}});if(total<=0)return;game.coins+=total;showToast("Продано: "+total+" шт. за "+total+"🪙");saveProfile();render([]);if(freeSpace()>0)$("storage-modal").style.display="none";else{$("storage-modal-text").textContent="Сейчас занято "+storageCount()+" из "+storageCap()+" мест.";renderStorageActions();}};
 function showStorageFull(){$("storage-modal-text").textContent="Сейчас занято "+storageCount()+" из "+storageCap()+" мест.";renderStorageActions();$("storage-modal").style.display="flex";}
 $("storage-close").onclick=function(){$("storage-modal").style.display="none";};
 $("storage-to-orders").onclick=function(){$("storage-modal").style.display="none";goPage("orders");};
 $("storage-to-upgrades").onclick=function(){$("storage-modal").style.display="none";goPage("upgrades");};
 
 function unlocksFor(l){
-  if(l===2)return ["🐄 Открыт Скотный двор","➡️ 🐔 Курятник — 150🪙, вкладка «Двор»","📋 Сразу 2 задания"];
-  if(l===4)return ["🏭 Мельницу можно построить за 200🪙","🫓 Мука готовится по очереди, улучшение мельницы ускоряет её"];
+  if(l===2)return ["🐄 Открыт Скотный двор","➡️ 🐔 Курятник — 150🪙","📋 Сразу 2 задания"];
+  if(l===3)return ["🧃 Соковыжималку можно построить за 200🪙 — вкладка «Цехи»","🧃 Морковный сок нужен в задания и в таверну"];
+  if(l===4)return ["🏭 Мельницу можно построить за 200🪙","🫓 Мука готовится по очереди"];
   if(l===5)return ["🥖 Пекарню можно построить за 350🪙","🍞 Хлеб готовится 8 минут","📋 Сразу 3 задания"];
-  if(l===7)return ["🐄 Коровник можно построить за 600🪙","🥛 Молоко по очереди: 10, 9, 8 минут"];
-  if(l===8)return ["🍳 Таверну можно построить за 250🪙 — отдельная вкладка","🍳 Яичница: 2 минуты готовки, гость платит 40🪙"];
-  if(l===9)return ["📋 Теперь сразу 4 задания!","✨ Больше заданий — быстрее заработок"];
+  if(l===7)return ["🐄 Коровник можно построить за 600🪙","🌽 В мельнице — кукурузная мука, в пекарне — кукурузный хлеб"];
+  if(l===8)return ["🍳 Таверну можно построить за 250🪙 — отдельная вкладка","🍳 Яичница и морковный сок для гостей"];
+  if(l===9)return ["📋 Теперь сразу 4 задания!","🍰 В пекарне — морковный торт только для таверны: 3🥕 + 1🥚 + 1🥛"];
   if(l===10)return ["🏪 Открыт Рынок!","➡️ Сначала 1 полка, остальные покупаются на рынке"];
+  if(l===15)return ["🐴 Скоро: конюшня и скачки!","✨ Эта мини-игра у нас в планах"];
   return ["⚡ Энергия восстановлена","⬆️ Загляни в «Прокачку»"];
 }
 function showLevelModal(l){$("modal-title").textContent="Ура! Вы достигли "+l+" уровня!";var ul=$("modal-list");ul.innerHTML="";unlocksFor(l).forEach(function(t){var li=document.createElement("li");li.textContent=t;ul.appendChild(li);});$("modal").style.display="flex";}
@@ -322,21 +253,18 @@ function shuffleBoard(){var g=0;do{for(var i=board.length-1;i>0;i--){var j=Math.
 function ensurePlayable(){if(board.length&&!findLines().length&&!hasPossibleMove()){shuffleBoard();showToast("🔀 На поле не было ходов — оно перемешалось само!");saveLocal();}}
 function newBoard(){board=[];for(var i=0;i<SIZE*SIZE;i++)board.push(randomCrop());var g=0;while((findLines().length||!hasPossibleMove())&&g<100){matchedCells(findLines()).forEach(function(i){board[i]=randomCrop();});if(!findLines().length&&!hasPossibleMove())shuffleBoard();g++;}}
 function applyGravity(){for(var c=0;c<SIZE;c++){var stack=[],r,r2,k;for(r=SIZE-1;r>=0;r--)if(board[r*SIZE+c])stack.push(board[r*SIZE+c]);for(r2=SIZE-1,k=0;r2>=0;r2--,k++)board[r2*SIZE+c]=k<stack.length?stack[k]:randomCrop();}}
-async function resolveBoard(){var lines=findLines();while(lines.length){var cells=matchedCells(lines);render(cells);await sleep(350);lines.forEach(function(l){if(freeSpace()>0){game[l.crop]+=1;addXp(10);}else{showStorageFull();}});cells.forEach(function(i){board[i]=null;});applyGravity();render([]);await sleep(200);lines=findLines();}ensurePlayable();saveProfile();render([]);}
+async function resolveBoard(){var lines=findLines();while(lines.length){var cells=matchedCells(lines);render(cells);await sleep(350);lines.forEach(function(l){if(l.crop==="beetle"){attackPending=true;}else if(freeSpace()>0){game[l.crop]+=1;addXp(10);}else{showStorageFull();}});cells.forEach(function(i){board[i]=null;});applyGravity();render([]);await sleep(200);lines=findLines();}ensurePlayable();saveProfile();render([]);if(attackPending){attackPending=false;setTimeout(startBugGame,400);}}
 function isNeighbour(a,b){var ar=Math.floor(a/SIZE),ac=a%SIZE,br=Math.floor(b/SIZE),bc=b%SIZE;return Math.abs(ar-br)+Math.abs(ac-bc)===1;}
-async function onCell(i){if(busy)return;if(freeSpace()<=0){showStorageFull();selected=-1;render([]);return;}if(selected===-1){selected=i;render([]);return;}if(selected===i){selected=-1;render([]);return;}if(!isNeighbour(selected,i)){selected=i;render([]);return;}if(game.energy<=0){alert("⚡ Энергия закончилась!");selected=-1;render([]);return;}busy=true;var a=selected;selected=-1;var tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);await sleep(200);if(findLines().length){game.energy-=1;lastEnergyAt=Date.now();await resolveBoard();}else{tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);}busy=false;render([]);}
+async function onCell(i){if(busy||bugActive)return;if(freeSpace()<=0&&board[i]!=="beetle"){showStorageFull();selected=-1;render([]);return;}if(selected===-1){selected=i;render([]);return;}if(selected===i){selected=-1;render([]);return;}if(!isNeighbour(selected,i)){selected=i;render([]);return;}if(game.energy<=0){alert("⚡ Энергия закончилась!");selected=-1;render([]);return;}busy=true;var a=selected;selected=-1;var tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);await sleep(200);if(findLines().length){game.energy-=1;lastEnergyAt=Date.now();await resolveBoard();}else{tmp=board[a];board[a]=board[i];board[i]=tmp;render([]);}busy=false;render([]);}
 
 function makeOrder(){
-  var pool=[
-    {text:"Привезти 3 🌾 пшеницы",need:{wheat:3},coins:24,xp:15},
-    {text:"Привезти 5 🌾 пшеницы",need:{wheat:5},coins:45,xp:20},
-    {text:"Привезти 2 🥕 моркови",need:{carrot:2},coins:26,xp:15},
-    {text:"Привезти 2 🌽 кукурузы",need:{corn:2},coins:36,xp:20}
-  ];
+  var pool=[{text:"Привезти 3 🌾 пшеницы",need:{wheat:3},coins:24,xp:15},{text:"Привезти 5 🌾 пшеницы",need:{wheat:5},coins:45,xp:20},{text:"Привезти 2 🥕 моркови",need:{carrot:2},coins:26,xp:15},{text:"Привезти 2 🌽 кукурузы",need:{corn:2},coins:36,xp:20}];
   if(game.boughtCoop){var eq=eggOrderQty();pool.push({text:"Привезти "+eq+" 🥚",need:{eggs:eq},coins:35*eq,xp:12*eq});}
-  if(game.boughtMill)pool.push({text:"Смолоть 1 🫓 муку",need:{flour:1},coins:70,xp:25});
+  if(game.boughtJuicer)pool.push({text:"Сделать 1 🧃 морковный сок",need:{juice:1},coins:60,xp:25});
+  if(game.boughtMill)pool.push({text:"Смолоть 1 🫓 пшеничную муку",need:{flour:1},coins:70,xp:25});
+  if(game.level>=7&&game.boughtMill)pool.push({text:"Смолоть 1 🌽 кукурузную муку",need:{cornflour:1},coins:85,xp:30});
   if(game.boughtBarn){var mq=milkOrderQty();pool.push({text:"Привезти "+mq+" 🥛 молока",need:{milk:mq},coins:50*mq,xp:15*mq});}
-  if(game.boughtBakery){pool.push({text:"Испечь 1 🍞 хлеб",need:{bread:1},coins:120,xp:35});if(game.level>=8)pool.push({text:"Испечь 2 🍞 хлеба",need:{bread:2},coins:260,xp:70});}
+  if(game.boughtBakery){pool.push({text:"Испечь 1 🍞 хлеб",need:{bread:1},coins:120,xp:35});if(game.level>=7)pool.push({text:"Испечь 1 кукурузный хлеб",need:{cornbread:1},coins:150,xp:45});if(game.level>=8)pool.push({text:"Испечь 2 🍞 хлеба",need:{bread:2},coins:260,xp:70});}
   return pool[Math.floor(Math.random()*pool.length)];
 }
 function orderLimit(){return game.level>=9?4:game.level>=5?3:game.level>=2?2:1;}
@@ -344,245 +272,160 @@ function sanitizeOrders(){orders=(orders||[]).filter(function(o){return o&&o.nee
 function ensureOrders(){sanitizeOrders();while(orders.length<orderLimit())orders.push(makeOrder());if(orders.length>orderLimit())orders.length=orderLimit();}
 function canDo(o){return Object.keys(o.need).every(function(k){return game[k]>=o.need[k];});}
 
-/* Очереди: следующий продукт запускается САМ, по расписанию, без сбора предыдущего */
 function updateProduction(){
-  var now=Date.now(),changed=false,guard;
-  guard=0;
-  while(chickenPending>0&&eggNextAt&&now>=eggNextAt&&guard<50){
-    chickenPending--;chickenReady++;chickenDone++;
-    eggNextAt=chickenPending>0?eggNextAt+eggInterval(chickenDone):0;guard++;changed=true;
-  }
-  guard=0;
-  while(cowPending>0&&milkNextAt&&now>=milkNextAt&&guard<50){
-    cowPending--;cowReady++;cowDone++;
-    milkNextAt=cowPending>0?milkNextAt+milkInterval(cowDone):0;guard++;changed=true;
-  }
-  guard=0;
-  while(millPending>0&&millNextAt&&now>=millNextAt&&guard<50){
-    millPending--;millReady++;
-    millNextAt=millPending>0?millNextAt+millMs():0;guard++;changed=true;
-  }
-  guard=0;
-  while(breadPending>0&&breadNextAt&&now>=breadNextAt&&guard<50){
-    breadPending--;breadReady++;
-    breadNextAt=breadPending>0?breadNextAt+breadMs():0;guard++;changed=true;
-  }
-  if(tavernCooking&&tavernCookAt&&now>=tavernCookAt){
-    tavernCooking=false;tavernCookAt=0;tavernReady++;if(!tavernSellAt)tavernSellAt=now+GUEST_MS;changed=true;showToast("🍳 Яичница готова! Гость придёт через 1 минуту.");
-  }
-  if(tavernReady>0&&tavernSellAt&&now>=tavernSellAt){
-    tavernReady--;game.coins+=40;addXp(15);tavernSellAt=tavernReady>0?tavernSellAt+GUEST_MS:0;changed=true;showToast("🧑 Гость съел яичницу и заплатил 40🪙!");
-    if(tavernSellAt&&tavernSellAt<=now&&tavernReady===0)tavernSellAt=0;
-  }
+  var now=Date.now(),changed=false,g;
+  g=0;while(chickenPending>0&&eggNextAt&&now>=eggNextAt&&g<50){chickenPending--;chickenReady++;chickenDone++;eggNextAt=chickenPending>0?eggNextAt+eggInterval(chickenDone):0;g++;changed=true;}
+  g=0;while(cowPending>0&&milkNextAt&&now>=milkNextAt&&g<50){cowPending--;cowReady++;cowDone++;milkNextAt=cowPending>0?milkNextAt+milkInterval(cowDone):0;g++;changed=true;}
+  g=0;while(juicePending>0&&juiceNextAt&&now>=juiceNextAt&&g<50){juicePending--;juiceReady++;juiceNextAt=juicePending>0?juiceNextAt+JUICE_MS:0;g++;changed=true;}
+  g=0;while(millPending>0&&millNextAt&&now>=millNextAt&&g<50){millPending--;millReady++;millNextAt=millPending>0?millNextAt+millMs():0;g++;changed=true;}
+  g=0;while(cornMillPending>0&&cornMillNextAt&&now>=cornMillNextAt&&g<50){cornMillPending--;cornMillReady++;cornMillNextAt=cornMillPending>0?cornMillNextAt+millMs():0;g++;changed=true;}
+  g=0;while(breadPending>0&&breadNextAt&&now>=breadNextAt&&g<50){breadPending--;breadReady++;breadNextAt=breadPending>0?breadNextAt+breadMs():0;g++;changed=true;}
+  g=0;while(cornBreadPending>0&&cornBreadNextAt&&now>=cornBreadNextAt&&g<50){cornBreadPending--;cornBreadReady++;cornBreadNextAt=cornBreadPending>0?cornBreadNextAt+breadMs():0;g++;changed=true;}
+  g=0;while(cakePending>0&&cakeNextAt&&now>=cakeNextAt&&g<50){cakePending--;cakeReady++;cakeNextAt=cakePending>0?cakeNextAt+CAKE_MS:0;g++;changed=true;showToast("🍰 Морковный торт готов! Подай его в таверне.");}
+  if(tavernCooking&&tavernCookAt&&now>=tavernCookAt){tavernCooking=false;tavernCookAt=0;tavernQueue.push({name:"🍳 Яичница",price:40,sellAt:now+GUEST_MS});changed=true;showToast("🍳 Яичница готова! Гость придёт через 1 минуту.");}
+  while(tavernQueue.length&&tavernQueue[0].sellAt<=now){var dish=tavernQueue.shift();game.coins+=dish.price;addXp(15);changed=true;showToast("🧑 Гость съел "+dish.name+" и заплатил "+dish.price+"🪙!");}
   if(changed)saveProfile();
 }
 
-function saveLocal(){localStorage.setItem("ferma_save3",JSON.stringify({game:game,board:board,orders:orders,energyAt:lastEnergyAt,day:dayKey,replaceUsed:replaceUsed,regenBuysToday:regenBuysToday,prod:{cp:chickenPending,cr:chickenReady,cd:chickenDone,ca:eggNextAt,wp:cowPending,wr:cowReady,wd:cowDone,wa:milkNextAt,mp:millPending,mr:millReady,ma:millNextAt,bp:breadPending,br:breadReady,ba:breadNextAt},tavern:{cooking:tavernCooking,at:tavernCookAt,ready:tavernReady,sellAt:tavernSellAt}}));}
+function saveLocal(){localStorage.setItem("ferma_save3",JSON.stringify({game:game,board:board,orders:orders,energyAt:lastEnergyAt,day:dayKey,replaceUsed:replaceUsed,regenBuysToday:regenBuysToday,prod:{cp:chickenPending,cr:chickenReady,cd:chickenDone,ca:eggNextAt,wp:cowPending,wr:cowReady,wd:cowDone,wa:milkNextAt,jp:juicePending,jr:juiceReady,ja:juiceNextAt,mp:millPending,mr:millReady,ma:millNextAt,cmp:cornMillPending,cmr:cornMillReady,cma:cornMillNextAt,bp:breadPending,br:breadReady,ba:breadNextAt,cbp:cornBreadPending,cbr:cornBreadReady,cba:cornBreadNextAt,kp:cakePending,kr:cakeReady,ka:cakeNextAt},tavern:{cooking:tavernCooking,at:tavernCookAt,queue:tavernQueue}}));}
 var saveTimer=null;
 function saveProfile(){saveLocal();if(!db){$("status").textContent="Локальный режим";return;}clearTimeout(saveTimer);saveTimer=setTimeout(async function(){
-  var res=await db.from("players").upsert({user_key:userKey,coins:game.coins,xp:game.xp,level:game.level,wheat:game.wheat,carrot:game.carrot,corn:game.corn,energy:game.energy,max_energy:game.maxEnergy,chickens:game.chickens,cows:game.cows,regen_level:game.regenLevel,storage_level:game.storageLevel,mill_level:game.millLevel,bakery_level:game.bakeryLevel,market_slots:game.marketSlots,flour:game.flour,eggs:game.eggs,milk:game.milk,bread:game.bread,bought_coop:game.boughtCoop,bought_mill:game.boughtMill,bought_bakery:game.boughtBakery,bought_barn:game.boughtBarn,bought_tavern:game.boughtTavern,updated_at:new Date().toISOString()});
+  var res=await db.from("players").upsert({user_key:userKey,coins:game.coins,xp:game.xp,level:game.level,wheat:game.wheat,carrot:game.carrot,corn:game.corn,energy:game.energy,max_energy:game.maxEnergy,chickens:game.chickens,cows:game.cows,regen_level:game.regenLevel,storage_level:game.storageLevel,mill_level:game.millLevel,bakery_level:game.bakeryLevel,market_slots:game.marketSlots,flour:game.flour,eggs:game.eggs,milk:game.milk,bread:game.bread,juice:game.juice,corn_flour:game.cornflour,corn_bread:game.cornbread,bought_coop:game.boughtCoop,bought_juicer:game.boughtJuicer,bought_mill:game.boughtMill,bought_bakery:game.boughtBakery,bought_barn:game.boughtBarn,bought_tavern:game.boughtTavern,updated_at:new Date().toISOString()});
   $("status").textContent=res.error?"Ошибка базы (игра работает локально)":"✓ Сохранено";if(res.error)console.error(res.error);
 },300);}
 async function loadProfile(){
-  try{var local=JSON.parse(localStorage.getItem("ferma_save3")||"null");
-    if(local){
-      hadLocal=true;
-      if(local.game)game=Object.assign(game,local.game);
-      if(local.board&&local.board.length===36)board=local.board;
-      if(local.orders)orders=local.orders;
-      if(local.energyAt)lastEnergyAt=local.energyAt;
-      if(local.day)dayKey=local.day;
-      replaceUsed=local.replaceUsed||0;regenBuysToday=local.regenBuysToday||0;
-      if(local.prod){chickenPending=local.prod.cp||0;chickenReady=local.prod.cr||0;chickenDone=local.prod.cd||0;eggNextAt=local.prod.ca||0;cowPending=local.prod.wp||0;cowReady=local.prod.wr||0;cowDone=local.prod.wd||0;milkNextAt=local.prod.wa||0;millPending=local.prod.mp||0;millReady=local.prod.mr||0;millNextAt=local.prod.ma||0;breadPending=local.prod.bp||0;breadReady=local.prod.br||0;breadNextAt=local.prod.ba||0;}
-      if(local.tavern){tavernCooking=!!local.tavern.cooking;tavernCookAt=local.tavern.at||0;tavernReady=local.tavern.ready||0;tavernSellAt=local.tavern.sellAt||0;}
-    }}catch(e){console.error(e);}
-  applyOfflineEnergy();
-  checkDaily();
-  if(!board.length)newBoard();ensurePlayable();ensureOrders();updateProduction();render([]);
+  try{var local=JSON.parse(localStorage.getItem("ferma_save3")||"null");if(local){hadLocal=true;if(local.game)game=Object.assign(game,local.game);if(local.board&&local.board.length===36)board=local.board;if(local.orders)orders=local.orders;if(local.energyAt)lastEnergyAt=local.energyAt;if(local.day)dayKey=local.day;replaceUsed=local.replaceUsed||0;regenBuysToday=local.regenBuysToday||0;if(local.prod){chickenPending=local.prod.cp||0;chickenReady=local.prod.cr||0;chickenDone=local.prod.cd||0;eggNextAt=local.prod.ca||0;cowPending=local.prod.wp||0;cowReady=local.prod.wr||0;cowDone=local.prod.wd||0;milkNextAt=local.prod.wa||0;juicePending=local.prod.jp||0;juiceReady=local.prod.jr||0;juiceNextAt=local.prod.ja||0;millPending=local.prod.mp||0;millReady=local.prod.mr||0;millNextAt=local.prod.ma||0;cornMillPending=local.prod.cmp||0;cornMillReady=local.prod.cmr||0;cornMillNextAt=local.prod.cma||0;breadPending=local.prod.bp||0;breadReady=local.prod.br||0;breadNextAt=local.prod.ba||0;cornBreadPending=local.prod.cbp||0;cornBreadReady=local.prod.cbr||0;cornBreadNextAt=local.prod.cba||0;cakePending=local.prod.kp||0;cakeReady=local.prod.kr||0;cakeNextAt=local.prod.ka||0;}if(local.tavern){tavernCooking=!!local.tavern.cooking;tavernCookAt=local.tavern.at||0;if(local.tavern.queue)tavernQueue=local.tavern.queue;else if(local.tavern.ready){for(var ti=0;ti<local.tavern.ready;ti++)tavernQueue.push({name:"🍳 Яичница",price:40,sellAt:Date.now()+GUEST_MS});}}}}catch(e){console.error(e);}
+  applyOfflineEnergy();checkDaily();if(!board.length)newBoard();ensurePlayable();ensureOrders();updateProduction();render([]);
   if(!db)return;
   var localEnergy=game.energy;
   var res=await db.from("players").select("*").eq("user_key",userKey).maybeSingle();
   if(!res.error&&res.data){
     ["coins","xp","level","wheat","carrot","corn","flour","eggs","milk","bread","chickens","cows"].forEach(function(k){if(res.data[k]!=null)game[k]=res.data[k];});
-    if(!hadLocal&&res.data.energy!=null)game.energy=res.data.energy;else game.energy=localEnergy;
+    if(res.data.juice!=null)game.juice=res.data.juice;if(res.data.corn_flour!=null)game.cornflour=res.data.corn_flour;if(res.data.corn_bread!=null)game.cornbread=res.data.corn_bread;
+    game.energy=hadLocal?localEnergy:(res.data.energy!=null?res.data.energy:game.energy);
     if(res.data.max_energy)game.maxEnergy=res.data.max_energy;if(res.data.regen_level!=null)game.regenLevel=res.data.regen_level;if(res.data.storage_level!=null)game.storageLevel=res.data.storage_level;
     if(res.data.mill_level)game.millLevel=res.data.mill_level;if(res.data.bakery_level)game.bakeryLevel=res.data.bakery_level;if(res.data.market_slots)game.marketSlots=res.data.market_slots;
-    ["bought_coop:boughtCoop","bought_mill:boughtMill","bought_bakery:boughtBakery","bought_barn:boughtBarn","bought_tavern:boughtTavern"].forEach(function(p){var a=p.split(":");if(res.data[a[0]]!=null)game[a[1]]=res.data[a[0]];});
+    ["bought_coop:boughtCoop","bought_juicer:boughtJuicer","bought_mill:boughtMill","bought_bakery:boughtBakery","bought_barn:boughtBarn","bought_tavern:boughtTavern"].forEach(function(p){var a=p.split(":");if(res.data[a[0]]!=null)game[a[1]]=res.data[a[0]];});
     $("status").textContent="✓ Подключено к базе";
   }else if(!res.error)await saveProfile();
   applyOfflineEnergy();ensureOrders();render([]);
 }
 function buy(cost,fn){if(game.coins<cost){alert("Не хватает монет! Выполняй задания.");return;}game.coins-=cost;fn();saveProfile();render([]);}
 
-/* --- Рынок с полками --- */
 function shelfCost(){return 150*game.marketSlots;}
-async function loadMarket(){
-  var box=$("market-list");if(!db){box.textContent="База недоступна";return;}
-  box.textContent="Загрузка…";
-  var res=await db.from("market").select("*").eq("seller_key",userKey).order("created_at",{ascending:true}).limit(50);
-  if(res.error){box.textContent="Ошибка рынка: "+res.error.message;console.error(res.error);return;}
-  ownListings=res.data.length;
-  var shelves="";
-  for(var i=0;i<game.marketSlots;i++)shelves+=i<ownListings?"📦":"▫️";
-  $("market-shelves").textContent=shelves;
-  $("market-shelves-hint").textContent="Полок: "+game.marketSlots+" · Занято: "+ownListings+" · Свободно: "+Math.max(0,game.marketSlots-ownListings);
-  $("btn-buy-shelf").textContent="Купить ещё полку — "+shelfCost()+"🪙";
-  $("btn-buy-shelf").disabled=game.coins<shelfCost();
-  $("btn-list").disabled=ownListings>=game.marketSlots;
-  $("btn-list").textContent=ownListings>=game.marketSlots?"Все полки заняты":"Выставить на свободную полку";
-  $("market-missing").textContent=ownListings>=game.marketSlots?"Не хватает: свободная полка. Купи ещё полку выше или сними объявление.":"";
-  box.innerHTML=res.data.length?"":"Пока пусто. Выставь первый товар на полку!";
-  res.data.forEach(function(m){
-    var d=document.createElement("div");d.className="order";
-    d.innerHTML="<b>"+(ITEMS[m.item]||m.item)+" × "+m.qty+"</b><br>Цена: "+m.price+"🪙<br><i>Твоё объявление</i>";
-    var btn=document.createElement("button");btn.className="action";btn.textContent="Снять с продажи";
-    btn.onclick=function(){cancelListing(m);};
-    d.appendChild(btn);box.appendChild(d);
-  });
-  render([]);
-}
-async function cancelListing(m){
-  if(freeSpace()<m.qty){showStorageFull();return;}
-  var del=await db.from("market").delete().eq("id",m.id);
-  if(del.error){alert("Ошибка: "+del.error.message);return;}
-  game[m.item]+=m.qty;showToast("Товар возвращён на склад");
-  saveProfile();loadMarket();
-}
-$("btn-list").onclick=async function(){
-  if(game.level<10||!db)return;
-  if(ownListings>=game.marketSlots){$("market-missing").textContent="Не хватает: свободная полка.";return;}
-  var item=$("market-item").value,qty=Math.max(1,parseInt($("market-qty").value||"1",10)),price=Math.max(1,parseInt($("market-price").value||"1",10));
-  if(!ITEMS[item]){alert("Не выбран товар");return;}
-  if((game[item]||0)<qty){$("market-missing").textContent="Не хватает: "+(qty-game[item])+" "+ITEMS[item];return;}
-  game[item]-=qty;
-  var res=await db.from("market").insert({seller_key:userKey,item:item,qty:qty,price:price});
-  if(res.error){
-    game[item]+=qty;
-    $("market-missing").textContent="Ошибка выставления: "+res.error.message;
-    alert("Не удалось выставить товар: "+res.error.message);
-    console.error(res.error);render([]);return;
-  }
-  showToast("🏪 Товар выставлен на полку!");
-  saveProfile();render([]);loadMarket();
-};
+async function loadMarket(){var box=$("market-list");if(!db){box.textContent="База недоступна";return;}box.textContent="Загрузка…";var res=await db.from("market").select("*").eq("seller_key",userKey).order("created_at",{ascending:true}).limit(50);if(res.error){box.textContent="Ошибка рынка: "+res.error.message;return;}ownListings=res.data.length;var shelves="";for(var i=0;i<game.marketSlots;i++)shelves+=i<ownListings?"📦":"▫️";$("market-shelves").textContent=shelves;$("market-shelves-hint").textContent="Полок: "+game.marketSlots+" · Занято: "+ownListings+" · Свободно: "+Math.max(0,game.marketSlots-ownListings);$("btn-buy-shelf").textContent="Купить ещё полку — "+shelfCost()+"🪙";$("btn-buy-shelf").disabled=game.coins<shelfCost();$("btn-list").disabled=ownListings>=game.marketSlots;$("btn-list").textContent=ownListings>=game.marketSlots?"Все полки заняты":"Выставить на свободную полку";$("market-missing").textContent=ownListings>=game.marketSlots?"Не хватает: свободная полка.":"";box.innerHTML=res.data.length?"":"Пока пусто.";res.data.forEach(function(m){var d=document.createElement("div");d.className="order";d.innerHTML="<b>"+(ITEMS[m.item]||m.item)+" × "+m.qty+"</b><br>Цена: "+m.price+"🪙<br><i>Твоё объявление</i>";var btn=document.createElement("button");btn.className="action";btn.textContent="Снять с продажи";btn.onclick=function(){cancelListing(m);};d.appendChild(btn);box.appendChild(d);});render([]);}
+async function cancelListing(m){if(freeSpace()<m.qty){showStorageFull();return;}var del=await db.from("market").delete().eq("id",m.id);if(del.error){alert("Ошибка: "+del.error.message);return;}game[m.item]+=m.qty;showToast("Товар возвращён на склад");saveProfile();loadMarket();}
+$("btn-list").onclick=async function(){if(game.level<10||!db)return;if(ownListings>=game.marketSlots){$("market-missing").textContent="Не хватает: свободная полка.";return;}var item=$("market-item").value,qty=Math.max(1,parseInt($("market-qty").value||"1",10)),price=Math.max(1,parseInt($("market-price").value||"1",10));if((game[item]||0)<qty){$("market-missing").textContent="Не хватает: "+(qty-game[item])+" "+ITEMS[item];return;}game[item]-=qty;var res=await db.from("market").insert({seller_key:userKey,item:item,qty:qty,price:price});if(res.error){game[item]+=qty;$("market-missing").textContent="Ошибка: "+res.error.message;alert("Не удалось выставить: "+res.error.message);render([]);return;}showToast("🏪 Товар выставлен!");saveProfile();render([]);loadMarket();};
 $("btn-market-refresh").onclick=loadMarket;
-$("btn-buy-shelf").onclick=function(){buy(shelfCost(),function(){game.marketSlots+=1;showToast("🎉 Новая полка куплена! Всего полок: "+game.marketSlots);loadMarket();});};
+$("btn-buy-shelf").onclick=function(){buy(shelfCost(),function(){game.marketSlots+=1;showToast("🎉 Полок теперь: "+game.marketSlots);loadMarket();});};
+$("btn-replace-orders").onclick=function(){if(replaceUsed>=1)return;replaceUsed=1;orders=[];ensureOrders();showToast("🔄 Задания заменены!");saveProfile();render([]);};
 
-$("btn-replace-orders").onclick=function(){
-  if(replaceUsed>=1)return;
-  replaceUsed=1;orders=[];ensureOrders();
-  showToast("🔄 Задания заменены! Следующая замена — за рекламу.");
+/* ===== МИНИ-ИГРА: ЖУКИ ===== */
+var bugActive=false,bugGrid=[],bugCurrent="green",bugNext="red",bugEndsAt=0,bugNextRowAt=0,bugClearedSince=0,bugTotalCleared=0,bugTimer=null,bugStartAt=0;
+var BUG_COLORS=[{id:"red",emoji:"🔴"},{id:"green",emoji:"🟢"},{id:"blue",emoji:"🔵"},{id:"yellow",emoji:"🟡"}];
+function bugEmoji(id){for(var i=0;i<BUG_COLORS.length;i++)if(BUG_COLORS[i].id===id)return BUG_COLORS[i].emoji;return "⚪";}
+function randomBugColor(){var present={};bugGrid.forEach(function(v){if(v)present[v]=true;});var keys=Object.keys(present);if(!keys.length)keys=BUG_COLORS.map(function(c){return c.id;});return keys[Math.floor(Math.random()*keys.length)];}
+function bugRowInterval(){var elapsed=Date.now()-bugStartAt;return elapsed<60000?20000:elapsed<120000?15000:10000;}
+function makeBugRow(){var row=[];for(var i=0;i<10;i++)row.push(BUG_COLORS[Math.floor(Math.random()*BUG_COLORS.length)].id);return row;}
+function startBugGame(){
+  if(bugActive)return;bugActive=true;bugGrid=[];var r,c;
+  for(r=0;r<10;r++){var row=[];for(c=0;c<10;c++)row.push(r<3?BUG_COLORS[Math.floor(Math.random()*BUG_COLORS.length)].id:null);bugGrid.push(row);}
+  bugStartAt=Date.now();bugEndsAt=bugStartAt+180000;bugNextRowAt=bugStartAt+20000;bugClearedSince=0;bugTotalCleared=0;
+  bugCurrent=randomBugColor();bugNext=randomBugColor();
+  $("bug-modal").style.display="flex";renderBug();
+  clearInterval(bugTimer);bugTimer=setInterval(bugTick,500);
+}
+function bugTick(){
+  if(!bugActive)return;var now=Date.now();
+  if(now>=bugEndsAt){endBugGame(true);return;}
+  if(now>=bugNextRowAt||bugClearedSince>=15){addBugRow();if(!bugActive)return;bugNextRowAt=now+bugRowInterval();bugClearedSince=0;}
+  renderBug();
+}
+function addBugRow(){
+  bugGrid.pop();bugGrid.unshift(makeBugRow());
+  for(var c=0;c<10;c++){if(bugGrid[9][c]){endBugGame(false);return;}}
+}
+function renderBug(){
+  var left=Math.max(0,Math.ceil((bugEndsAt-Date.now())/1000));
+  $("bug-info").innerHTML="⏱ Осталось: <b>"+fmt(left*1000)+"</b> · Убрано жуков: "+bugTotalCleared+" · Следующий ряд через "+fmt(Math.max(0,bugNextRowAt-Date.now()))+" или после "+Math.max(0,15-bugClearedSince)+" убранных";
+  $("bug-current").textContent=bugEmoji(bugCurrent);$("bug-next").textContent=bugEmoji(bugNext);
+  var box=$("bug-board");box.innerHTML="";
+  bugGrid.forEach(function(row,r){row.forEach(function(v,c){var b=document.createElement("button");b.className="bug-cell"+(v?"":" empty");b.textContent=v?"🪲":"";b.style.background=v?({red:"#e57373",green:"#81c784",blue:"#64b5f6",yellow:"#ffd54f"})[v]:"rgba(255,255,255,.08)";b.onclick=function(){shootBug(c);};box.appendChild(b);});});
+}
+function shootBug(col){
+  if(!bugActive)return;
+  var row=0;while(row<10&&bugGrid[row][col])row++;
+  if(row>=10){endBugGame(false);return;}
+  bugGrid[row][col]=bugCurrent;
+  var group=bugGroup(row,col,bugCurrent);
+  if(group.length>=4){
+    group.forEach(function(p){bugGrid[p[0]][p[1]]=null;});
+    bugTotalCleared+=group.length;bugClearedSince+=group.length;
+    dropFloatingBugs();
+  }
+  bugCurrent=bugNext;bugNext=randomBugColor();
+  if(bugClearedSince>=15){addBugRow();if(!bugActive)return;bugNextRowAt=Date.now()+bugRowInterval();bugClearedSince=0;}
+  renderBug();
+}
+function bugGroup(sr,sc,color){
+  var seen={},stack=[[sr,sc]],out=[];seen[sr+":"+sc]=true;
+  while(stack.length){var p=stack.pop();out.push(p);var dirs=[[1,0],[-1,0],[0,1],[0,-1]];for(var i=0;i<4;i++){var nr=p[0]+dirs[i][0],nc=p[1]+dirs[i][1];if(nr<0||nr>=10||nc<0||nc>=10)continue;var key=nr+":"+nc;if(seen[key])continue;if(bugGrid[nr][nc]===color){seen[key]=true;stack.push([nr,nc]);}}}
+  return out;
+}
+function dropFloatingBugs(){
+  var connected={},stack=[],c;
+  for(c=0;c<10;c++)if(bugGrid[0][c]){connected["0:"+c]=true;stack.push([0,c]);}
+  while(stack.length){var p=stack.pop();var dirs=[[1,0],[-1,0],[0,1],[0,-1]];for(var i=0;i<4;i++){var nr=p[0]+dirs[i][0],nc=p[1]+dirs[i][1];if(nr<0||nr>=10||nc<0||nc>=10)continue;var key=nr+":"+nc;if(connected[key]||!bugGrid[nr][nc])continue;connected[key]=true;stack.push([nr,nc]);}}
+  for(var r=0;r<10;r++)for(c=0;c<10;c++)if(bugGrid[r][c]&&!connected[r+":"+c]){bugGrid[r][c]=null;bugTotalCleared++;bugClearedSince++;}
+}
+function endBugGame(win){
+  if(!bugActive)return;bugActive=false;clearInterval(bugTimer);$("bug-modal").style.display="none";
+  if(win){
+    game.energy+=10;addXp(50);showToast("🎉 Амбар защищён! Награда: +10⚡ и +50⭐");
+  }else{
+    var plants=["wheat","carrot","corn"],eaten=0,guard=0;
+    while(eaten<20&&guard<200){var total=plants.reduce(function(s,k){return s+game[k];},0);if(total<=0)break;var k2=plants[Math.floor(Math.random()*plants.length)];if(game[k2]>0){game[k2]--;eaten++;}guard++;}
+    showToast(eaten>0?("🪲 Жуки добрались до амбара и съели растений: "+eaten+" шт."):"🪲 Жуки добрались до амбара, но растений на складе не было.");
+  }
   saveProfile();render([]);
-};
+}
+$("bug-surrender").onclick=function(){endBugGame(false);};
 
 function render(matched){
   matched=matched||[];updateProduction();
   $("coins").textContent=game.coins;$("xp").textContent=game.xp+"/"+xpNeed(game.level);$("lvl").textContent="Ур. "+game.level;
-  $("energy-text").textContent=game.energy+"/"+game.maxEnergy;$("energy-fill").style.width=(game.energy/game.maxEnergy*100)+"%";
+  $("energy-text").textContent=game.energy+"/"+game.maxEnergy;$("energy-fill").style.width=Math.min(100,game.energy/game.maxEnergy*100)+"%";
   $("energy-hint").textContent="Восстановление: 1⚡ за "+fmt(regenMs())+" — работает и пока ферма закрыта.";
-  $("storage-text").textContent=storageCount()+"/"+storageCap();
-  $("storage-text").parentElement.style.color=freeSpace()<=0?"#c0392b":"inherit";
-
+  $("storage-text").textContent=storageCount()+"/"+storageCap();$("storage-text").parentElement.style.color=freeSpace()<=0?"#c0392b":"inherit";
   $("btn-replace-orders").disabled=replaceUsed>=1;
   $("btn-replace-orders").textContent=replaceUsed>=1?"🔄 Бесплатная замена использована":"🔄 Заменить все задания (бесплатно, 1 раз в день)";
-  $("btn-replace-ad").textContent=replaceUsed>=1?"📺 Вторая замена — смотреть рекламу (скоро)":"📺 Вторая замена будет за рекламу (скоро)";
-
   var box=$("board");box.innerHTML="";
   board.forEach(function(id,i){var b=document.createElement("button");b.className="cell"+(i===selected?" selected":"")+(matched.indexOf(i)>=0?" matched":"");b.textContent=id?emojiOf(id):"";b.onclick=function(){onCell(i);};box.appendChild(b);});
 
-  $("lock-animals").style.display=game.level>=2?"none":"block";
-  $("buy-coop").style.display=(game.level>=2&&!game.boughtCoop)?"block":"none";
-  $("content-animals").style.display=game.boughtCoop?"block":"none";
-  $("btn-buy-coop").disabled=game.coins<COST_COOP;
+  $("lock-animals").style.display=game.level>=2?"none":"block";$("buy-coop").style.display=(game.level>=2&&!game.boughtCoop)?"block":"none";$("content-animals").style.display=game.boughtCoop?"block":"none";$("btn-buy-coop").disabled=game.coins<COST_COOP;
+  $("lock-barn").style.display=game.level>=7?"none":"block";$("buy-barn").style.display=(game.level>=7&&!game.boughtBarn)?"block":"none";$("content-barn").style.display=game.boughtBarn?"block":"none";$("btn-buy-barn").disabled=game.coins<COST_BARN;$("btn-buy-barn").textContent="Построить коровник — 600🪙"+(game.coins<COST_BARN?" (у тебя "+game.coins+")":"");
+  $("lock-juicer").style.display=game.level>=3?"none":"block";$("buy-juicer").style.display=(game.level>=3&&!game.boughtJuicer)?"block":"none";$("content-juicer").style.display=game.boughtJuicer?"block":"none";$("btn-buy-juicer").disabled=game.coins<COST_JUICER;$("btn-buy-juicer").textContent="Построить соковыжималку — 200🪙"+(game.coins<COST_JUICER?" (у тебя "+game.coins+")":"");
+  $("lock-mill").style.display=game.level>=4?"none":"block";$("buy-mill").style.display=(game.level>=4&&!game.boughtMill)?"block":"none";$("content-mill").style.display=game.boughtMill?"block":"none";$("btn-buy-mill").disabled=game.coins<COST_MILL;$("btn-buy-mill").textContent="Построить мельницу — 200🪙"+(game.coins<COST_MILL?" (у тебя "+game.coins+")":"");
+  $("lock-bakery").style.display=game.level>=5?"none":"block";$("buy-bakery").style.display=(game.level>=5&&!game.boughtBakery)?"block":"none";$("content-bakery").style.display=game.boughtBakery?"block":"none";$("btn-buy-bakery").disabled=game.coins<COST_BAKERY;$("btn-buy-bakery").textContent="Построить пекарню — 350🪙"+(game.coins<COST_BAKERY?" (у тебя "+game.coins+")":"");
+  $("lock-tavern").style.display=game.level>=8?"none":"block";$("buy-tavern").style.display=(game.level>=8&&!game.boughtTavern)?"block":"none";$("content-tavern").style.display=game.boughtTavern?"block":"none";$("btn-buy-tavern").disabled=game.coins<COST_TAVERN;$("btn-buy-tavern").textContent="Построить таверну — 250🪙"+(game.coins<COST_TAVERN?" (у тебя "+game.coins+")":"");
+  $("lock-market").style.display=game.level>=10?"none":"block";$("content-market").style.display=game.level>=10?"block":"none";
+  var sel=$("market-item");if(sel){if(!sel.options.length)ITEM_KEYS.forEach(function(k){var o=document.createElement("option");o.value=k;sel.appendChild(o);});for(var oi=0;oi<sel.options.length;oi++){var key=sel.options[oi].value;sel.options[oi].textContent=ITEMS[key]+" (на складе: "+game[key]+")";}}
 
-  $("lock-barn").style.display=game.level>=7?"none":"block";
-  $("buy-barn").style.display=(game.level>=7&&!game.boughtBarn)?"block":"none";
-  $("content-barn").style.display=game.boughtBarn?"block":"none";
-  $("btn-buy-barn").disabled=game.coins<COST_BARN;
-  $("btn-buy-barn").textContent="Построить коровник — 600🪙"+(game.coins<COST_BARN?" (у тебя "+game.coins+")":"");
-
-  $("lock-mill").style.display=game.level>=4?"none":"block";
-  $("buy-mill").style.display=(game.level>=4&&!game.boughtMill)?"block":"none";
-  $("content-mill").style.display=game.boughtMill?"block":"none";
-  $("btn-buy-mill").disabled=game.coins<COST_MILL;
-  $("btn-buy-mill").textContent="Построить мельницу — 200🪙"+(game.coins<COST_MILL?" (у тебя "+game.coins+")":"");
-
-  $("lock-bakery").style.display=game.level>=5?"none":"block";
-  $("buy-bakery").style.display=(game.level>=5&&!game.boughtBakery)?"block":"none";
-  $("content-bakery").style.display=game.boughtBakery?"block":"none";
-  $("btn-buy-bakery").disabled=game.coins<COST_BAKERY;
-  $("btn-buy-bakery").textContent="Построить пекарню — 350🪙"+(game.coins<COST_BAKERY?" (у тебя "+game.coins+")":"");
-
-  $("lock-tavern").style.display=game.level>=8?"none":"block";
-  $("buy-tavern").style.display=(game.level>=8&&!game.boughtTavern)?"block":"none";
-  $("content-tavern").style.display=game.boughtTavern?"block":"none";
-  $("btn-buy-tavern").disabled=game.coins<COST_TAVERN;
-  $("btn-buy-tavern").textContent="Построить таверну — 250🪙"+(game.coins<COST_TAVERN?" (у тебя "+game.coins+")":"");
-
-  $("lock-market").style.display=game.level>=10?"none":"block";
-  $("content-market").style.display=game.level>=10?"block":"none";
-  var sel=$("market-item");
-  if(sel){if(!sel.options.length)ITEM_KEYS.forEach(function(k){var o=document.createElement("option");o.value=k;sel.appendChild(o);});for(var oi=0;oi<sel.options.length;oi++){var key=sel.options[oi].value;sel.options[oi].textContent=ITEMS[key]+" (на складе: "+game[key]+")";}}
-
-  if(game.boughtCoop){
-    var feedNeed={};feedNeed.wheat=game.chickens;feedNeed.energy=1;
-    $("btn-feed").disabled=!(game.wheat>=game.chickens&&game.energy>=1&&chickenPending===0&&chickenReady===0);
-    $("btn-feed").textContent="🌾 Покормить — "+game.chickens+" пшеницы + 1⚡";
-    $("btn-egg").disabled=chickenReady===0||freeSpace()<=0;
-    $("chicken-emoji").textContent=chickenReady>0?"🐔✨":"🐔";
-    $("chicken-info").textContent="Куриц: "+game.chickens;
-    $("egg-hint").textContent=chickenReady>0?("Готово яиц: "+chickenReady+(chickenPending>0?". В очереди ещё готовится: "+chickenPending:"")+" — можно собрать сейчас или подождать и собрать все вместе."):chickenPending>0?("Готовится по очереди. Готово: "+chickenReady+", в очереди: "+chickenPending+". Следующее через "+fmt(eggNextAt-Date.now())):"Яйца по очереди: 1-е — 3 мин, 2-е — 2,5 мин, 3-е — 2 мин. Следующее запускается само, без сбора первого.";
-    $("egg-missing").textContent=(chickenPending>0||chickenReady>0)?"":missingText(feedNeed);
-  }
-  if(game.boughtBarn){
-    var cowNeed={};cowNeed.corn=game.cows;cowNeed.energy=1;
-    $("btn-feed-cow").disabled=!(game.corn>=game.cows&&game.energy>=1&&cowPending===0&&cowReady===0);
-    $("btn-feed-cow").textContent="🌽 Покормить — "+game.cows+" кукурузы + 1⚡";
-    $("btn-milk").disabled=cowReady===0||freeSpace()<=0;
-    $("cow-emoji").textContent=cowReady>0?"🐄✨":"🐄";
-    $("cow-info").textContent="Коров: "+game.cows;
-    $("milk-hint").textContent=cowReady>0?("Готово молока: "+cowReady+(cowPending>0?". В очереди ещё: "+cowPending:"")+" — забери готовое."):cowPending>0?("Готовится по очереди. Следующее через "+fmt(milkNextAt-Date.now())+" — запустится само."):"Молоко по очереди: 1-е — 10 мин, далее 9, 8 мин. Следующее запускается само.";
-    $("milk-missing").textContent=(cowPending>0||cowReady>0)?"":missingText(cowNeed);
-  }
-  if(game.boughtMill){
-    var slots=game.millLevel;
-    $("btn-flour").disabled=!(game.wheat>=3&&game.energy>=1&&(millPending+millReady)<slots);
-    $("btn-flour-collect").disabled=!(millReady>0&&freeSpace()>0);
-    $("btn-flour").textContent="Запустить муку — 3 🌾 + 1⚡ (ур. "+game.millLevel+")";
-    $("mill-hint").textContent="Время 1 муки: "+fmt(millMs())+" · Готово: "+millReady+" · В очереди: "+millPending+" · Мест: "+slots+(millPending>0?". Следующая через "+fmt(millNextAt-Date.now())+" — запустится сама":"");
-    $("mill-missing").textContent=(millPending+millReady)>=slots?"Очередь заполнена — дождись или улучши мельницу.":missingText({wheat:3,energy:1});
-  }
-  if(game.boughtBakery){
-    var bslots=game.bakeryLevel;
-    $("btn-bread").disabled=!(game.flour>=1&&game.eggs>=1&&game.energy>=1&&(breadPending+breadReady)<bslots);
-    $("btn-bread-collect").disabled=!(breadReady>0&&freeSpace()>0);
-    $("btn-bread").textContent="Поставить хлеб — 1 🫓 + 1 🥚 + 1⚡ (ур. "+game.bakeryLevel+")";
-    $("bread-hint").textContent="Время 1 хлеба: "+fmt(breadMs())+" · Готово: "+breadReady+" · В очереди: "+breadPending+" · Мест: "+bslots+(breadPending>0?". Следующий через "+fmt(breadNextAt-Date.now())+" — запустится сам":"");
-    $("bread-missing").textContent=(breadPending+breadReady)>=bslots?"Очередь заполнена — дождись или улучши пекарню.":missingText({flour:1,eggs:1,energy:1});
-  }
-  if(game.boughtTavern){
-    $("btn-omelet").disabled=!(game.eggs>=1&&game.energy>=1&&!tavernCooking);
-    $("btn-omelet").textContent=tavernCooking?"🍳 Яичница готовится…":"Приготовить яичницу — 1 🥚 + 1⚡";
-    $("tavern-hint").textContent=tavernCooking?("Готовится, осталось "+fmt(tavernCookAt-Date.now())):tavernReady>0?("В очереди блюд: "+tavernReady+". Гость выкупит следующее через "+fmt(tavernSellAt-Date.now())+" за 40🪙"):"Очередь блюд пуста.";
-    $("tavern-missing").textContent=tavernCooking?"":missingText({eggs:1,energy:1});
-  }
+  if(game.boughtCoop){var need1={};need1.wheat=game.chickens;need1.energy=1;$("btn-feed").disabled=!(game.wheat>=game.chickens&&game.energy>=1&&chickenPending===0&&chickenReady===0);$("btn-feed").textContent="🌾 Покормить — "+game.chickens+" пшеницы + 1⚡";$("btn-egg").disabled=chickenReady===0||freeSpace()<=0;$("chicken-emoji").textContent=chickenReady>0?"🐔✨":"🐔";$("chicken-info").textContent="Куриц: "+game.chickens;$("egg-hint").textContent=chickenReady>0?("Готово яиц: "+chickenReady+(chickenPending>0?". В очереди ещё: "+chickenPending:"")):chickenPending>0?("Готовится по очереди. Следующее через "+fmt(eggNextAt-Date.now())+" — запустится само."):"Яйца по очереди: 3 мин, 2,5 мин, 2 мин.";$("egg-missing").textContent=(chickenPending>0||chickenReady>0)?"":missingText(need1);}
+  if(game.boughtBarn){var need2={};need2.corn=game.cows;need2.energy=1;$("btn-feed-cow").disabled=!(game.corn>=game.cows&&game.energy>=1&&cowPending===0&&cowReady===0);$("btn-feed-cow").textContent="🌽 Покормить — "+game.cows+" кукурузы + 1⚡";$("btn-milk").disabled=cowReady===0||freeSpace()<=0;$("cow-emoji").textContent=cowReady>0?"🐄✨":"🐄";$("cow-info").textContent="Коров: "+game.cows;$("milk-hint").textContent=cowReady>0?("Готово молока: "+cowReady+(cowPending>0?". В очереди ещё: "+cowPending:"")):cowPending>0?("Готовится по очереди. Следующее через "+fmt(milkNextAt-Date.now())):"Молоко по очереди: 10, 9, 8 мин.";$("milk-missing").textContent=(cowPending>0||cowReady>0)?"":missingText(need2);}
+  if(game.boughtJuicer){$("btn-juice").disabled=!(game.carrot>=2&&game.energy>=1&&juicePending===0&&juiceReady===0);$("btn-juice-collect").disabled=!(juiceReady>0&&freeSpace()>0);$("juice-hint").textContent=juiceReady>0?"Сок готов: "+juiceReady:juicePending>0?("Сок будет через "+fmt(juiceNextAt-Date.now())):"Сок через 3 минуты. Потом его можно отдать в задание или подать гостю таверны за 60🪙.";$("juice-missing").textContent=(juicePending>0||juiceReady>0)?"":missingText({carrot:2,energy:1});}
+  if(game.boughtMill){var totalMill=millPending+millReady+cornMillPending+cornMillReady;$("btn-flour").disabled=!(game.wheat>=3&&game.energy>=1&&totalMill<game.millLevel);$("btn-cornflour").disabled=!(game.level>=7&&game.corn>=3&&game.energy>=1&&totalMill<game.millLevel);$("btn-flour-collect").disabled=!(millReady>0&&freeSpace()>0);$("btn-cornflour-collect").disabled=!(cornMillReady>0&&freeSpace()>0);$("mill-hint").textContent="Уровень: "+game.millLevel+" · Пшеничная мука — готово "+millReady+", в очереди "+millPending+" · Кукурузная — готово "+cornMillReady+", в очереди "+cornMillPending+" · Время: "+fmt(millMs());$("mill-missing").textContent=totalMill>=game.millLevel?"Очередь мельницы заполнена — дождись или улучши мельницу.":(game.level>=7?missingText({wheat:3,energy:1}):missingText({wheat:3,energy:1}));}
+  if(game.boughtBakery){var totalBak=breadPending+breadReady+cornBreadPending+cornBreadReady;$("btn-bread").disabled=!(game.flour>=1&&game.eggs>=1&&game.energy>=1&&totalBak<game.bakeryLevel);$("btn-cornbread").disabled=!(game.level>=7&&game.cornflour>=1&&game.milk>=1&&game.energy>=1&&totalBak<game.bakeryLevel);$("btn-cake").disabled=!(game.level>=9&&game.carrot>=3&&game.eggs>=1&&game.milk>=1&&game.energy>=1);$("btn-bread-collect").disabled=!(breadReady>0&&freeSpace()>0);$("btn-cornbread-collect").disabled=!(cornBreadReady>0&&freeSpace()>0);$("bread-hint").textContent="Хлеб — готово "+breadReady+", в очереди "+breadPending+" · Кукурузный — готово "+cornBreadReady+", в очереди "+cornBreadPending+" · Торт — готово "+cakeReady+", в очереди "+cakePending+(cakeReady>0?". Торт ждёт подачи в таверне!":"");$("bread-missing").textContent=game.level>=9?missingText({carrot:3,eggs:1,milk:1,energy:1}):missingText({flour:1,eggs:1,energy:1});}
+  if(game.boughtTavern){$("btn-omelet").disabled=!(game.eggs>=1&&game.energy>=1&&!tavernCooking);$("btn-omelet").textContent=tavernCooking?"🍳 Яичница готовится…":"Приготовить яичницу — 1 🥚 + 1⚡";$("btn-serve-juice").disabled=!(game.juice>=1);$("btn-serve-cake").disabled=!(cakeReady>=1);$("btn-serve-cake").textContent="🍰 Подать морковный торт гостю (готовых: "+cakeReady+")";var qtext=tavernQueue.length?tavernQueue.map(function(d){return d.name+" — "+d.price+"🪙 через "+fmt(d.sellAt-Date.now());}).join(" · "):"Очередь блюд пуста.";$("tavern-hint").textContent=tavernCooking?("Яичница готовится, осталось "+fmt(tavernCookAt-Date.now())+". Очередь: "+qtext):("Очередь блюд: "+qtext);$("tavern-missing").textContent=missingText({eggs:1,energy:1});}
 
   ensureOrders();var ob=$("orders");ob.innerHTML="";
-  orders.forEach(function(o,idx){
-    var d=document.createElement("div");d.className="order";var ok=canDo(o);
-    d.innerHTML="<b>"+o.text+"</b><br>Награда: "+o.coins+"🪙 + "+o.xp+"⭐";
-    if(!ok){var m=document.createElement("div");m.className="missing";m.textContent=missingText(o.need);d.appendChild(m);}
-    var btn=document.createElement("button");btn.className="action";btn.textContent=ok?"✅ Выполнить":"Не хватает ресурсов";btn.disabled=!ok;
-    btn.onclick=function(){Object.keys(o.need).forEach(function(k){game[k]-=o.need[k];});game.coins+=o.coins;addXp(o.xp);orders.splice(idx,1);ensureOrders();saveProfile();render([]);};
-    d.appendChild(btn);ob.appendChild(d);
-  });
+  orders.forEach(function(o,idx){var d=document.createElement("div");d.className="order";var ok=canDo(o);d.innerHTML="<b>"+o.text+"</b><br>Награда: "+o.coins+"🪙 + "+o.xp+"⭐";if(!ok){var m=document.createElement("div");m.className="missing";m.textContent=missingText(o.need);d.appendChild(m);}var btn=document.createElement("button");btn.className="action";btn.textContent=ok?"✅ Выполнить":"Не хватает ресурсов";btn.disabled=!ok;btn.onclick=function(){Object.keys(o.need).forEach(function(k){game[k]-=o.need[k];});game.coins+=o.coins;addXp(o.xp);orders.splice(idx,1);ensureOrders();saveProfile();render([]);};d.appendChild(btn);ob.appendChild(d);});
 
-  var storageCost=80*(game.storageLevel+1);
-  var regenCost=60*Math.pow(2,regenBuysToday);
+  var storageCost=80*(game.storageLevel+1),regenCost=60*Math.pow(2,regenBuysToday);
   var up=[
     {name:"📦 Склад +10 мест",desc:"Сейчас: "+storageCount()+"/"+storageCap(),cost:storageCost,locked:false,buy:function(){game.storageLevel+=1;}},
     {name:"⚡ Макс. энергия +5",desc:"Сейчас: "+game.maxEnergy,cost:100+(game.maxEnergy-20)*40,locked:false,buy:function(){game.maxEnergy+=5;game.energy+=5;}},
-    {name:"⏩ Быстрое восстановление энергии",desc:"Уровень: "+game.regenLevel+" · Куплено сегодня: "+regenBuysToday+" · Завтра цена снова 60🪙",cost:regenCost,locked:false,buy:function(){game.regenLevel+=1;regenBuysToday+=1;}},
+    {name:"⏩ Быстрое восстановление энергии",desc:"Уровень: "+game.regenLevel+" · Куплено сегодня: "+regenBuysToday+" · В 00:00 МСК цена снова 60",cost:regenCost,locked:false,buy:function(){game.regenLevel+=1;regenBuysToday+=1;}},
     {name:"🐔 Курица +1",desc:"Сейчас: "+game.chickens,cost:100*game.chickens,locked:!game.boughtCoop,lockText:"🔒 Сначала построй курятник",buy:function(){game.chickens+=1;}},
     {name:"🐄 Корова +1",desc:"Сейчас: "+game.cows,cost:200*game.cows,locked:!game.boughtBarn,lockText:"🔒 Сначала построй коровник",buy:function(){game.cows+=1;}},
     {name:"🏭 Мельница +1 уровень",desc:"Сейчас: ур. "+game.millLevel+" — +1 место в очереди и −30 сек",cost:150*game.millLevel,locked:!game.boughtMill,lockText:"🔒 Сначала построй мельницу",buy:function(){game.millLevel+=1;}},
@@ -593,65 +436,37 @@ function render(matched){
 }
 
 $("btn-buy-coop").onclick=function(){buy(COST_COOP,function(){game.boughtCoop=true;showToast("🎉 Курятник построен!");});};
+$("btn-buy-juicer").onclick=function(){buy(COST_JUICER,function(){game.boughtJuicer=true;showToast("🎉 Соковыжималка построена!");});};
 $("btn-buy-mill").onclick=function(){buy(COST_MILL,function(){game.boughtMill=true;showToast("🎉 Мельница построена!");});};
 $("btn-buy-bakery").onclick=function(){buy(COST_BAKERY,function(){game.boughtBakery=true;showToast("🎉 Пекарня построена!");});};
 $("btn-buy-barn").onclick=function(){buy(COST_BARN,function(){game.boughtBarn=true;showToast("🎉 Коровник построен!");});};
 $("btn-buy-tavern").onclick=function(){buy(COST_TAVERN,function(){game.boughtTavern=true;showToast("🎉 Таверна построена!");});};
 
-$("btn-feed").onclick=function(){
-  if(!game.boughtCoop||chickenPending>0||chickenReady>0)return;
-  if(game.wheat<game.chickens||game.energy<1){render([]);return;}
-  game.energy-=1;lastEnergyAt=Date.now();game.wheat-=game.chickens;
-  chickenPending=game.chickens;chickenDone=0;eggNextAt=Date.now()+eggInterval(0);
-  saveProfile();render([]);
-};
+$("btn-feed").onclick=function(){if(!game.boughtCoop||chickenPending>0||chickenReady>0||game.wheat<game.chickens||game.energy<1){render([]);return;}game.energy-=1;lastEnergyAt=Date.now();game.wheat-=game.chickens;chickenPending=game.chickens;chickenDone=0;eggNextAt=Date.now()+eggInterval(0);saveProfile();render([]);};
 $("btn-egg").onclick=function(){if(chickenReady<1)return;var take=Math.min(chickenReady,freeSpace());if(take<=0){showStorageFull();return;}game.eggs+=take;chickenReady-=take;addXp(5);saveProfile();render([]);};
-
-$("btn-feed-cow").onclick=function(){
-  if(!game.boughtBarn||cowPending>0||cowReady>0)return;
-  if(game.corn<game.cows||game.energy<1){render([]);return;}
-  game.energy-=1;lastEnergyAt=Date.now();game.corn-=game.cows;
-  cowPending=game.cows;cowDone=0;milkNextAt=Date.now()+milkInterval(0);
-  saveProfile();render([]);
-};
+$("btn-feed-cow").onclick=function(){if(!game.boughtBarn||cowPending>0||cowReady>0||game.corn<game.cows||game.energy<1){render([]);return;}game.energy-=1;lastEnergyAt=Date.now();game.corn-=game.cows;cowPending=game.cows;cowDone=0;milkNextAt=Date.now()+milkInterval(0);saveProfile();render([]);};
 $("btn-milk").onclick=function(){if(cowReady<1)return;var take=Math.min(cowReady,freeSpace());if(take<=0){showStorageFull();return;}game.milk+=take;cowReady-=take;addXp(8);saveProfile();render([]);};
 
-$("btn-flour").onclick=function(){
-  if(!game.boughtMill||game.wheat<3||(millPending+millReady)>=game.millLevel)return;
-  if(!spendEnergy()){render([]);return;}
-  game.wheat-=3;
-  if(millPending===0)millNextAt=Date.now()+millMs();
-  millPending++;
-  showToast("🏭 Мука запущена за 1⚡, будет через "+fmt(millMs()));
-  saveProfile();render([]);
-};
+$("btn-juice").onclick=function(){if(!game.boughtJuicer||game.carrot<2||juicePending>0||juiceReady>0)return;if(!spendEnergy()){render([]);return;}game.carrot-=2;juicePending=1;juiceNextAt=Date.now()+JUICE_MS;showToast("🧃 Сок будет через 3 минуты");saveProfile();render([]);};
+$("btn-juice-collect").onclick=function(){if(juiceReady<1)return;if(freeSpace()<=0){showStorageFull();return;}game.juice+=juiceReady;juiceReady=0;addXp(10);saveProfile();render([]);};
+
+$("btn-flour").onclick=function(){if(!game.boughtMill||game.wheat<3||(millPending+millReady+cornMillPending+cornMillReady)>=game.millLevel)return;if(!spendEnergy()){render([]);return;}game.wheat-=3;if(millPending===0&&cornMillPending===0)millNextAt=Date.now()+millMs();if(millPending===0)millNextAt=Date.now()+millMs();millPending++;saveProfile();render([]);};
+$("btn-cornflour").onclick=function(){if(!game.boughtMill||game.level<7||game.corn<3||(millPending+millReady+cornMillPending+cornMillReady)>=game.millLevel)return;if(!spendEnergy()){render([]);return;}game.corn-=3;if(cornMillPending===0)cornMillNextAt=Date.now()+millMs();cornMillPending++;saveProfile();render([]);};
 $("btn-flour-collect").onclick=function(){if(millReady<1)return;var take=Math.min(millReady,freeSpace());if(take<=0){showStorageFull();return;}game.flour+=take;millReady-=take;addXp(10);saveProfile();render([]);};
+$("btn-cornflour-collect").onclick=function(){if(cornMillReady<1)return;var take=Math.min(cornMillReady,freeSpace());if(take<=0){showStorageFull();return;}game.cornflour+=take;cornMillReady-=take;addXp(12);saveProfile();render([]);};
 
-$("btn-bread").onclick=function(){
-  if(!game.boughtBakery||!(game.flour>=1&&game.eggs>=1)||(breadPending+breadReady)>=game.bakeryLevel)return;
-  if(!spendEnergy()){render([]);return;}
-  game.flour-=1;game.eggs-=1;
-  if(breadPending===0)breadNextAt=Date.now()+breadMs();
-  breadPending++;
-  showToast("🥖 Хлеб поставлен за 1⚡, будет через "+fmt(breadMs()));
-  saveProfile();render([]);
-};
+$("btn-bread").onclick=function(){if(!game.boughtBakery||!(game.flour>=1&&game.eggs>=1)||(breadPending+breadReady+cornBreadPending+cornBreadReady)>=game.bakeryLevel)return;if(!spendEnergy()){render([]);return;}game.flour-=1;game.eggs-=1;if(breadPending===0)breadNextAt=Date.now()+breadMs();breadPending++;saveProfile();render([]);};
+$("btn-cornbread").onclick=function(){if(!game.boughtBakery||game.level<7||!(game.cornflour>=1&&game.milk>=1)||(breadPending+breadReady+cornBreadPending+cornBreadReady)>=game.bakeryLevel)return;if(!spendEnergy()){render([]);return;}game.cornflour-=1;game.milk-=1;if(cornBreadPending===0)cornBreadNextAt=Date.now()+breadMs();cornBreadPending++;saveProfile();render([]);};
+$("btn-cake").onclick=function(){if(!game.boughtBakery||game.level<9||!(game.carrot>=3&&game.eggs>=1&&game.milk>=1))return;if(!spendEnergy()){render([]);return;}game.carrot-=3;game.eggs-=1;game.milk-=1;if(cakePending===0)cakeNextAt=Date.now()+CAKE_MS;cakePending++;showToast("🍰 Торт поставлен на 10 минут — потом подашь его в таверне");saveProfile();render([]);};
 $("btn-bread-collect").onclick=function(){if(breadReady<1)return;var take=Math.min(breadReady,freeSpace());if(take<=0){showStorageFull();return;}game.bread+=take;breadReady-=take;addXp(15);saveProfile();render([]);};
+$("btn-cornbread-collect").onclick=function(){if(cornBreadReady<1)return;var take=Math.min(cornBreadReady,freeSpace());if(take<=0){showStorageFull();return;}game.cornbread+=take;cornBreadReady-=take;addXp(18);saveProfile();render([]);};
 
-$("btn-omelet").onclick=function(){
-  if(!game.boughtTavern||tavernCooking||game.eggs<1)return;
-  if(!spendEnergy()){render([]);return;}
-  game.eggs-=1;tavernCooking=true;tavernCookAt=Date.now()+OMELET_MS;
-  showToast("🍳 Яичница готовится 2 минуты");
-  saveProfile();render([]);
-};
+$("btn-omelet").onclick=function(){if(!game.boughtTavern||tavernCooking||game.eggs<1)return;if(!spendEnergy()){render([]);return;}game.eggs-=1;tavernCooking=true;tavernCookAt=Date.now()+OMELET_MS;showToast("🍳 Яичница готовится 2 минуты");saveProfile();render([]);};
+$("btn-serve-juice").onclick=function(){if(!game.boughtTavern||game.juice<1)return;game.juice-=1;tavernQueue.push({name:"🧃 Морковный сок",price:60,sellAt:Date.now()+GUEST_MS});showToast("🧃 Сок подан! Гость заплатит через 1 минуту.");saveProfile();render([]);};
+$("btn-serve-cake").onclick=function(){if(!game.boughtTavern||cakeReady<1)return;cakeReady-=1;tavernQueue.push({name:"🍰 Морковный торт",price:180,sellAt:Date.now()+GUEST_MS});showToast("🍰 Торт подан! Гость заплатит 180🪙 через 1 минуту.");saveProfile();render([]);};
 
 document.querySelectorAll(".nav button").forEach(function(btn){btn.onclick=function(){goPage(btn.dataset.page);};});
-setInterval(function(){
-  checkDaily();
-  applyOfflineEnergy();
-  render([]);
-},1000);
+setInterval(function(){checkDaily();applyOfflineEnergy();render([]);},1000);
 loadProfile();
 })();
 </script>
