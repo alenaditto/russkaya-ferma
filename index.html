@@ -61,14 +61,14 @@
   .shooter{font-size:24px;margin-top:8px;font-weight:700}
   #map-viewport{position:relative;height:62vh;min-height:420px;margin:10px 12px 0;border-radius:20px;overflow:hidden;background:#8fbf5f;border:3px solid #6f9e43;touch-action:none;cursor:grab;box-shadow:0 6px 16px rgba(90,60,30,.22)}
   #map-viewport:active{cursor:grabbing}
-  #map-world{position:absolute;left:0;top:0;width:1800px;height:2000px;transform-origin:0 0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 90px),repeating-linear-gradient(-45deg,rgba(70,110,40,.07) 0 2px,transparent 2px 90px),radial-gradient(circle at 300px 300px, rgba(255,255,200,.28), transparent 280px),repeating-linear-gradient(45deg,#a5d672 0 90px,#9ecb6b 90px 180px)}
+  #map-world{position:absolute;left:0;top:0;width:2600px;height:2600px;transform-origin:0 0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 90px),repeating-linear-gradient(-45deg,rgba(70,110,40,.07) 0 2px,transparent 2px 90px),radial-gradient(circle at 300px 300px, rgba(255,255,200,.28), transparent 280px),repeating-linear-gradient(45deg,#a5d672 0 90px,#9ecb6b 90px 180px)}
   .territory{position:absolute;border-radius:28px;border:3px dashed rgba(91,64,48,.35);background:rgba(255,250,220,.20);z-index:1}
   .territory.locked{background:rgba(70,110,50,.45);border-color:rgba(40,70,30,.5);overflow:hidden}
   .territory .tname{position:absolute;top:10px;left:14px;background:rgba(255,253,247,.92);padding:5px 10px;border-radius:12px;font-weight:800;font-size:14px;z-index:3;border:1px solid #d8bd8a}
   .territory .tlock{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);background:rgba(255,253,247,.94);padding:10px 14px;border-radius:14px;font-weight:800;text-align:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.2);max-width:80%}
   .territory .ttrees{position:absolute;inset:34px 6px 6px;font-size:40px;line-height:1.25;opacity:.85;word-break:break-all}
-  .plot{position:absolute;width:170px;transform:translate(-50%,-58%);text-align:center;z-index:2;background:none;border:none;cursor:pointer;font-family:inherit;padding:10px 0 0}
-  .plot .ground{display:block;width:112px;height:56px;margin:58px auto -68px;background:url("images/tiles/grass.png") center/contain no-repeat,radial-gradient(ellipse at center,#d8bd8a 0%,#b9945e 58%,rgba(140,100,55,0) 72%);border-radius:50%;box-shadow:0 10px 12px rgba(60,35,15,.18)}
+  .plot{position:absolute;width:190px;transform:translate(-50%,-94%);text-align:center;z-index:2;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+  .plot .ground{display:block;position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:calc(var(--bw,108px)*1.25);height:calc(var(--bw,108px)*0.66);background:url("images/tiles/grass.png") center/contain no-repeat,radial-gradient(ellipse at center,#d8bd8a 0%,#b9945e 58%,rgba(140,100,55,0) 72%);border-radius:50%;box-shadow:0 10px 12px rgba(60,35,15,.18);z-index:0}
   .plot .pico{display:block;font-size:64px;line-height:1;filter:drop-shadow(0 8px 4px rgba(60,35,15,.35));position:relative;z-index:2;text-shadow:0 3px 0 rgba(255,255,255,.25);min-height:64px}
   .plot .bimg{display:block;width:108px;max-width:none;height:auto;margin:0 auto;filter:drop-shadow(0 8px 5px rgba(60,35,15,.35));pointer-events:none}
   .plot .bwrap{display:block;position:relative;margin:0 auto;pointer-events:none}
@@ -288,42 +288,44 @@ var BUILD_FLAG={Coop:"boughtCoop",Juicer:"boughtJuicer",Mill:"boughtMill",Bakery
 var BUILD_NAME={Coop:"Курятник",Juicer:"Соковыжималка",Mill:"Мельница",Bakery:"Пекарня",Barn:"Коровник",Tavern:"Таверна"};
 var constructions={},territorySeen={home:true},territoryInit=false,highlightPlotId="",lastUnlockLevel=0;
 var TERRITORIES=[
-  {id:"home",name:"🏡 Домашняя поляна",level:1,x:20,y:20,w:860,h:640},
-  {id:"meadow",name:"🌿 Луг у реки",level:10,x:900,y:20,w:860,h:640},
-  {id:"forest",name:"🌲 Лесная опушка",level:25,x:20,y:680,w:540,h:680},
-  {id:"hills",name:"⛰ Холмы",level:45,x:580,y:680,w:560,h:680},
-  {id:"lake",name:"🏞 Озёрный край",level:70,x:1160,y:680,w:600,h:680},
-  {id:"far",name:"🏘 Дальний хутор",level:100,x:580,y:1380,w:560,h:560}
+  {id:"home",name:"🏡 Домашняя поляна",level:1,x:20,y:20,w:1420,h:1080},
+  {id:"meadow",name:"🌿 Луг у реки",level:10,x:1480,y:20,w:980,h:760},
+  {id:"forest",name:"🌲 Лесная опушка",level:25,x:20,y:1140,w:760,h:760},
+  {id:"hills",name:"⛰ Холмы",level:45,x:820,y:1140,w:760,h:760},
+  {id:"lake",name:"🏞 Озёрный край",level:70,x:1620,y:820,w:900,h:760},
+  {id:"far",name:"🏘 Дальний хутор",level:100,x:820,y:1960,w:760,h:600}
 ];
 function territoryById(id){for(var i=0;i<TERRITORIES.length;i++)if(TERRITORIES[i].id===id)return TERRITORIES[i];return TERRITORIES[0];}
 function territoryOpen(t){return game.level>=t.level;}
 var PLOTS=[
-  {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:120,name:"Терем",x:180,y:170,terr:"home",page:"upgrades"},
-  {id:"board",icon:"📋",img:"images/buildings/board.png",w:82,name:"Доска заказов",x:350,y:150,terr:"home",page:"orders"},
-  {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:112,name:"Амбар",x:560,y:160,terr:"home",action:"storage"},
-  {id:"lavka",icon:"🏺",img:"images/buildings/lavka.png",w:108,name:"Лавка диковин",x:745,y:330,terr:"home",page:"lavka",level:5},
-  {id:"tavern",icon:"🍳",img:"images/buildings/tavern.png",w:128,name:"Таверна",x:745,y:175,terr:"home",page:"tavern",level:8,buildKey:"Tavern",cost:COST_TAVERN},
-  {id:"field",icon:"🌾",name:"Поле",x:430,y:350,terr:"home",page:"field"},
-  {id:"coop",icon:"🐔",img:"images/buildings/coop.png",w:132,name:"Курятник",x:660,y:480,terr:"home",page:"animals",level:2,buildKey:"Coop",cost:COST_COOP},
-  {id:"juicer",icon:"🧃",img:"images/buildings/juicer.png",w:100,name:"Соковыжималка",x:165,y:480,terr:"home",page:"factory",level:3,buildKey:"Juicer",cost:COST_JUICER},
-  {id:"mill",icon:"🏭",img:"images/buildings/mill.png",w:104,blades:"images/buildings/mill-blades.png",bladesW:98,bladesTop:"26%",name:"Мельница",x:360,y:550,terr:"home",page:"factory",level:4,buildKey:"Mill",cost:COST_MILL},
-  {id:"bakery",icon:"🥖",img:"images/buildings/bakery.png",w:128,name:"Пекарня",x:540,y:520,terr:"home",page:"factory",level:5,buildKey:"Bakery",cost:COST_BAKERY},
-  {id:"barn",icon:"🐄",img:"images/buildings/barn.png",w:152,name:"Коровник",x:130,y:320,terr:"home",page:"animals",level:7,buildKey:"Barn",cost:COST_BARN},
-  {id:"market",icon:"🏪",img:"images/buildings/market.png",w:148,name:"Рынок",x:1180,y:260,terr:"meadow",page:"market",level:10},
-  {id:"stable",icon:"🐴",name:"Конюшня",x:1480,y:430,terr:"meadow",level:15,soon:"🐴 Конюшня и скачки — скоро!"},
-  {id:"future-forest",icon:"🏚",name:"Старый цех",x:270,y:1020,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
-  {id:"future-hills",icon:"🏚",name:"Заброшенная мастерская",x:850,y:1020,terr:"hills",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-lake",icon:"🏚",name:"Старая пристань",x:1450,y:1020,terr:"lake",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-far",icon:"🏚",name:"Дальний дом",x:850,y:1650,terr:"far",soon:"Здесь будет новое здание. Скоро!"}
+  {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:120,name:"Терем",x:240,y:250,terr:"home",page:"upgrades"},
+  {id:"board",icon:"📋",img:"images/buildings/board.png",w:82,name:"Доска заказов",x:600,y:230,terr:"home",page:"orders"},
+  {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:112,name:"Амбар",x:960,y:250,terr:"home",action:"storage"},
+  {id:"tavern",icon:"🍳",img:"images/buildings/tavern.png",w:128,name:"Таверна",x:1300,y:330,terr:"home",page:"tavern",level:8,buildKey:"Tavern",cost:COST_TAVERN},
+  {id:"lavka",icon:"🏺",img:"images/buildings/lavka.png",w:108,name:"Лавка диковин",x:1080,y:600,terr:"home",page:"lavka",level:5},
+  {id:"field",icon:"🌾",name:"Поле",x:620,y:580,terr:"home",page:"field"},
+  {id:"barn",icon:"🐄",img:"images/buildings/barn.png",w:152,name:"Коровник",x:250,y:600,terr:"home",page:"animals",level:7,buildKey:"Barn",cost:COST_BARN},
+  {id:"juicer",icon:"🧃",img:"images/buildings/juicer.png",w:100,name:"Соковыжималка",x:250,y:940,terr:"home",page:"factory",level:3,buildKey:"Juicer",cost:COST_JUICER},
+  {id:"mill",icon:"🏭",img:"images/buildings/mill.png",w:104,blades:"images/buildings/mill-blades.png",bladesW:98,bladesTop:"26%",name:"Мельница",x:620,y:960,terr:"home",page:"factory",level:4,buildKey:"Mill",cost:COST_MILL},
+  {id:"bakery",icon:"🥖",img:"images/buildings/bakery.png",w:128,name:"Пекарня",x:980,y:930,terr:"home",page:"factory",level:5,buildKey:"Bakery",cost:COST_BAKERY},
+  {id:"coop",icon:"🐔",img:"images/buildings/coop.png",w:132,name:"Курятник",x:1320,y:920,terr:"home",page:"animals",level:2,buildKey:"Coop",cost:COST_COOP},
+  {id:"market",icon:"🏪",img:"images/buildings/market.png",w:148,name:"Рынок",x:1850,y:330,terr:"meadow",page:"market",level:10},
+  {id:"stable",icon:"🐴",name:"Конюшня",x:2250,y:560,terr:"meadow",level:15,soon:"🐴 Конюшня и скачки — скоро!"},
+  {id:"future-forest",icon:"🏚",name:"Старый цех",x:380,y:1500,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
+  {id:"future-hills",icon:"🏚",name:"Заброшенная мастерская",x:1200,y:1500,terr:"hills",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-lake",icon:"🏚",name:"Старая пристань",x:2050,y:1180,terr:"lake",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-far",icon:"🏚",name:"Дальний дом",x:1200,y:2250,terr:"far",soon:"Здесь будет новое здание. Скоро!"}
 ];
 function plotById(id){for(var i=0;i<PLOTS.length;i++)if(PLOTS[i].id===id)return PLOTS[i];return PLOTS[0];}
 var DECOR_TREES=[
-  {x:105,y:270,terr:"home",size:72},
-  {x:805,y:300,terr:"home",size:84},
-  {x:250,y:625,terr:"home",size:66},
-  {x:820,y:610,terr:"home",size:78},
-  {x:1040,y:180,terr:"meadow",size:86},
-  {x:1640,y:560,terr:"meadow",size:74}
+  {x:420,y:340,terr:"home",size:76},
+  {x:800,y:330,terr:"home",size:66},
+  {x:1150,y:380,terr:"home",size:84},
+  {x:420,y:760,terr:"home",size:70},
+  {x:820,y:740,terr:"home",size:80},
+  {x:1180,y:1080,terr:"home",size:72},
+  {x:1660,y:220,terr:"meadow",size:86},
+  {x:2380,y:680,terr:"meadow",size:74}
 ];
 
 var game={coins:100,xp:0,level:1,energy:20,maxEnergy:20,chickens:1,cows:1,storageLevel:0,juicerLevel:1,millLevel:1,bakeryLevel:1,marketSlots:1,fieldLevel:0,wheat:0,carrot:0,corn:0,flour:0,eggs:0,milk:0,bread:0,juice:0,cornflour:0,cornbread:0,boughtCoop:false,boughtJuicer:false,boughtMill:false,boughtBakery:false,boughtBarn:false,boughtTavern:false};
@@ -467,15 +469,11 @@ function renderMap(){
   }
   world.innerHTML="";
   TERRITORIES.forEach(function(t){
+    if(!territoryOpen(t))return;
     var d=document.createElement("div");
-    d.className="territory"+(territoryOpen(t)?"":" locked");
+    d.className="territory";
     d.style.left=t.x+"px";d.style.top=t.y+"px";d.style.width=t.w+"px";d.style.height=t.h+"px";
-    if(territoryOpen(t)){
-      d.innerHTML="<div class='tname'>"+t.name+"</div>";
-    }else{
-      var trees="";for(var i=0;i<70;i++)trees+=(i%5===0?"🌳":(i%7===0?"🌲":"🌿"));
-      d.innerHTML="<div class='tname'>"+t.name+"</div><div class='ttrees'>"+trees+"</div><div class='tlock'>🔒<br>Откроется с "+t.level+" уровня</div>";
-    }
+    d.innerHTML="<div class='tname'>"+t.name+"</div>";
     world.appendChild(d);
   });
   DECOR_TREES.forEach(function(t){
@@ -496,8 +494,9 @@ function renderMap(){
     if(st==="hidden")return;
     var b=document.createElement("button");
     b.className="plot"+(st==="ruin"||st==="soon"?" ruin":st==="building"?" building":st==="ready2build"?" ready2build":"")+(highlightPlotId===p.id?" highlight":"");
-    b.style.left=p.x+"px";b.style.top=p.y+"px";
+      b.style.left=p.x+"px";b.style.top=p.y+"px";
     b.style.zIndex=Math.round(p.y/10)+2;
+    b.style.setProperty("--bw",(p.w||108)+"px");
     var state="";
     if(st==="ruin"){state="Откроется с "+(p.level||territoryById(p.terr).level)+" уровня";}
     else if(st==="building"){state="Строится: "+fmt(constructions[p.buildKey]-Date.now());}
@@ -552,12 +551,12 @@ function renderMap(){
 var mapX=-120,mapY=-60,mapScale=0.62,mapPointers={},mapLastDist=0,mapDragMoved=false;
 function applyMap(){
   var vp=$("map-viewport"),world=$("map-world");if(!vp||!world)return;
-  var w=1800*mapScale,h=2000*mapScale,vw=vp.clientWidth,vh=vp.clientHeight;
+  var w=2600*mapScale,h=2600*mapScale,vw=vp.clientWidth,vh=vp.clientHeight;
   mapX=Math.min(30,Math.max(vw-w-30,mapX));
   mapY=Math.min(30,Math.max(vh-h-30,mapY));
   world.style.transform="translate("+mapX+"px,"+mapY+"px) scale("+mapScale+")";
 }
-function centerMap(){mapScale=Math.max(0.45,Math.min(0.75,($("map-viewport").clientWidth||400)/700));mapX=-140*mapScale-40;mapY=-40;applyMap();}
+function centerMap(){var vp=$("map-viewport");mapScale=0.58;mapX=(vp.clientWidth||400)/2-620*mapScale;mapY=(vp.clientHeight||420)/2-480*mapScale;applyMap();}
 $("btn-home").onclick=function(){centerMap();};
 $("btn-zoom-in").onclick=function(){if(anyModalOpen())return;mapScale=Math.min(1.2,mapScale*1.2);applyMap();};
 $("btn-zoom-out").onclick=function(){if(anyModalOpen())return;mapScale=Math.max(0.35,mapScale/1.2);applyMap();};
