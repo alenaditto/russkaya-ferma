@@ -99,7 +99,7 @@
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
   @keyframes goalJump{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.08)}}
   @keyframes pulseName{from{transform:scale(1)}to{transform:scale(1.07)}}
-  .field-visual{display:block;width:330px;height:190px;border-radius:36px;background:radial-gradient(ellipse at 50% 35%,#ffe58a 0%,#f2c94c 55%,#d99a20 100%);border:6px solid #a97b2f;box-shadow:inset 0 0 38px rgba(150,90,0,.35),0 12px 16px rgba(60,35,15,.25);font-size:34px;line-height:1.25;padding:16px 8px;overflow:hidden;animation:fieldSway 3.8s ease-in-out infinite}
+  .field-visual{display:block;width:410px;height:225px;border-radius:36px;background:radial-gradient(ellipse at 50% 35%,#ffe58a 0%,#f2c94c 55%,#d99a20 100%);border:6px solid #a97b2f;box-shadow:inset 0 0 38px rgba(150,90,0,.35),0 12px 16px rgba(60,35,15,.25);font-size:34px;line-height:1.25;padding:16px 8px;overflow:hidden;animation:fieldSway 3.8s ease-in-out infinite}
   @keyframes fieldSway{0%,100%{transform:rotate(-.5deg)}50%{transform:rotate(.6deg)}}
   .map-tree{position:absolute;width:76px;height:auto;transform:translate(-50%,-88%);transform-origin:50% 90%;animation:treeSway 3.6s ease-in-out infinite;pointer-events:none;filter:drop-shadow(0 5px 4px rgba(60,35,15,.25))}
   @keyframes treeSway{0%,100%{transform:translate(-50%,-88%) rotate(-1.6deg)}50%{transform:translate(-50%,-88%) rotate(1.8deg)}}
@@ -332,27 +332,27 @@ var TERRITORIES=[
   {id:"lake",name:"🏞 Озёрный край",level:70,x:1800,y:1600,w:TILE_W,h:TILE_H,bg:"images/bg/lake-bg.png"}
 ];
 var PANOS=[
-  {y:1600,bg:"images/bg/pano-bottom.jpg",z:1},
-  {y:0,bg:"images/bg/pano-top.jpg",z:2}
+  {y:1600,bg:"images/bg/pano-bottom.jpg",z:0},
+  {y:0,bg:"images/bg/pano-top.jpg",z:0}
 ];
 function territoryById(id){for(var i=0;i<TERRITORIES.length;i++)if(TERRITORIES[i].id===id)return TERRITORIES[i];return TERRITORIES[3];}
 function territoryOpen(t){return game.level>=t.level;}
 var PLOTS=[
-  {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:150,name:"Терем",x:460,y:1600+470,terr:"home",page:"upgrades"},
-  {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:140,name:"Амбар",x:210,y:1600+720,terr:"home",action:"storage"},
-  {id:"board",icon:"📋",img:"images/buildings/board.png",w:100,name:"Доска заказов",x:690,y:1600+720,terr:"home",page:"orders"},
-  {id:"mill",icon:"🏭",img:"images/buildings/mill.png",w:130,blades:"images/buildings/mill-blades.png",bladesW:120,bladesTop:"26%",name:"Мельница",x:460,y:1600+800,terr:"home",page:"factory",level:4,buildKey:"Mill",cost:COST_MILL},
-  {id:"coop",icon:"🐔",img:"images/buildings/coop.png",w:165,name:"Курятник",x:210,y:1600+1040,terr:"home",page:"animals",level:2,buildKey:"Coop",cost:COST_COOP},
-  {id:"juicer",icon:"🧃",img:"images/buildings/juicer.png",w:125,name:"Соковыжималка",x:690,y:1600+1040,terr:"home",page:"factory",level:3,buildKey:"Juicer",cost:COST_JUICER},
-  {id:"field",icon:"🌾",name:"Поле",x:450,y:1600+1340,terr:"home",page:"field",isField:true},
-  {id:"bakery",icon:"🥖",img:"images/buildings/bakery.png",w:160,name:"Пекарня",x:900+250,y:1600+420,terr:"meadow",page:"factory",level:6,buildKey:"Bakery",cost:COST_BAKERY},
-  {id:"tavern",icon:"🍳",img:"images/buildings/tavern.png",w:160,name:"Таверна",x:900+650,y:1600+420,terr:"meadow",page:"tavern",level:8,buildKey:"Tavern",cost:COST_TAVERN},
-  {id:"sheep",icon:"🐑",img:"images/buildings/sheep.png",w:160,name:"Овчарня",x:900+250,y:1600+780,terr:"meadow",page:"animals",level:9,buildKey:"Sheep",cost:COST_SHEEP},
-  {id:"market",icon:"🏪",img:"images/buildings/market.png",w:180,name:"Рынок",x:900+650,y:1600+780,terr:"meadow",page:"market",level:10},
-  {id:"weave",icon:"🧵",img:"images/buildings/weave.png",w:145,name:"Ткацкий станок",x:900+250,y:1600+1140,terr:"meadow",page:"factory",level:11,buildKey:"Weave",cost:COST_WEAVE},
-  {id:"barn",icon:"🐄",img:"images/buildings/barn.png",w:185,name:"Коровник",x:900+650,y:1600+1140,terr:"meadow",page:"animals",level:13,buildKey:"Barn",cost:COST_BARN},
-  {id:"lavka",icon:"🏺",img:"images/buildings/lavka.png",w:135,name:"Лавка диковин",x:900+450,y:1600+1440,terr:"meadow",page:"lavka",level:16},
-  {id:"stable",icon:"🐴",img:"images/buildings/stable.png",w:170,name:"Конюшня",x:900+450,y:540,terr:"forest",level:20,soon:"🐴 Конюшня и скачки — скоро!"},
+  {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:190,name:"Терем",x:240,y:1600+520,terr:"home",page:"upgrades"},
+  {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:175,name:"Амбар",x:240,y:1600+780,terr:"home",action:"storage"},
+  {id:"board",icon:"📋",img:"images/buildings/board.png",w:110,name:"Доска заказов",x:660,y:1600+780,terr:"home",page:"orders"},
+  {id:"mill",icon:"🏭",img:"images/buildings/mill.png",w:170,blades:"images/buildings/mill-blades.png",bladesW:155,bladesTop:"26%",name:"Мельница",x:660,y:1600+560,terr:"home",page:"factory",level:4,buildKey:"Mill",cost:COST_MILL},
+  {id:"coop",icon:"🐔",img:"images/buildings/coop.png",w:210,name:"Курятник",x:240,y:1600+1100,terr:"home",page:"animals",level:2,buildKey:"Coop",cost:COST_COOP},
+  {id:"juicer",icon:"🧃",img:"images/buildings/juicer.png",w:160,name:"Соковыжималка",x:660,y:1600+1100,terr:"home",page:"factory",level:3,buildKey:"Juicer",cost:COST_JUICER},
+  {id:"field",icon:"🌾",name:"Поле",x:450,y:1600+1400,terr:"home",page:"field",isField:true},
+  {id:"bakery",icon:"🥖",img:"images/buildings/bakery.png",w:200,name:"Пекарня",x:900+250,y:1600+420,terr:"meadow",page:"factory",level:6,buildKey:"Bakery",cost:COST_BAKERY},
+  {id:"tavern",icon:"🍳",img:"images/buildings/tavern.png",w:200,name:"Таверна",x:900+650,y:1600+420,terr:"meadow",page:"tavern",level:8,buildKey:"Tavern",cost:COST_TAVERN},
+  {id:"sheep",icon:"🐑",img:"images/buildings/sheep.png",w:200,name:"Овчарня",x:900+250,y:1600+780,terr:"meadow",page:"animals",level:9,buildKey:"Sheep",cost:COST_SHEEP},
+  {id:"market",icon:"🏪",img:"images/buildings/market.png",w:225,name:"Рынок",x:900+650,y:1600+780,terr:"meadow",page:"market",level:10},
+  {id:"weave",icon:"🧵",img:"images/buildings/weave.png",w:180,name:"Ткацкий станок",x:900+250,y:1600+1140,terr:"meadow",page:"factory",level:11,buildKey:"Weave",cost:COST_WEAVE},
+  {id:"barn",icon:"🐄",img:"images/buildings/barn.png",w:230,name:"Коровник",x:900+650,y:1600+1140,terr:"meadow",page:"animals",level:13,buildKey:"Barn",cost:COST_BARN},
+  {id:"lavka",icon:"🏺",img:"images/buildings/lavka.png",w:170,name:"Лавка диковин",x:900+450,y:1600+1440,terr:"meadow",page:"lavka",level:16},
+  {id:"stable",icon:"🐴",img:"images/buildings/stable.png",w:215,name:"Конюшня",x:900+450,y:540,terr:"forest",level:20,soon:"🐴 Конюшня и скачки — скоро!"},
   {id:"future-forest",icon:"🏚",name:"Старый цех",x:900+230,y:1000,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
   {id:"future-forest2",icon:"🏚",name:"Хижина травницы",x:900+670,y:1000,terr:"forest",soon:"Здесь будет новое здание. Скоро!"},
   {id:"future-forest3",icon:"🏚",name:"Лесопилка",x:900+450,y:1350,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
