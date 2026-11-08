@@ -56,7 +56,8 @@
   #map-viewport{position:fixed;inset:0;height:100dvh;min-height:0;margin:0;border-radius:0;overflow:hidden;background:#79b657;border:none;touch-action:none;cursor:grab;box-shadow:none}
   #map-viewport:active{cursor:grabbing}
   #map-world{position:absolute;left:0;top:0;width:2700px;height:3200px;transform-origin:0 0;background:radial-gradient(circle at 450px 2400px,rgba(255,255,190,.25),transparent 700px),repeating-linear-gradient(45deg,#93c96a 0 90px,#8ec563 90px 180px),#8ec563}
-  .territory{position:absolute;overflow:hidden;z-index:1;background-size:cover;background-position:center;background-repeat:no-repeat}
+  .territory{position:absolute;overflow:hidden;z-index:1;background:transparent}
+  .pano{position:absolute;left:0;width:2700px;height:1600px;z-index:0;background-size:100% 100%;background-position:center;background-repeat:no-repeat;pointer-events:none}
   .territory .tname{position:absolute;top:56px;left:60px;background:rgba(255,253,247,.88);padding:8px 14px;border-radius:14px;font-weight:800;font-size:24px;z-index:30;border:2px solid rgba(216,189,138,.85)}
   .territory .clouds{position:absolute;inset:0;z-index:20;background:rgba(210,225,235,.28);overflow:hidden}
   .territory .clouds span{position:absolute;font-size:220px;line-height:1;opacity:.92;filter:drop-shadow(0 12px 14px rgba(90,110,130,.35));animation:cloudDrift 9s ease-in-out infinite}
@@ -330,6 +331,10 @@ var TERRITORIES=[
   {id:"meadow",name:"🌿 Луг у реки",level:6,x:900,y:1600,w:TILE_W,h:TILE_H,bg:"images/bg/meadow-bg.png"},
   {id:"lake",name:"🏞 Озёрный край",level:70,x:1800,y:1600,w:TILE_W,h:TILE_H,bg:"images/bg/lake-bg.png"}
 ];
+var PANOS=[
+  {y:0,bg:"images/bg/pano-top.jpg"},
+  {y:1600,bg:"images/bg/pano-bottom.jpg"}
+];
 function territoryById(id){for(var i=0;i<TERRITORIES.length;i++)if(TERRITORIES[i].id===id)return TERRITORIES[i];return TERRITORIES[3];}
 function territoryOpen(t){return game.level>=t.level;}
 var PLOTS=[
@@ -555,12 +560,19 @@ function renderMap(){
   if(mapKey===lastMapKey&&world.children.length)return;
   lastMapKey=mapKey;
   world.innerHTML="";
+  PANOS.forEach(function(pn){
+    var pd=document.createElement("div");
+    pd.className="pano";
+    pd.style.top=pn.y+"px";
+    pd.style.backgroundImage="url('"+pn.bg+"')";
+    world.appendChild(pd);
+  });
   TERRITORIES.forEach(function(t){
     var open=territoryOpen(t);
     var d=document.createElement("div");
     d.className="territory";
     d.style.left=t.x+"px";d.style.top=t.y+"px";d.style.width=t.w+"px";d.style.height=t.h+"px";
-    d.style.backgroundImage="url('"+t.bg+"')";
+    d.style.background="transparent";
     if(open){
       d.innerHTML="<div class='tname'>"+t.name+"</div>";
     }else{
@@ -572,7 +584,7 @@ function renderMap(){
     }
     world.appendChild(d);
   });
-  addSeamDecor(world);
+  /* Деревья-заплатки и мосты убраны: панорамы бесшовные внутри рядов */
   PLOTS.forEach(function(p){
     var st=plotState(p);
     if(st==="hidden")return;
