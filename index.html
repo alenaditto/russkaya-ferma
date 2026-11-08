@@ -56,13 +56,15 @@
   #map-viewport{position:fixed;inset:0;height:100dvh;min-height:0;margin:0;border-radius:0;overflow:hidden;background:#79b657;border:none;touch-action:none;cursor:grab;box-shadow:none}
   #map-viewport:active{cursor:grabbing}
   #map-world{position:absolute;left:0;top:0;width:2700px;height:3200px;transform-origin:0 0;background:radial-gradient(circle at 450px 2400px,rgba(255,255,190,.25),transparent 700px),repeating-linear-gradient(45deg,#93c96a 0 90px,#8ec563 90px 180px),#8ec563}
-  .territory{position:absolute;overflow:hidden;z-index:1;background-size:cover;background-position:center;background-repeat:no-repeat;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%),linear-gradient(to bottom,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%),linear-gradient(to bottom,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%);mask-composite:intersect}
+  .territory{position:absolute;overflow:hidden;z-index:1;background-size:cover;background-position:center;background-repeat:no-repeat}
   .territory .tname{position:absolute;top:56px;left:60px;background:rgba(255,253,247,.88);padding:8px 14px;border-radius:14px;font-weight:800;font-size:24px;z-index:30;border:2px solid rgba(216,189,138,.85)}
   .territory .clouds{position:absolute;inset:0;z-index:20;background:rgba(210,225,235,.28);overflow:hidden}
   .territory .clouds span{position:absolute;font-size:220px;line-height:1;opacity:.92;filter:drop-shadow(0 12px 14px rgba(90,110,130,.35));animation:cloudDrift 9s ease-in-out infinite}
   @keyframes cloudDrift{0%,100%{transform:translateX(0)}50%{transform:translateX(46px)}}
   .territory .tlock{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);background:rgba(255,253,247,.95);padding:20px 28px;border-radius:20px;font-weight:900;font-size:30px;text-align:center;z-index:31;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:80%}
-  .seam-patch{position:absolute;width:250px;height:100px;transform:translate(-50%,-50%) rotate(-3deg);background:radial-gradient(ellipse at center,#eccf92 0%,#dfba7a 55%,rgba(223,186,122,0) 73%);border-radius:50%;z-index:6;pointer-events:none}
+  .seam-road{position:absolute;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,#ecca8d 0%,#ddb678 58%,rgba(221,182,120,0) 76%);border-radius:50%;z-index:5;pointer-events:none}
+  .seam-road-h{width:420px;height:118px}
+  .seam-road-v{width:118px;height:420px}
   .seam-tree{position:absolute;width:120px;height:auto;transform:translate(-50%,-88%);transform-origin:50% 90%;animation:treeSway 3.6s ease-in-out infinite;pointer-events:none;filter:drop-shadow(0 5px 4px rgba(60,35,15,.25));z-index:7}
   /* === HUD ПОВЕРХ КАРТЫ === */
   .hud{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:10px;right:10px;z-index:20;pointer-events:none}
@@ -494,26 +496,39 @@ function plotState(p){
   return "open";
 }
 function addSeamDecor(world){
-  var patches=[{x:900,y:2500},{x:1350,y:1600},{x:1800,y:2400},{x:450,y:1600}];
-  patches.forEach(function(p){
-    var d=document.createElement("div");d.className="seam-patch";
-    d.style.left=p.x+"px";d.style.top=p.y+"px";
+  var PASS_HM_Y=2400;
+  var PASS_MF_X=1350;
+  var roads=[
+    {cls:"seam-road seam-road-h",x:900,y:PASS_HM_Y},
+    {cls:"seam-road seam-road-v",x:PASS_MF_X,y:1600}
+  ];
+  roads.forEach(function(r){
+    var d=document.createElement("div");d.className=r.cls;
+    d.style.left=r.x+"px";d.style.top=r.y+"px";
     world.appendChild(d);
   });
-  var trees=[
-    {x:872,y:1780},{x:928,y:2080},{x:870,y:2820},{x:930,y:3020},
-    {x:1080,y:1575},{x:1620,y:1625},{x:1775,y:1980},{x:1825,y:2820},
-    {x:180,y:1575},{x:720,y:1625},{x:880,y:120},{x:920,y:2820-1600}
+  var borders=[
+    {axis:"v",fixed:900,from:60,to:3140,gaps:[[PASS_HM_Y-130,PASS_HM_Y+130]]},
+    {axis:"v",fixed:1800,from:60,to:3140,gaps:[]},
+    {axis:"h",fixed:1600,from:60,to:2640,gaps:[[PASS_MF_X-130,PASS_MF_X+130]]}
   ];
-  trees.forEach(function(t,i){
-    if(t.y>3200)return;
-    var img=document.createElement("img");
-    img.className="seam-tree";img.src="images/decor/tree.png";img.alt="";
-    img.style.left=t.x+"px";img.style.top=t.y+"px";
-    img.style.width=(105+(i%3)*18)+"px";
-    img.style.animationDelay=(i*0.35)+"s";
-    img.onerror=function(){img.style.display="none";};
-    world.appendChild(img);
+  var n=0;
+  borders.forEach(function(b){
+    for(var pos=b.from;pos<=b.to;pos+=104){
+      var inGap=false;
+      b.gaps.forEach(function(g){if(pos>g[0]&&pos<g[1])inGap=true;});
+      if(inGap)continue;
+      var off=Math.sin(n*2.39)*30;
+      var img=document.createElement("img");
+      img.className="seam-tree";img.src="images/decor/tree.png";img.alt="";
+      img.style.left=((b.axis==="v"?b.fixed+off:pos))+"px";
+      img.style.top=((b.axis==="v"?pos:b.fixed+off))+"px";
+      img.style.width=(108+(n%4)*20)+"px";
+      img.style.animationDelay=((n%7)*0.3)+"s";
+      img.onerror=function(){img.style.display="none";};
+      world.appendChild(img);
+      n++;
+    }
   });
 }
 function renderMap(){
@@ -532,7 +547,7 @@ function renderMap(){
     var open=territoryOpen(t);
     var d=document.createElement("div");
     d.className="territory";
-    d.style.left=(t.x-SEAM)+"px";d.style.top=(t.y-SEAM)+"px";d.style.width=(t.w+SEAM*2)+"px";d.style.height=(t.h+SEAM*2)+"px";
+    d.style.left=t.x+"px";d.style.top=t.y+"px";d.style.width=t.w+"px";d.style.height=t.h+"px";
     d.style.backgroundImage="url('"+t.bg+"')";
     if(open){
       d.innerHTML="<div class='tname'>"+t.name+"</div>";
