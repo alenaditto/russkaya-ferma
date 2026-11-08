@@ -57,7 +57,7 @@
   #map-viewport:active{cursor:grabbing}
   #map-world{position:absolute;left:0;top:0;width:2700px;height:3200px;transform-origin:0 0;background:radial-gradient(circle at 450px 2400px,rgba(255,255,190,.25),transparent 700px),repeating-linear-gradient(45deg,#93c96a 0 90px,#8ec563 90px 180px),#8ec563}
   .territory{position:absolute;overflow:hidden;z-index:1;background:transparent}
-  .pano{position:absolute;left:0;width:2700px;height:1600px;z-index:0;background-size:100% 100%;background-position:center;background-repeat:no-repeat;pointer-events:none}
+  .pano{position:absolute;left:0;width:2700px;height:1660px;background-size:100% 100%;background-position:center;background-repeat:no-repeat;pointer-events:none}
   .territory .tname{position:absolute;top:56px;left:60px;background:rgba(255,253,247,.88);padding:8px 14px;border-radius:14px;font-weight:800;font-size:24px;z-index:30;border:2px solid rgba(216,189,138,.85)}
   .territory .clouds{position:absolute;inset:0;z-index:20;background:rgba(210,225,235,.28);overflow:hidden}
   .territory .clouds span{position:absolute;font-size:220px;line-height:1;opacity:.92;filter:drop-shadow(0 12px 14px rgba(90,110,130,.35));animation:cloudDrift 9s ease-in-out infinite}
@@ -332,39 +332,39 @@ var TERRITORIES=[
   {id:"lake",name:"🏞 Озёрный край",level:70,x:1800,y:1600,w:TILE_W,h:TILE_H,bg:"images/bg/lake-bg.png"}
 ];
 var PANOS=[
-  {y:0,bg:"images/bg/pano-top.jpg"},
-  {y:1600,bg:"images/bg/pano-bottom.jpg"}
+  {y:1600,bg:"images/bg/pano-bottom.jpg",z:1},
+  {y:0,bg:"images/bg/pano-top.jpg",z:2}
 ];
 function territoryById(id){for(var i=0;i<TERRITORIES.length;i++)if(TERRITORIES[i].id===id)return TERRITORIES[i];return TERRITORIES[3];}
 function territoryOpen(t){return game.level>=t.level;}
 var PLOTS=[
-  {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:120,name:"Терем",x:450,y:1600+430,terr:"home",page:"upgrades"},
-  {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:112,name:"Амбар",x:180,y:1600+660,terr:"home",action:"storage"},
-  {id:"board",icon:"📋",img:"images/buildings/board.png",w:82,name:"Доска заказов",x:720,y:1600+660,terr:"home",page:"orders"},
-  {id:"coop",icon:"🐔",img:"images/buildings/coop.png",w:132,name:"Курятник",x:190,y:1600+980,terr:"home",page:"animals",level:2,buildKey:"Coop",cost:COST_COOP},
-  {id:"juicer",icon:"🧃",img:"images/buildings/juicer.png",w:100,name:"Соковыжималка",x:710,y:1600+980,terr:"home",page:"factory",level:3,buildKey:"Juicer",cost:COST_JUICER},
-  {id:"mill",icon:"🏭",img:"images/buildings/mill.png",w:104,blades:"images/buildings/mill-blades.png",bladesW:98,bladesTop:"26%",name:"Мельница",x:450,y:1600+760,terr:"home",page:"factory",level:4,buildKey:"Mill",cost:COST_MILL},
-  {id:"field",icon:"🌾",name:"Поле",x:450,y:1600+1330,terr:"home",page:"field",isField:true},
-  {id:"bakery",icon:"🥖",img:"images/buildings/bakery.png",w:128,name:"Пекарня",x:900+230,y:1600+400,terr:"meadow",page:"factory",level:6,buildKey:"Bakery",cost:COST_BAKERY},
-  {id:"tavern",icon:"🍳",img:"images/buildings/tavern.png",w:128,name:"Таверна",x:900+670,y:1600+400,terr:"meadow",page:"tavern",level:8,buildKey:"Tavern",cost:COST_TAVERN},
-  {id:"sheep",icon:"🐑",img:"images/buildings/sheep.png",w:128,name:"Овчарня",x:900+230,y:1600+760,terr:"meadow",page:"animals",level:9,buildKey:"Sheep",cost:COST_SHEEP},
-  {id:"market",icon:"🏪",img:"images/buildings/market.png",w:148,name:"Рынок",x:900+670,y:1600+760,terr:"meadow",page:"market",level:10},
-  {id:"weave",icon:"🧵",img:"images/buildings/weave.png",w:118,name:"Ткацкий станок",x:900+230,y:1600+1120,terr:"meadow",page:"factory",level:11,buildKey:"Weave",cost:COST_WEAVE},
-  {id:"barn",icon:"🐄",img:"images/buildings/barn.png",w:152,name:"Коровник",x:900+670,y:1600+1120,terr:"meadow",page:"animals",level:13,buildKey:"Barn",cost:COST_BARN},
-  {id:"lavka",icon:"🏺",img:"images/buildings/lavka.png",w:108,name:"Лавка диковин",x:900+450,y:1600+1420,terr:"meadow",page:"lavka",level:16},
-  {id:"stable",icon:"🐴",img:"images/buildings/stable.png",w:140,name:"Конюшня",x:900+450,y:520,terr:"forest",level:20,soon:"🐴 Конюшня и скачки — скоро!"},
-  {id:"future-forest",icon:"🏚",name:"Старый цех",x:900+220,y:980,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
-  {id:"future-forest2",icon:"🏚",name:"Хижина травницы",x:900+680,y:980,terr:"forest",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-forest3",icon:"🏚",name:"Лесопилка",x:900+450,y:1330,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
-  {id:"future-hills",icon:"🏚",name:"Заброшенная мастерская",x:450,y:620,terr:"hills",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-hills2",icon:"⛏",name:"Старая каменоломня",x:240,y:1080,terr:"hills",soon:"Здесь будет каменоломня. Скоро!"},
-  {id:"future-hills3",icon:"🏚",name:"Старая кузница",x:660,y:1080,terr:"hills",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-lake",icon:"🏚",name:"Старая пристань",x:1800+450,y:1600+620,terr:"lake",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-lake2",icon:"🎣",name:"Рыбацкий пруд",x:1800+240,y:1600+1080,terr:"lake",soon:"Здесь будет рыбацкий пруд. Скоро!"},
-  {id:"future-lake3",icon:"🏚",name:"Лодочная мастерская",x:1800+660,y:1600+1080,terr:"lake",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-far",icon:"🏚",name:"Дальний дом",x:1800+450,y:620,terr:"far",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-far2",icon:"🏚",name:"Дальняя мастерская",x:1800+240,y:1080,terr:"far",soon:"Здесь будет новое здание. Скоро!"},
-  {id:"future-far3",icon:"🏚",name:"Дальний амбар",x:1800+660,y:1080,terr:"far",soon:"Здесь будет новое здание. Скоро!"}
+  {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:150,name:"Терем",x:460,y:1600+470,terr:"home",page:"upgrades"},
+  {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:140,name:"Амбар",x:210,y:1600+720,terr:"home",action:"storage"},
+  {id:"board",icon:"📋",img:"images/buildings/board.png",w:100,name:"Доска заказов",x:690,y:1600+720,terr:"home",page:"orders"},
+  {id:"mill",icon:"🏭",img:"images/buildings/mill.png",w:130,blades:"images/buildings/mill-blades.png",bladesW:120,bladesTop:"26%",name:"Мельница",x:460,y:1600+800,terr:"home",page:"factory",level:4,buildKey:"Mill",cost:COST_MILL},
+  {id:"coop",icon:"🐔",img:"images/buildings/coop.png",w:165,name:"Курятник",x:210,y:1600+1040,terr:"home",page:"animals",level:2,buildKey:"Coop",cost:COST_COOP},
+  {id:"juicer",icon:"🧃",img:"images/buildings/juicer.png",w:125,name:"Соковыжималка",x:690,y:1600+1040,terr:"home",page:"factory",level:3,buildKey:"Juicer",cost:COST_JUICER},
+  {id:"field",icon:"🌾",name:"Поле",x:450,y:1600+1340,terr:"home",page:"field",isField:true},
+  {id:"bakery",icon:"🥖",img:"images/buildings/bakery.png",w:160,name:"Пекарня",x:900+250,y:1600+420,terr:"meadow",page:"factory",level:6,buildKey:"Bakery",cost:COST_BAKERY},
+  {id:"tavern",icon:"🍳",img:"images/buildings/tavern.png",w:160,name:"Таверна",x:900+650,y:1600+420,terr:"meadow",page:"tavern",level:8,buildKey:"Tavern",cost:COST_TAVERN},
+  {id:"sheep",icon:"🐑",img:"images/buildings/sheep.png",w:160,name:"Овчарня",x:900+250,y:1600+780,terr:"meadow",page:"animals",level:9,buildKey:"Sheep",cost:COST_SHEEP},
+  {id:"market",icon:"🏪",img:"images/buildings/market.png",w:180,name:"Рынок",x:900+650,y:1600+780,terr:"meadow",page:"market",level:10},
+  {id:"weave",icon:"🧵",img:"images/buildings/weave.png",w:145,name:"Ткацкий станок",x:900+250,y:1600+1140,terr:"meadow",page:"factory",level:11,buildKey:"Weave",cost:COST_WEAVE},
+  {id:"barn",icon:"🐄",img:"images/buildings/barn.png",w:185,name:"Коровник",x:900+650,y:1600+1140,terr:"meadow",page:"animals",level:13,buildKey:"Barn",cost:COST_BARN},
+  {id:"lavka",icon:"🏺",img:"images/buildings/lavka.png",w:135,name:"Лавка диковин",x:900+450,y:1600+1440,terr:"meadow",page:"lavka",level:16},
+  {id:"stable",icon:"🐴",img:"images/buildings/stable.png",w:170,name:"Конюшня",x:900+450,y:540,terr:"forest",level:20,soon:"🐴 Конюшня и скачки — скоро!"},
+  {id:"future-forest",icon:"🏚",name:"Старый цех",x:900+230,y:1000,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
+  {id:"future-forest2",icon:"🏚",name:"Хижина травницы",x:900+670,y:1000,terr:"forest",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-forest3",icon:"🏚",name:"Лесопилка",x:900+450,y:1350,terr:"forest",soon:"Здесь будет новое производство. Скоро!"},
+  {id:"future-hills",icon:"🏚",name:"Заброшенная мастерская",x:450,y:640,terr:"hills",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-hills2",icon:"⛏",name:"Старая каменоломня",x:240,y:1100,terr:"hills",soon:"Здесь будет каменоломня. Скоро!"},
+  {id:"future-hills3",icon:"🏚",name:"Старая кузница",x:660,y:1100,terr:"hills",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-lake",icon:"🏚",name:"Старая пристань",x:1800+450,y:1600+640,terr:"lake",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-lake2",icon:"🎣",name:"Рыбацкий пруд",x:1800+240,y:1600+1100,terr:"lake",soon:"Здесь будет рыбацкий пруд. Скоро!"},
+  {id:"future-lake3",icon:"🏚",name:"Лодочная мастерская",x:1800+660,y:1600+1100,terr:"lake",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-far",icon:"🏚",name:"Дальний дом",x:1800+450,y:640,terr:"far",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-far2",icon:"🏚",name:"Дальняя мастерская",x:1800+240,y:1100,terr:"far",soon:"Здесь будет новое здание. Скоро!"},
+  {id:"future-far3",icon:"🏚",name:"Дальний амбар",x:1800+660,y:1100,terr:"far",soon:"Здесь будет новое здание. Скоро!"}
 ];
 function plotById(id){for(var i=0;i<PLOTS.length;i++)if(PLOTS[i].id===id)return PLOTS[i];return PLOTS[0];}
 
@@ -563,7 +563,7 @@ function renderMap(){
   PANOS.forEach(function(pn){
     var pd=document.createElement("div");
     pd.className="pano";
-    pd.style.top=pn.y+"px";
+    pd.style.top=pn.y+"px";pd.style.zIndex=pn.z;
     pd.style.backgroundImage="url('"+pn.bg+"')";
     world.appendChild(pd);
   });
@@ -652,16 +652,16 @@ var mapX=-120,mapY=-60,mapScale=0.44,mapPointers={},mapLastDist=0,mapDragMoved=f
 function applyMap(){
   var vp=$("map-viewport"),world=$("map-world");if(!vp||!world)return;
   var w=WORLD_W*mapScale,h=WORLD_H*mapScale,vw=vp.clientWidth,vh=vp.clientHeight;
-  mapX=Math.min(30,Math.max(vw-w-30,mapX));
-  mapY=Math.min(30,Math.max(vh-h-30,mapY));
+  mapX=Math.min(0,Math.max(vw-w,mapX));
+  mapY=Math.min(0,Math.max(vh-h,mapY));
   world.style.transform="translate("+mapX+"px,"+mapY+"px) scale("+mapScale+")";
 }
 function centerMap(){
   var vp=$("map-viewport");
   var vw=vp.clientWidth||390,vh=vp.clientHeight||720;
-  mapScale=Math.max(0.36,Math.min(0.52,vw/940));
+  mapScale=Math.max(0.38,Math.min(0.55,vw/860));
   mapX=vw/2-450*mapScale;
-  mapY=vh/2-(1600+880)*mapScale;
+  mapY=vh/2-(1600+820)*mapScale;
   applyMap();
 }
 $("btn-home").onclick=function(){centerMap();};
