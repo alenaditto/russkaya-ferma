@@ -7,20 +7,13 @@
 <link rel="icon" href="data:,">
 <style>
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{overscroll-behavior:none}
-  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f3e8d6;color:#5b4030}
-  .app{max-width:440px;margin:0 auto;min-height:100vh;padding-bottom:20px}
-  header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 6px}
-  h1{font-size:22px;margin:0}.lvl{background:#8d3b1f;color:#fff;padding:7px 12px;border-radius:18px;font-weight:700;border-bottom:3px solid #c96a35}
-  .res{display:flex;flex-wrap:wrap;gap:8px 14px;padding:6px 16px;font-weight:600}
-  #goal-bar{display:flex;gap:10px;align-items:center;margin:10px 12px 0;background:linear-gradient(180deg,#fff8e6,#f7e7c3);border:2px solid #c96a35;border-radius:16px;padding:10px 12px;box-shadow:0 3px 10px rgba(90,60,30,.16)}
-  #goal-text{flex:1;font-weight:800;font-size:14px;line-height:1.35}
-  #btn-goal-show{flex:0 0 auto;border:none;background:#8d3b1f;color:#fff;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+  html,body{overscroll-behavior:none;height:100%}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#79b657;color:#5b4030;overflow:hidden}
+  .app{max-width:none;margin:0;min-height:100dvh;padding:0}
   .card{background:#fffdf7;border-radius:16px;padding:16px;margin:12px 16px 0;box-shadow:0 2px 8px rgba(90,60,30,.08);border:1px solid #ecd9b8}
   .card h2{font-size:17px;margin:0 0 12px;color:#7a3418}
   .hint{font-size:13px;opacity:.75;margin-top:8px;line-height:1.4}
   .missing{font-size:13px;color:#c0392b;font-weight:700;margin-top:8px;line-height:1.4}
-  #status{text-align:center;font-size:12px;opacity:.6;padding:12px}
   .board{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;touch-action:none}
   .cell{aspect-ratio:1;border:none;border-radius:11px;cursor:pointer;font-size:25px;display:flex;align-items:center;justify-content:center;background:#e9dcc3;transition:transform .15s,background .15s;touch-action:none;user-select:none}
   .cell:active{transform:scale(.92)}.cell.selected{background:#ffd98a;outline:3px solid #c96a35}.cell.matched{background:#b7e4a8;transform:scale(.85);opacity:.4}
@@ -59,15 +52,31 @@
   #bug-modal{z-index:80;background:rgba(35,55,25,.92)}
   .bug-box{background:#f7ead0;border-radius:20px;padding:16px;max-width:420px;width:100%;margin:auto;text-align:center}
   .shooter{font-size:24px;margin-top:8px;font-weight:700}
-  #map-viewport{position:relative;height:62vh;min-height:420px;margin:10px 12px 0;border-radius:20px;overflow:hidden;background:#8fbf5f;border:3px solid #6f9e43;touch-action:none;cursor:grab;box-shadow:0 6px 16px rgba(90,60,30,.22)}
+  /* === ПОЛНОЭКРАННАЯ КАРТА === */
+  #map-viewport{position:fixed;inset:0;height:100dvh;min-height:0;margin:0;border-radius:0;overflow:hidden;background:#79b657;border:none;touch-action:none;cursor:grab;box-shadow:none}
   #map-viewport:active{cursor:grabbing}
-  #map-world{position:absolute;left:0;top:0;width:2700px;height:3200px;transform-origin:0 0;background:#8fbf5f}
-  .territory{position:absolute;overflow:hidden;z-index:1;background-size:cover;background-position:center;background-repeat:no-repeat}
-  .territory .tname{position:absolute;top:26px;left:30px;background:rgba(255,253,247,.92);padding:10px 16px;border-radius:14px;font-weight:800;font-size:26px;z-index:30;border:2px solid #d8bd8a}
+  #map-world{position:absolute;left:0;top:0;width:2700px;height:3200px;transform-origin:0 0;background:radial-gradient(circle at 450px 2400px,rgba(255,255,190,.25),transparent 700px),repeating-linear-gradient(45deg,#93c96a 0 90px,#8ec563 90px 180px),#8ec563}
+  .territory{position:absolute;overflow:hidden;z-index:1;background-size:cover;background-position:center;background-repeat:no-repeat;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%),linear-gradient(to bottom,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%),linear-gradient(to bottom,transparent 0,#000 38px,#000 calc(100% - 38px),transparent 100%);mask-composite:intersect}
+  .territory .tname{position:absolute;top:56px;left:60px;background:rgba(255,253,247,.88);padding:8px 14px;border-radius:14px;font-weight:800;font-size:24px;z-index:30;border:2px solid rgba(216,189,138,.85)}
   .territory .clouds{position:absolute;inset:0;z-index:20;background:rgba(210,225,235,.28);overflow:hidden}
   .territory .clouds span{position:absolute;font-size:220px;line-height:1;opacity:.92;filter:drop-shadow(0 12px 14px rgba(90,110,130,.35));animation:cloudDrift 9s ease-in-out infinite}
   @keyframes cloudDrift{0%,100%{transform:translateX(0)}50%{transform:translateX(46px)}}
   .territory .tlock{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);background:rgba(255,253,247,.95);padding:20px 28px;border-radius:20px;font-weight:900;font-size:30px;text-align:center;z-index:31;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:80%}
+  .seam-patch{position:absolute;width:250px;height:100px;transform:translate(-50%,-50%) rotate(-3deg);background:radial-gradient(ellipse at center,#eccf92 0%,#dfba7a 55%,rgba(223,186,122,0) 73%);border-radius:50%;z-index:6;pointer-events:none}
+  .seam-tree{position:absolute;width:120px;height:auto;transform:translate(-50%,-88%);transform-origin:50% 90%;animation:treeSway 3.6s ease-in-out infinite;pointer-events:none;filter:drop-shadow(0 5px 4px rgba(60,35,15,.25));z-index:7}
+  /* === HUD ПОВЕРХ КАРТЫ === */
+  .hud{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:10px;right:10px;z-index:20;pointer-events:none}
+  .hud-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .hud-rings{display:flex;gap:8px}
+  .hud-ring{width:66px;height:66px;border-radius:50%;padding:5px;box-shadow:0 4px 12px rgba(60,35,15,.35);background:rgba(255,255,255,.55)}
+  .hud-ring-in{width:100%;height:100%;border-radius:50%;background:rgba(255,253,247,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:11px;line-height:1.08;text-align:center;color:#5b4030;padding:3px}
+  .hud-ring-in b{font-size:13px}
+  .hud-pills{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+  .hud-pill{background:rgba(255,253,247,.94);border:2px solid rgba(216,189,138,.9);border-radius:999px;padding:7px 11px;font-weight:900;font-size:14px;box-shadow:0 3px 9px rgba(60,35,15,.22)}
+  #goal-bar{pointer-events:auto;display:flex;gap:9px;align-items:center;margin-top:9px;background:linear-gradient(180deg,rgba(255,248,230,.96),rgba(247,231,195,.94));border:2px solid #c96a35;border-radius:16px;padding:9px 11px;box-shadow:0 3px 10px rgba(90,60,30,.20)}
+  #goal-text{flex:1;font-weight:800;font-size:13.5px;line-height:1.3}
+  #btn-goal-show{flex:0 0 auto;border:none;background:#8d3b1f;color:#fff;border-radius:12px;padding:9px 11px;font-weight:900;cursor:pointer}
+  .hud-bottom{position:absolute;left:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:15;pointer-events:none;background:rgba(255,253,247,.82);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:700;max-width:72%}
   .plot{position:absolute;width:190px;transform:translate(-50%,-94%);text-align:center;z-index:2;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
   .plot .ground{display:block;position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:calc(var(--bw,108px)*1.18);height:calc(var(--bw,108px)*0.34);background:radial-gradient(ellipse at center,rgba(70,45,20,.38) 0%,rgba(70,45,20,.16) 58%,rgba(70,45,20,0) 74%);border-radius:50%;z-index:0}
   .plot .pico{display:block;font-size:64px;line-height:1;filter:drop-shadow(0 8px 4px rgba(60,35,15,.35));position:relative;z-index:2;min-height:64px}
@@ -91,8 +100,8 @@
   @keyframes fieldSway{0%,100%{transform:rotate(-.5deg)}50%{transform:rotate(.6deg)}}
   .map-tree{position:absolute;width:76px;height:auto;transform:translate(-50%,-88%);transform-origin:50% 90%;animation:treeSway 3.6s ease-in-out infinite;pointer-events:none;filter:drop-shadow(0 5px 4px rgba(60,35,15,.25))}
   @keyframes treeSway{0%,100%{transform:translate(-50%,-88%) rotate(-1.6deg)}50%{transform:translate(-50%,-88%) rotate(1.8deg)}}
-  .map-btns{position:absolute;right:10px;bottom:10px;z-index:5;display:flex;flex-direction:column;gap:8px}
-  .map-btns button{width:46px;height:46px;border-radius:50%;border:none;background:#fffdf7;font-size:21px;font-weight:900;color:#5b4030;box-shadow:0 3px 8px rgba(0,0,0,.25);cursor:pointer}
+  .map-btns{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:25;display:flex;flex-direction:column;gap:8px}
+  .map-btns button{width:48px;height:48px;border-radius:50%;border:none;background:#fffdf7;font-size:21px;font-weight:900;color:#5b4030;box-shadow:0 3px 8px rgba(0,0,0,.25);cursor:pointer}
   #sheet{z-index:60;padding:0;align-items:flex-end}
   #storage-modal{z-index:95}
   #energy-modal{z-index:96}
@@ -155,21 +164,31 @@
 </div></div>
 
 <div class="app">
-  <header><h1>🌾 Русская ферма</h1><div class="lvl" id="lvl">Ур. 1</div></header>
-  <div class="res"><span>🪙 <span id="coins">0</span></span><span>⭐ <span id="xp">0/0</span></span><span>⚡ <span id="energy-text">20/20</span></span><span>📦 <span id="storage-text">0/15</span></span></div>
-
-  <div id="goal-bar"><div id="goal-text">🎯 Цель: собери урожай на поле</div><button id="btn-goal-show">Показать →</button></div>
-
   <div id="map-viewport">
     <div id="map-world"></div>
+
+    <div class="hud">
+      <div class="hud-top">
+        <div class="hud-rings">
+          <div class="hud-ring" id="xp-ring" title="Опыт"><div class="hud-ring-in"><span>⭐ Ур.</span><b id="lvl">1</b><span id="xp">0/0</span></div></div>
+          <div class="hud-ring" id="energy-ring" title="Энергия"><div class="hud-ring-in"><span>⚡</span><b id="energy-text">20/20</b><span>энергия</span></div></div>
+        </div>
+        <div class="hud-pills">
+          <div class="hud-pill">🪙 <span id="coins">0</span></div>
+          <div class="hud-pill">📦 <span id="storage-text">0/15</span></div>
+        </div>
+      </div>
+      <div id="goal-bar"><div id="goal-text">🎯 Цель: собери урожай на поле</div><button id="btn-goal-show">Показать →</button></div>
+    </div>
+
+    <div class="hud-bottom"><span id="status">Загрузка…</span> · Веди карту пальцем, нажимай на здания</div>
+
     <div class="map-btns">
       <button id="btn-zoom-in" title="Приблизить">+</button>
       <button id="btn-zoom-out" title="Отдалить">−</button>
       <button id="btn-home" title="К ферме">🏠</button>
     </div>
   </div>
-  <div class="hint" style="padding:0 16px">Веди карту пальцем или мышью. Нажимай на здания, чтобы зайти внутрь. Подсказка сверху всегда ведёт к следующему шагу.</div>
-  <div id="status">Загрузка…</div>
 </div>
 
 <div class="modal-wrap" id="sheet"><div class="sheet-box">
@@ -300,8 +319,7 @@ var BUILD_MS={Coop:60000,Juicer:120000,Mill:180000,Bakery:300000,Barn:600000,Tav
 var BUILD_FLAG={Coop:"boughtCoop",Juicer:"boughtJuicer",Mill:"boughtMill",Bakery:"boughtBakery",Barn:"boughtBarn",Tavern:"boughtTavern",Sheep:"boughtSheep",Weave:"boughtWeave"};
 var BUILD_NAME={Coop:"Курятник",Juicer:"Соковыжималка",Mill:"Мельница",Bakery:"Пекарня",Barn:"Коровник",Tavern:"Таверна",Sheep:"Овчарня",Weave:"Ткацкая мастерская"};
 var constructions={},territorySeen={home:true},territoryInit=false,highlightPlotId="",lastUnlockLevel=0;
-/* Плитки 9:16: каждая территория 900x1600. Мир 2700x3200. */
-var TILE_W=900,TILE_H=1600,WORLD_W=2700,WORLD_H=3200;
+var TILE_W=900,TILE_H=1600,WORLD_W=2700,WORLD_H=3200,SEAM=34;
 var TERRITORIES=[
   {id:"hills",name:"⛰ Холмы",level:45,x:0,y:0,w:TILE_W,h:TILE_H,bg:"images/bg/hills-bg.png"},
   {id:"forest",name:"🌲 Лесная опушка",level:20,x:900,y:0,w:TILE_W,h:TILE_H,bg:"images/bg/forest-bg.png"},
@@ -312,7 +330,6 @@ var TERRITORIES=[
 ];
 function territoryById(id){for(var i=0;i<TERRITORIES.length;i++)if(TERRITORIES[i].id===id)return TERRITORIES[i];return TERRITORIES[3];}
 function territoryOpen(t){return game.level>=t.level;}
-/* Координаты: абсолютные в мире. Домашняя: x 0..900, y 1600..3200. Луг: x 900..1800. Лесная: x 900..1800, y 0..1600. */
 var PLOTS=[
   {id:"house",icon:"🏠",img:"images/buildings/terem.png",w:120,name:"Терем",x:450,y:1600+430,terr:"home",page:"upgrades"},
   {id:"ambar",icon:"📦",img:"images/buildings/ambar.png",w:112,name:"Амбар",x:180,y:1600+660,terr:"home",action:"storage"},
@@ -343,7 +360,6 @@ var PLOTS=[
   {id:"future-far3",icon:"🏚",name:"Дальний амбар",x:1800+660,y:1080,terr:"far",soon:"Здесь будет новое здание. Скоро!"}
 ];
 function plotById(id){for(var i=0;i<PLOTS.length;i++)if(PLOTS[i].id===id)return PLOTS[i];return PLOTS[0];}
-var DECOR_TREES=[];
 
 var game={coins:100,xp:0,level:1,energy:20,maxEnergy:20,chickens:1,cows:1,sheep:1,storageLevel:0,juicerLevel:1,millLevel:1,bakeryLevel:1,weaveLevel:1,marketSlots:1,fieldLevel:0,wheat:0,carrot:0,corn:0,flour:0,eggs:0,milk:0,bread:0,juice:0,cornflour:0,cornbread:0,wool:0,cloth:0,boughtCoop:false,boughtJuicer:false,boughtMill:false,boughtBakery:false,boughtBarn:false,boughtTavern:false,boughtSheep:false,boughtWeave:false};
 var board=[],selected=-1,busy=false,lastEnergyAt=Date.now(),orders=[],sellQty={};
@@ -477,6 +493,29 @@ function plotState(p){
   }
   return "open";
 }
+function addSeamDecor(world){
+  var patches=[{x:900,y:2500},{x:1350,y:1600},{x:1800,y:2400},{x:450,y:1600}];
+  patches.forEach(function(p){
+    var d=document.createElement("div");d.className="seam-patch";
+    d.style.left=p.x+"px";d.style.top=p.y+"px";
+    world.appendChild(d);
+  });
+  var trees=[
+    {x:872,y:1780},{x:928,y:2080},{x:870,y:2820},{x:930,y:3020},
+    {x:1080,y:1575},{x:1620,y:1625},{x:1775,y:1980},{x:1825,y:2820},
+    {x:180,y:1575},{x:720,y:1625},{x:880,y:120},{x:920,y:2820-1600}
+  ];
+  trees.forEach(function(t,i){
+    if(t.y>3200)return;
+    var img=document.createElement("img");
+    img.className="seam-tree";img.src="images/decor/tree.png";img.alt="";
+    img.style.left=t.x+"px";img.style.top=t.y+"px";
+    img.style.width=(105+(i%3)*18)+"px";
+    img.style.animationDelay=(i*0.35)+"s";
+    img.onerror=function(){img.style.display="none";};
+    world.appendChild(img);
+  });
+}
 function renderMap(){
   var world=$("map-world");if(!world)return;
   if(territoryInit){
@@ -493,7 +532,7 @@ function renderMap(){
     var open=territoryOpen(t);
     var d=document.createElement("div");
     d.className="territory";
-    d.style.left=t.x+"px";d.style.top=t.y+"px";d.style.width=t.w+"px";d.style.height=t.h+"px";
+    d.style.left=(t.x-SEAM)+"px";d.style.top=(t.y-SEAM)+"px";d.style.width=(t.w+SEAM*2)+"px";d.style.height=(t.h+SEAM*2)+"px";
     d.style.backgroundImage="url('"+t.bg+"')";
     if(open){
       d.innerHTML="<div class='tname'>"+t.name+"</div>";
@@ -506,6 +545,7 @@ function renderMap(){
     }
     world.appendChild(d);
   });
+  addSeamDecor(world);
   PLOTS.forEach(function(p){
     var st=plotState(p);
     if(st==="hidden")return;
@@ -569,7 +609,7 @@ function renderMap(){
   });
 }
 
-var mapX=-120,mapY=-60,mapScale=0.48,mapPointers={},mapLastDist=0,mapDragMoved=false;
+var mapX=-120,mapY=-60,mapScale=0.44,mapPointers={},mapLastDist=0,mapDragMoved=false;
 function applyMap(){
   var vp=$("map-viewport"),world=$("map-world");if(!vp||!world)return;
   var w=WORLD_W*mapScale,h=WORLD_H*mapScale,vw=vp.clientWidth,vh=vp.clientHeight;
@@ -577,11 +617,17 @@ function applyMap(){
   mapY=Math.min(30,Math.max(vh-h-30,mapY));
   world.style.transform="translate("+mapX+"px,"+mapY+"px) scale("+mapScale+")";
 }
-/* Старт новичка: Домашняя поляна, в кадре терем сверху, поле внизу. */
-function centerMap(){var vp=$("map-viewport");mapScale=0.48;mapX=(vp.clientWidth||400)/2-450*mapScale;mapY=(vp.clientHeight||420)/2-(1600+1010)*mapScale;applyMap();}
+function centerMap(){
+  var vp=$("map-viewport");
+  var vw=vp.clientWidth||390,vh=vp.clientHeight||720;
+  mapScale=Math.max(0.36,Math.min(0.52,vw/940));
+  mapX=vw/2-450*mapScale;
+  mapY=vh/2-(1600+880)*mapScale;
+  applyMap();
+}
 $("btn-home").onclick=function(){centerMap();};
 $("btn-zoom-in").onclick=function(){if(anyModalOpen())return;mapScale=Math.min(1.1,mapScale*1.2);applyMap();};
-$("btn-zoom-out").onclick=function(){if(anyModalOpen())return;mapScale=Math.max(0.22,mapScale/1.2);applyMap();};
+$("btn-zoom-out").onclick=function(){if(anyModalOpen())return;mapScale=Math.max(0.20,mapScale/1.2);applyMap();};
 (function(){
   var vp=$("map-viewport");if(!vp)return;
   vp.addEventListener("pointerdown",function(e){if(anyModalOpen())return;vp.setPointerCapture(e.pointerId);mapPointers[e.pointerId]={x:e.clientX,y:e.clientY};mapDragMoved=false;mapLastDist=0;});
@@ -599,7 +645,7 @@ $("btn-zoom-out").onclick=function(){if(anyModalOpen())return;mapScale=Math.max(
       mapDragMoved=true;
       var a=mapPointers[ids[0]],b=mapPointers[ids[1]];
       var dist=Math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
-      if(mapLastDist>0){mapScale=Math.max(0.22,Math.min(1.1,mapScale*dist/mapLastDist));applyMap();}
+      if(mapLastDist>0){mapScale=Math.max(0.20,Math.min(1.1,mapScale*dist/mapLastDist));applyMap();}
       mapLastDist=dist;
     }
   });
@@ -611,7 +657,7 @@ $("btn-zoom-out").onclick=function(){if(anyModalOpen())return;mapScale=Math.max(
   }
   vp.addEventListener("pointerup",up);
   vp.addEventListener("pointercancel",up);
-  vp.addEventListener("wheel",function(e){if(anyModalOpen())return;e.preventDefault();mapScale=Math.max(0.22,Math.min(1.1,mapScale*(e.deltaY<0?1.1:0.9)));applyMap();},{passive:false});
+  vp.addEventListener("wheel",function(e){if(anyModalOpen())return;e.preventDefault();mapScale=Math.max(0.20,Math.min(1.1,mapScale*(e.deltaY<0?1.1:0.9)));applyMap();},{passive:false});
   document.addEventListener("gesturestart",function(e){e.preventDefault();});
 })();
 
@@ -629,8 +675,9 @@ function renderAnimalSlots(boxId,slots,animal,kind){
     var face=document.createElement("span");face.className="face";face.textContent=s.state==="ready"?animal+"✨":animal;d.appendChild(face);
     var info=document.createElement("div");info.style.fontSize="11px";info.style.fontWeight="700";
     var btn=document.createElement("button");btn.className="action";
-    var feedEmoji=kind==="cow"?"🌽":kind==="sheep"?"🌾":"🌾";
-    var prodEmoji=kind==="cow"?"🥛":kind==="sheep"?"🧶":"🥚";
+    var feedEmoji="🌾",prodEmoji="🥚";
+    if(kind==="cow"){feedEmoji="🌽";prodEmoji="🥛";}
+    if(kind==="sheep"){feedEmoji="🌾";prodEmoji="🧶";}
     if(s.state==="ready"){info.textContent="Готово!";btn.textContent=prodEmoji;btn.onclick=function(){if(kind==="cow")collectCow(i);else if(kind==="sheep")collectSheep(i);else collectChicken(i);};}
     else if(s.state==="cooking"){info.textContent=fmt(s.at-Date.now());btn.textContent="⏳";btn.disabled=true;}
     else{info.textContent=kind==="cow"?"3🌽+1⚡":kind==="sheep"?"2🌾+1⚡":"1🌾+1⚡";btn.textContent=feedEmoji;btn.onclick=function(){if(kind==="cow")feedCow(i);else if(kind==="sheep")feedSheep(i);else feedChicken(i);};btn.disabled=kind==="cow"?(game.corn<3||game.energy<1):kind==="sheep"?(game.wheat<2||game.energy<1):(game.wheat<1||game.energy<1);}
@@ -890,8 +937,13 @@ $("bug-surrender").onclick=function(){endBugGame(false);};
 function render(matched){
   matched=matched||[];updateProduction();ensureAnimalSlots();renderMap();
   var goal=getGoal();$("goal-text").textContent=goal.text;
-  $("coins").textContent=game.coins;$("xp").textContent=game.xp+"/"+xpNeed(game.level);$("lvl").textContent="Ур. "+game.level;
-  $("energy-text").textContent=game.energy+"/"+game.maxEnergy;var ef=$("energy-fill");if(ef)ef.style.width=Math.min(100,game.energy/game.maxEnergy*100)+"%";
+  $("coins").textContent=game.coins;$("xp").textContent=game.xp+"/"+xpNeed(game.level);$("lvl").textContent=game.level;
+  var xpPct=Math.max(0,Math.min(100,Math.round(game.xp/xpNeed(game.level)*100)));
+  var xr=$("xp-ring");if(xr)xr.style.background="conic-gradient(#f2b63c "+xpPct+"%, rgba(255,255,255,.55) "+xpPct+"%)";
+  $("energy-text").textContent=game.energy+"/"+game.maxEnergy;
+  var enPct=game.maxEnergy?Math.max(0,Math.min(100,Math.round(game.energy/game.maxEnergy*100))):0;
+  var er=$("energy-ring");if(er)er.style.background="conic-gradient(#f08a2e "+enPct+"%, rgba(255,255,255,.55) "+enPct+"%)";
+  var ef=$("energy-fill");if(ef)ef.style.width=enPct+"%";
   var eh=$("energy-hint");if(eh)eh.textContent="Восстановление: 1⚡ за 20 сек — и пока ферма закрыта.";
   $("storage-text").textContent=storageCount()+"/"+storageCap();$("storage-text").parentElement.style.color=freeSpace()<=0?"#c0392b":"inherit";
   $("btn-replace-orders").disabled=replaceUsed>=1;
