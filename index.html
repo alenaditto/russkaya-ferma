@@ -62,9 +62,9 @@
   .territory .clouds span{position:absolute;font-size:220px;line-height:1;opacity:.92;filter:drop-shadow(0 12px 14px rgba(90,110,130,.35));animation:cloudDrift 9s ease-in-out infinite}
   @keyframes cloudDrift{0%,100%{transform:translateX(0)}50%{transform:translateX(46px)}}
   .territory .tlock{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);background:rgba(255,253,247,.95);padding:20px 28px;border-radius:20px;font-weight:900;font-size:30px;text-align:center;z-index:31;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:80%}
-  .seam-road{position:absolute;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,#ecca8d 0%,#ddb678 58%,rgba(221,182,120,0) 76%);border-radius:50%;z-index:5;pointer-events:none}
-  .seam-road-h{width:420px;height:118px}
-  .seam-road-v{width:118px;height:420px}
+  .seam-bridge{position:absolute;transform:translate(-50%,-50%);z-index:9;pointer-events:none;border-radius:16px;box-shadow:0 8px 14px rgba(60,35,15,.35)}
+  .seam-bridge-h{width:360px;height:104px;background:repeating-linear-gradient(90deg,#c08a4e 0 26px,#9d6836 26px 31px);border-top:13px solid #7a4a24;border-bottom:13px solid #7a4a24}
+  .seam-bridge-v{width:104px;height:360px;background:repeating-linear-gradient(0deg,#c08a4e 0 26px,#9d6836 26px 31px);border-left:13px solid #7a4a24;border-right:13px solid #7a4a24}
   .seam-tree{position:absolute;width:120px;height:auto;transform:translate(-50%,-88%);transform-origin:50% 90%;animation:treeSway 3.6s ease-in-out infinite;pointer-events:none;filter:drop-shadow(0 5px 4px rgba(60,35,15,.25));z-index:7}
   /* === HUD ПОВЕРХ КАРТЫ === */
   .hud{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:10px;right:10px;z-index:20;pointer-events:none}
@@ -320,7 +320,7 @@ var ITEM_KEYS=Object.keys(ITEMS);
 var BUILD_MS={Coop:60000,Juicer:120000,Mill:180000,Bakery:300000,Barn:600000,Tavern:600000,Sheep:300000,Weave:240000};
 var BUILD_FLAG={Coop:"boughtCoop",Juicer:"boughtJuicer",Mill:"boughtMill",Bakery:"boughtBakery",Barn:"boughtBarn",Tavern:"boughtTavern",Sheep:"boughtSheep",Weave:"boughtWeave"};
 var BUILD_NAME={Coop:"Курятник",Juicer:"Соковыжималка",Mill:"Мельница",Bakery:"Пекарня",Barn:"Коровник",Tavern:"Таверна",Sheep:"Овчарня",Weave:"Ткацкая мастерская"};
-var constructions={},territorySeen={home:true},territoryInit=false,highlightPlotId="",lastUnlockLevel=0;
+var constructions={},territorySeen={home:true},territoryInit=false,highlightPlotId="",lastUnlockLevel=0,lastMapKey="";
 var TILE_W=900,TILE_H=1600,WORLD_W=2700,WORLD_H=3200,SEAM=34;
 var TERRITORIES=[
   {id:"hills",name:"⛰ Холмы",level:45,x:0,y:0,w:TILE_W,h:TILE_H,bg:"images/bg/hills-bg.png"},
@@ -498,33 +498,35 @@ function plotState(p){
 function addSeamDecor(world){
   var PASS_HM_Y=2400;
   var PASS_MF_X=1350;
-  var roads=[
-    {cls:"seam-road seam-road-h",x:900,y:PASS_HM_Y},
-    {cls:"seam-road seam-road-v",x:PASS_MF_X,y:1600}
+  var bridges=[
+    {cls:"seam-bridge seam-bridge-h",x:900,y:PASS_HM_Y},
+    {cls:"seam-bridge seam-bridge-v",x:PASS_MF_X,y:1600}
   ];
-  roads.forEach(function(r){
+  bridges.forEach(function(r){
     var d=document.createElement("div");d.className=r.cls;
     d.style.left=r.x+"px";d.style.top=r.y+"px";
     world.appendChild(d);
   });
   var borders=[
-    {axis:"v",fixed:900,from:60,to:3140,gaps:[[PASS_HM_Y-130,PASS_HM_Y+130]]},
-    {axis:"v",fixed:1800,from:60,to:3140,gaps:[]},
-    {axis:"h",fixed:1600,from:60,to:2640,gaps:[[PASS_MF_X-130,PASS_MF_X+130]]}
+    {axis:"v",fixed:900,from:40,to:3160,gaps:[[PASS_HM_Y-190,PASS_HM_Y+190]]},
+    {axis:"v",fixed:1800,from:40,to:3160,gaps:[]},
+    {axis:"h",fixed:1600,from:40,to:2660,gaps:[[PASS_MF_X-190,PASS_MF_X+190]]}
   ];
   var n=0;
   borders.forEach(function(b){
-    for(var pos=b.from;pos<=b.to;pos+=104){
+    for(var pos=b.from;pos<=b.to;pos+=76){
       var inGap=false;
       b.gaps.forEach(function(g){if(pos>g[0]&&pos<g[1])inGap=true;});
       if(inGap)continue;
-      var off=Math.sin(n*2.39)*30;
+      var off=Math.sin(n*2.39)*34;
       var img=document.createElement("img");
       img.className="seam-tree";img.src="images/decor/tree.png";img.alt="";
       img.style.left=((b.axis==="v"?b.fixed+off:pos))+"px";
       img.style.top=((b.axis==="v"?pos:b.fixed+off))+"px";
-      img.style.width=(108+(n%4)*20)+"px";
+      img.style.width=(165+((n*53)%110))+"px";
+      img.style.zIndex=8+((n*7)%6);
       img.style.animationDelay=((n%7)*0.3)+"s";
+      if(n%2===1)img.style.animation="none";
       img.onerror=function(){img.style.display="none";};
       world.appendChild(img);
       n++;
@@ -542,6 +544,16 @@ function renderMap(){
       }
     });
   }
+  var mapKey=[game.level,highlightPlotId,freeSpace()<=0,
+    PLOTS.map(function(p){return plotState(p);}).join(","),
+    chickenSlots.map(function(s){return s.state;}).join(","),
+    sheepSlots.map(function(s){return s.state;}).join(","),
+    cowSlots.map(function(s){return s.state;}).join(","),
+    orders.map(function(o){return canDo(o)?1:0;}).join(","),
+    Object.keys(constructions).sort().map(function(k){return k+Math.ceil((constructions[k]-Date.now())/60000);}).join(",")
+  ].join("|");
+  if(mapKey===lastMapKey&&world.children.length)return;
+  lastMapKey=mapKey;
   world.innerHTML="";
   TERRITORIES.forEach(function(t){
     var open=territoryOpen(t);
